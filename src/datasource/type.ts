@@ -66,3 +66,22 @@ export interface notice {
 // //预约记录
 // export interface Reservation {
 //   laboratoryId?: string
+
+export interface LabNum{
+  DanQing?:number,
+  ChengDong?:number,
+  Zhu?:number,
+  LinKe?:number,
+  JiaJu?:number,
+  JiaoTong?:number
+    
+  }
+  export interface LabName{
+    DanQing?:Array<Lab>,
+    ChengDong?:Array<Lab>,
+    Zhu?:Array<Lab>,
+    LinKe?:Array<Lab>,
+    JiaJu?:Array<Lab>,
+    JiaoTong?:Array<Lab>
+      
+    

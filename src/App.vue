@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import LoadingView from './components/LoadingView.vue'
 </script>
-
 <template>
   <suspense>
     <template #default>
@@ -13,4 +12,5 @@ import LoadingView from './components/LoadingView.vue'
   </suspense>
 </template>
 
-<style></style>
+<style>
+</style>
