@@ -70,11 +70,16 @@ export async function usePost<T>(url: string, data: unknown) {
 export async function useGet<T>(url: string) {
   const resp = useFetch(url, { immediate: false }).get().json<ResultVO<T>>()
   await resp.execute(true)
-  return resp
+  return  resp.data.value?.data
 }
 
 export async function useDelete<T>(url: string, data: unknown) {
   const resp = useFetch(url, { immediate: false }).delete(data).json<ResultVO<T>>()
   await resp.execute(true)
-  return resp
+  return resp.data.value?.data
+}
+export const usePatch = async <T>(url: string, data: unknown) => {
+  const resp = useFetch(url, { immediate: false }).patch(data).json<ResultVO<T>>()
+  await resp.execute(true)
+  return resp.data.value?.data
 }

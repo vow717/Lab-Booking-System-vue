@@ -29,16 +29,32 @@ const router = createRouter({
           component: () => import('@/views/admin/IndexView.vue'),
           meta: {
             roles: [Consty.ADMIN]
-          }
-        },
-        {
-          path: 'teacher',
-          component: () => import('@/views/teacher/IndexView.vue'),
-          meta: {
-            roles: [Consty.TEACHER]
-          }
-        }
+          },
+          children:[
+            {
+              path: 'lab',
+              component: () => import('@/views/admin/LabView.vue'),
+            },
+            {
+              path: 'user',
+              component: () => import('@/views/admin/UserView.vue'),
+           
+            },
+            {
+              path: 'reset',
+              component: () => import('@/views/admin/ResetView.vue'),             
+            },
+            {
+              path: 'notice',
+              component: () => import('@/views/admin/NoticeView.vue'),             
+            }
+          ]
+        },     
       ]
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/'
     }
   ]
 })
