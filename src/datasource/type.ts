@@ -48,7 +48,7 @@ export interface DEF2Course {
 export interface Lab {
   id?: string
   name?: string
-  Location?: string
+  location?: string
   manager?: User //实验室管理人
   config?: string
   capacity?: number //容纳人数
@@ -62,3 +62,21 @@ export interface notice {
   createTime?: string
   updateTime?: string
 }
+export interface LabNum{
+DanQing?:number,
+ChengDong?:number,
+Zhu?:number,
+LinKe?:number,
+JiaJu?:number,
+JiaoTong?:number
+  
+}
+export interface LabName{
+  DanQing?:Array<Lab>,
+  ChengDong?:Array<Lab>,
+  Zhu?:Array<Lab>,
+  LinKe?:Array<Lab>,
+  JiaJu?:Array<Lab>,
+  JiaoTong?:Array<Lab>
+    
+  }

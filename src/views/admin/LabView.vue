@@ -1,6 +1,107 @@
 <script setup lang="ts">
+import { AdminService } from '@/services/AdminService';
+import { ref } from 'vue';
+import type { Lab,LabName,LabNum} from '@/datasource/type';
+import { locationItems } from '@/datasource/const';
+import EditLabVue from '@/views/admin/operationLabView.vue'
+import AddLabVue from './operation/AddLabVue.vue';
+const allLabs = await AdminService.listLabsService()
+const activeName = ref('0')
+
+const locationName = ref<LabName>({
+    DanQing: [],
+    ChengDong: [],
+    Zhu: [],
+    LinKe: [],
+    JiaJu: [],
+    JiaoTong: []
+});
+//
+const collectLS = (lS: Lab[]) => {
+  console.log(lS);
+
+  lS.forEach((lab) =>{
+  
+    if(lab.location == '丹青楼'){
+      locationName.value.DanQing?.push(lab)
+    }else if(lab.location === '成栋楼'){
+      locationName.value.ChengDong?.push(lab)
+    }else if(lab.location === '主楼'){
+      locationName.value.Zhu?.push(lab)
+    }else if(lab.location === '林科楼'){
+      locationName.value.LinKe?.push(lab)
+    }else if(lab.location === '家具楼'){
+      locationName.value.JiaJu?.push(lab)
+    }else if(lab.location === '交通楼'){
+      locationName.value.JiaoTong?.push(lab)
+    }
+  })
+
+  console.log(locationName.value);
+  
+}
+collectLS(allLabs.value)
+
+  const locationMap: { [key: string]: Lab[] } = {
+    DanQing: locationName.value.DanQing,
+    ChengDong: locationName.value.ChengDong,
+    Zhu: locationName.value.Zhu,
+    LinKe: locationName.value.LinKe,
+    JiaJu: locationName.value.JiaJu,
+    JiaoTong: locationName.value.JiaoTong
+};
+
+const currentLocationF = (v: string) => {
+    console.log(v);
+    return locationMap[v];
+};
 
 </script>
 <template>
-<div>lab</div>
+<div>
+<el-row :gutter="10" style="margin-bottom: 10px"> 
+  <el-col><AddLabVue /></el-col>
+<br>
+<el-col>
+  <div class="demo-collapse">
+    <el-collapse v-model="activeName" accordion>   
+      <template v-for="(l,index) of locationItems" :key="l.v" name="index">
+        <el-collapse-item :title="l.name" >
+             <el-table :data="currentLocationF(l.v)">
+              <el-table-column type="index" label="#" />
+              <el-table-column label="实验室号" width="200">
+            <template #default="scope" >
+              <el-text>
+                {{ scope.row.name  }}
+              </el-text>
+            </template>
+          </el-table-column>
+          <el-table-column label="配置" width="500">
+            <template #default="scope">
+              {{ scope.row.config}}      
+            </template>
+          </el-table-column>
+          <el-table-column label="负责人" width="200">
+            <template #default="scope">
+              {{ scope.row.manager.name}}  / {{ scope.row.manager.phone }}    
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="150">
+            <template #default="scope">
+            <EditLabVue :labs="scope.row"/>
+          </template>
+          </el-table-column>
+            </el-table>
+      </el-collapse-item>
+    </template>
+    </el-collapse>
+  </div>
+
+</el-col>
+    
+</el-row>
+
+
+
+</div>
 </template>
