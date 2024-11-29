@@ -36,7 +36,25 @@ const router = createRouter({
           component: () => import('@/views/teacher/IndexView.vue'),
           meta: {
             roles: [Consty.TEACHER]
-          }
+          },
+          children: [
+            {
+              path: '',
+              component: () => import('@/views/teacher/HomeView.vue')
+            },
+            {
+              path: 'schedule',
+              component: () => import('@/views/teacher/HomeView.vue')
+            },
+            {
+              path: 'importSchedule',
+              component: () => import('@/views/teacher/ImportScheduleView.vue')
+            },
+            {
+              path: 'bookLab',
+              component: () => import('@/views/teacher/BookLabView.vue')
+            }
+          ]
         }
       ]
     }
