@@ -84,4 +84,4 @@ export interface LabNum{
     JiaJu?:Array<Lab>,
     JiaoTong?:Array<Lab>
       
-    }
+    
