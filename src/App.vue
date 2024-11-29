@@ -7,8 +7,9 @@ import LoadingView from './components/LoadingView.vue'
     <template #default>
       <router-view />
     </template>
-
-    <template #fallback><loading-view /></template>
+    <template #fallback>
+      <loading-view />
+    </template>
   </suspense>
 </template>
 

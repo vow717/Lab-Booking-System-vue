@@ -1,5 +1,5 @@
-import type { ResultVO } from '@/datasource/type'
-
+import type { ResultVO,Lab } from '@/datasource/type'
+import {listLabs} from '@/datasource/const'
 import { createServer, Response } from 'miragejs'
 
 const server = createServer({})
@@ -36,5 +36,16 @@ server.post('/login', (schema, request) => {
   }
   resultVO.code = 401
   resultVO.message = '用户名密码错误'
+  return resultVO
+})
+
+
+server.get('admin/lab', (_schema, request) => {
+  console.log(request.params.uid)
+  const resultVO: ResultVO<{ labs: Lab[]}> = {
+    code: 200,
+    data: { labs: listLabs() }
+  }
+
   return resultVO
 })

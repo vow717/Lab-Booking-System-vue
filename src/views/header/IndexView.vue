@@ -20,8 +20,12 @@ const logoutF = () => {
 </script>
 <template>
   <div>
+
+      
     <el-row class="my-row" style="padding: 3px" align="middle">
-      <el-col :span="4">
+      <el-col :span="2">
+      </el-col>
+      <el-col :span="2">
         <el-button
           type="danger"
           :icon="Setting"
@@ -32,13 +36,17 @@ const logoutF = () => {
       </el-col>
 
       <!-- 基于权限加载上功能栏 -->
-      <el-col :span="18">
+      <el-col :span="16">
         <component :is="realComponent" />
+      </el-col>
+      <el-col :span="1">
       </el-col>
       <el-col :span="2">
         <el-icon id="logout" :size="32" color="red" @click="logoutF">
           <SwitchButton />
         </el-icon>
+      </el-col>
+      <el-col :span="1">
       </el-col>
     </el-row>
   </div>

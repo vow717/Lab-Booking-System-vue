@@ -8,5 +8,4 @@ import('@/mock/Index') //这里是引入mockjs的文件，这个文件里面定�
 const app = createApp(App)
 app.use(ElementPlus)
 app.use(router)
-
 app.mount('#app')
