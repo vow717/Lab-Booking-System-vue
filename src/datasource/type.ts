@@ -62,3 +62,7 @@ export interface notice {
   createTime?: string
   updateTime?: string
 }
+
+// //预约记录
+// export interface Reservation {
+//   laboratoryId?: string
