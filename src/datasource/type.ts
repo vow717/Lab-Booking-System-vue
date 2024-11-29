@@ -80,3 +80,7 @@ export interface LabName{
   JiaoTong?:Array<Lab>
     
   }
+
+// //预约记录
+// export interface Reservation {
+//   laboratoryId?: string
