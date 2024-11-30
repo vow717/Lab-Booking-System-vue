@@ -6,7 +6,7 @@ import ChildDialog from './BookLabDialog3.vue'
 const props = defineProps<{
   course: DEF2Course | null
   closeDialog2: () => void
-  lab: { id: string; name: string; required_config: string }
+  lab: { id: string; name: string; config: string; capacity: number }
 }>()
 
 // 这里可以编写子组件中关于模态框确定预约等相关逻辑

@@ -43,6 +43,7 @@ export interface DEF2Course {
   total?: number
   reserved?: number
   require_config?: string
+  require_number?: number
 }
 
 export interface Lab {

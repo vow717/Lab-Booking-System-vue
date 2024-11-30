@@ -8,7 +8,7 @@ const weekMax = 18
 const props = defineProps<{
   course: DEF2Course | null
   closeDialog3: () => void
-  lab: { id: string; name: string; required_config: string }
+  lab: { id: string; name: string; config: string; capacity: number }
   time: { period: number; day: number } | null
 }>()
 //前端根据实验室的id和currentCourse的period和day去找到该实验室的预约数据

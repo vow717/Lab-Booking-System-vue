@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { DEF2Course } from '@/datasource/type'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import ChildDialog from './BookLabDialog2.vue'
 // 接收父组件传递的课程信息
 const props = defineProps<{
@@ -9,66 +9,86 @@ const props = defineProps<{
 }>()
 
 const dialogVisible = ref(false)
-const currentLab = ref<{ id: string; name: string; required_config: string }>({})
+const currentLab = ref<{ id: string; name: string; config: string; capacity: number }>({})
 
 const labs = ref([
   {
     id: '1',
     name: '实验室1',
-    required_config: '100人,Windows 11'
+    config: 'Windows 11',
+    capacity: 100
   },
   {
     id: '2',
     name: '实验室2',
-    required_config: '80人,Windows 10'
+    config: 'Windows 10',
+    capacity: 80
   },
   {
     id: '3',
     name: '实验室3',
-    required_config: '60人,Windows 8'
+    config: 'Windows 8',
+    capacity: 120
   },
   {
     id: '4',
     name: '实验室4',
-    required_config: '40人,Windows 7'
+    config: 'Windows 7',
+    capacity: 40
   },
   {
     id: '5',
     name: '实验室5',
-    required_config: '20人,Windows 6'
+    config: 'Windows XP',
+    capacity: 20
   },
   {
     id: '6',
     name: '实验室6',
-    required_config: '10人,Windows 5'
+    config: 'Windows 2000',
+    capacity: 60
   },
   {
     id: '7',
     name: '实验室7',
-    required_config: '5人,Windows 4'
+    config: 'Windows 98',
+    capacity: 130
   },
   {
     id: '8',
     name: '实验室8',
-    required_config: '2人,Windows 3'
+    config: 'Windows 95',
+    capacity: 50
   },
   {
     id: '9',
     name: '实验室9',
-    required_config: '1人,Windows 2'
+    config: 'Windows 3.1',
+    capacity: 110
   },
   {
     id: '10',
     name: '实验室10',
-    required_config: '1人,Windows 1'
-  },
-  {
-    id: '11',
-    name: '实验室11',
-    required_config: '1人,Windows 0'
+    config: 'Windows 1.0',
+    capacity: 90
   }
 ])
-const confirmReservation = (lab: { id: string; name: string; required_config: string }) => {
+const showLabs = ref<{ id: string; name: string; config: string; capacity: number }[]>(
+  labs.value.filter(lab => lab.capacity >= props.course?.require_number)
+)
+watch(
+  () => props.course,
+  () => {
+    showLabs.value = labs.value.filter(lab => lab.capacity >= props.course?.require_number)
+  }
+)
+
+const confirmReservation = (lab: {
+  id: string
+  name: string
+  config: string
+  capacity: number
+}) => {
   currentLab.value = lab
   dialogVisible.value = true
 }
@@ -87,12 +107,12 @@ const handleCloseDialog = () => {
     </div>
     <br />
     <div class="card-container">
-      <el-card v-for="lab in labs" :key="lab.id">
+      <el-card v-for="lab in showLabs" :key="lab.id">
         <div>
           <p>-实验室名称-：</p>
           <p>{{ lab.name }}</p>
           <p>-实验室配置-:</p>
-          <p>{{ lab.required_config }}</p>
+          <p>{{ lab.config }}</p>
           <el-button @click="confirmReservation(lab)">预约</el-button>
         </div>
       </el-card>
