@@ -70,8 +70,26 @@ const router = createRouter({
               component: () => import('@/views/teacher/ImportScheduleView.vue')
             },
             {
+              path: 'editCourse',
+              component: () => import('@/views/teacher/editcourse/EditExperimentView.vue'),
+              children: [
+                {
+                  path: 'theoretical',
+                  component: () => import('@/views/teacher/editcourse/EditTheoryView.vue')
+                },
+                {
+                  path: 'experimental',
+                  component: () => import('@/views/teacher/editcourse/EditExperimentView.vue')
+                }
+              ]
+            },
+            {
               path: 'bookLab',
               component: () => import('@/views/teacher/BookLabView.vue')
+            },
+            {
+              path: 'notice',
+              component: () => import('@/views/teacher/NoticeView.vue')
             }
           ]
         }

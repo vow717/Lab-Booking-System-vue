@@ -1,23 +1,27 @@
 <script setup lang="ts">
 import type { DEF2Course } from '@/datasource/type'
 import { defineProps, ref } from 'vue'
-
+import ChildDialog from './BookLabDialog3.vue'
 // 接收父组件传递的课程信息
 const props = defineProps<{
   course: DEF2Course | null
   closeDialog2: () => void
-  lab: { id: string; name: string; required_config: string }
+  lab: { id: string; name: string; config: string; capacity: number }
 }>()
 
 // 这里可以编写子组件中关于模态框确定预约等相关逻辑
-const confirmReservation = () => {
-  // 假设这里进行一些预约的操作，比如发送请求等
-  console.log('确认预约课程：', props.course)
-  // 可以在这里关闭模态框，通知父组件等操作，示例中简单关闭模态框
-  props.closeDialog2()
-  console.log('关闭模态框')
+const confirmReservation = (period: number, day: number) => {
+  currentTime.value = { period, day }
+  dialogVisible.value = true
 }
 
+const handleCloseDialog = () => {
+  dialogVisible.value = false
+  props.closeDialog2()
+}
+
+const dialogVisible = ref(false)
+const currentTime = ref<{ period: number; day: number }>({ period: 0, day: 0 })
 //-------------------------------
 const days = ['######', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
 const periods = ['第一二节', '第三四节', '第五六节', '第七八节']
@@ -84,7 +88,7 @@ const enoughTime = (period: number, day: number) => {}
           <div>{{ period }}</div>
         </td>
         <td v-for="(day, indexd) in days.length - 1" :key="indexd">
-          <button :disabled="false" @click="">
+          <button :disabled="false" @click="confirmReservation(indexr + 1, indexd + 1)">
             <div v-for="(item, index) in showCourses(indexr + 1, indexd + 1)" :key="index">
               <div>{{ item.name }}</div>
               <div>{{ item.week }}</div>
@@ -93,6 +97,13 @@ const enoughTime = (period: number, day: number) => {}
         </td>
       </tr>
     </tbody>
+    <el-dialog v-model="dialogVisible" :close-on-click-modal="false" :destroy-on-close="true">
+      <ChildDialog
+        :course="props.course"
+        :closeDialog3="handleCloseDialog"
+        :lab="props.lab"
+        :time="currentTime" />
+    </el-dialog>
   </div>
 </template>
 
