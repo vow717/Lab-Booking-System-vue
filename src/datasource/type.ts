@@ -48,7 +48,7 @@ export interface DEF2Course {
 export interface Lab {
   id?: string
   name?: string
-  Location?: string
+  location?: string
   manager?: User //实验室管理人
   config?: string
   capacity?: number //容纳人数
@@ -63,25 +63,32 @@ export interface notice {
   updateTime?: string
 }
 
-// //预约记录
-// export interface Reservation {
-//   laboratoryId?: string
+//预约记录
+export interface Reservation {
+  id?: string
+  laboratoryId?: string
+  teacherId?: string
+  laboratoryName?: string
+  courseName?: string
+  courseId?: string
+  period?: number
+  day?: number
+  weeks?: string //,分割的周数，例如1,2,3,4,7,8,9
+}
 
-export interface LabNum{
-  DanQing?:number,
-  ChengDong?:number,
-  Zhu?:number,
-  LinKe?:number,
-  JiaJu?:number,
-  JiaoTong?:number
-    
-  }
-  export interface LabName{
-    DanQing?:Array<Lab>,
-    ChengDong?:Array<Lab>,
-    Zhu?:Array<Lab>,
-    LinKe?:Array<Lab>,
-    JiaJu?:Array<Lab>,
-    JiaoTong?:Array<Lab>
-      
-    
+export interface LabNum {
+  DanQing?: number
+  ChengDong?: number
+  Zhu?: number
+  LinKe?: number
+  JiaJu?: number
+  JiaoTong?: number
+}
+export interface LabName {
+  DanQing?: Array<Lab>
+  ChengDong?: Array<Lab>
+  Zhu?: Array<Lab>
+  LinKe?: Array<Lab>
+  JiaJu?: Array<Lab>
+  JiaoTong?: Array<Lab>
+}

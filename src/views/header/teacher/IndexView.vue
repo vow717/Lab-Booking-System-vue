@@ -5,7 +5,8 @@ import { useRoute } from 'vue-router'
 const menus = ref<{ name: string; path: string }[]>([
   { name: '查看课表', path: '/teacher/schedule' },
   { name: '导入课表', path: '/teacher/importSchedule' },
-  { name: '预约实验室', path: '/teacher/bookLab' }
+  { name: '预约实验室', path: '/teacher/bookLab' },
+  { name: '查看公告', path: '/teacher/notice' }
 ])
 
 const route = useRoute()

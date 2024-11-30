@@ -1,0 +1,72 @@
+<script setup lang="ts">
+import { type DEF2Course, type Reservation } from '@/datasource/type'
+import { ref, watch } from 'vue'
+
+//定义最多可预约的周数
+const weekMax = 18
+
+const props = defineProps<{
+  course: DEF2Course | null
+  closeDialog3: () => void
+  lab: { id: string; name: string; required_config: string }
+  time: { period: number; day: number } | null
+}>()
+//前端根据实验室的id和currentCourse的period和day去找到该实验室的预约数据
+//拿到数据后，前端根据数据渲染哪些哪些周的课程被预约了
+//这里模拟一下
+const orders = '1,2,3,4,7,8,9,12,13,14'
+const weeks = orders.split(',')
+
+const wantOrderR = ref<number[]>([])
+
+const confirmReservation = () => {
+  //向后端提交预约数据
+
+  wantOrderR.value = []
+  props.closeDialog3()
+}
+
+//要提交的预约记录
+const reservationR = ref<Reservation>({
+  courseId: props.course?.id,
+  laboratoryId: props.lab.id,
+  weeks: wantOrderR.value.join(','),
+  period: props.time?.period,
+  day: props.time?.day
+})
+watch(wantOrderR, () => {
+  reservationR.value.weeks = wantOrderR.value.join(',')
+})
+</script>
+<template>
+  <div>
+    <p>课程名称：{{ props.course?.name }}</p>
+    <p>实验室名称: {{ props.lab.name }}</p>
+    <p>预约情况</p>
+    <div>
+      <!--多选框-->
+      <el-checkbox-group v-model="wantOrderR">
+        <!--属性排列，一行占4个？-->
+        <el-checkbox
+          v-for="week in weekMax"
+          :key="week"
+          :label="week"
+          :disabled="weeks.includes(week.toString())">
+          第{{ week }}周
+        </el-checkbox>
+      </el-checkbox-group>
+      <br />
+      <div>{{ reservationR }}</div>
+      <el-button @click="confirmReservation">确定预约</el-button>
+    </div>
+  </div>
+</template>
+<style scoped>
+.el-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+.el-checkbox {
+  width: 20%;
+}
+</style>

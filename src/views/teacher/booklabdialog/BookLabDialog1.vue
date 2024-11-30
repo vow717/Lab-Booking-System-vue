@@ -97,7 +97,11 @@ const handleCloseDialog = () => {
         </div>
       </el-card>
     </div>
-    <el-dialog v-model="dialogVisible" title="预约实验室">
+    <el-dialog
+      v-model="dialogVisible"
+      title="预约实验室"
+      :close-on-click-modal="false"
+      :destroy-on-close="true">
       <ChildDialog :course="props.course" :closeDialog2="handleCloseDialog" :lab="currentLab" />
     </el-dialog>
   </div>
@@ -105,15 +109,14 @@ const handleCloseDialog = () => {
 <style scoped>
 .card-container {
   display: flex;
-  max-height: 400px; /* 设置一个合适的最大高度值，可根据实际情况调整 */
+  max-height: 400px;
   overflow-y: auto; /* 当内容在垂直方向溢出时显示滚动条 */
 
   flex-wrap: wrap;
-  gap: 10px; /* 卡片之间的间距，可以根据需要调整 */
+  gap: 10px; /* 卡片之间的间距 */
 }
 
 .el-card {
-  flex: 0 0 calc(20% - 10px); /* 如果要一行显示3个卡片，每个卡片占据大约三分之一的宽度，减去间距 */
-  /* 如果要一行显示4个卡片，则改为 flex: 0 0 calc(25% - 10px); */
+  flex: 0 0 calc(20% - 10px);
 }
 </style>

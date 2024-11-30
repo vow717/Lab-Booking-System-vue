@@ -72,6 +72,10 @@ const router = createRouter({
             {
               path: 'bookLab',
               component: () => import('@/views/teacher/BookLabView.vue')
+            },
+            {
+              path: 'notice',
+              component: () => import('@/views/teacher/NoticeView.vue')
             }
           ]
         }

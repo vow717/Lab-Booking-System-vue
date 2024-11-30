@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { DEF2Course } from '@/datasource/type'
 import { ref } from 'vue'
-import ChildDialog from './BookLabDialog1.vue'
+import ChildDialog from './booklabdialog/BookLabDialog1.vue'
 //courses是会从数据库中获取的实验课课程
 //这里虚拟创建一下
 const courses = ref<DEF2Course[]>([
   {
+    id: '1',
     name: 'web实验',
     type: 'DEF2',
     reserved: 0,
@@ -13,6 +14,7 @@ const courses = ref<DEF2Course[]>([
     total: 12
   },
   {
+    id: '2',
     name: 'java实验',
     type: 'DEF2',
     reserved: 0,
@@ -52,7 +54,12 @@ const handleCloseDialog = () => {
       </div>
     </el-card>
 
-    <el-dialog v-model="dialogVisible" title="预约实验室" weight="50%">
+    <el-dialog
+      v-model="dialogVisible"
+      title="预约实验室"
+      weight="50%"
+      :close-on-click-modal="false"
+      :destroy-on-close="true">
       <ChildDialog :course="currentCourse" :closeDialog1="handleCloseDialog" />
     </el-dialog>
   </div>
