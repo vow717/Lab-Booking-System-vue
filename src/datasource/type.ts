@@ -77,6 +77,24 @@ export interface Reservation {
   weeks?: string //,分割的周数，例如1,2,3,4,7,8,9
 }
 
+export interface LabNum{
+  DanQing?:number,
+  ChengDong?:number,
+  Zhu?:number,
+  LinKe?:number,
+  JiaJu?:number,
+  JiaoTong?:number
+    
+  }
+  export interface LabName{
+    DanQing?:Array<Lab>,
+    ChengDong?:Array<Lab>,
+    Zhu?:Array<Lab>,
+    LinKe?:Array<Lab>,
+    JiaJu?:Array<Lab>,
+    JiaoTong?:Array<Lab>   
+  }
+
 export interface LabNum {
   DanQing?: number
   ChengDong?: number
@@ -93,3 +111,4 @@ export interface LabName {
   JiaJu?: Array<Lab>
   JiaoTong?: Array<Lab>
 }
+

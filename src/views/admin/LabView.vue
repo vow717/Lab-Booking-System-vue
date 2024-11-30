@@ -18,8 +18,6 @@ const locationName = ref<LabName>({
 });
 //
 const collectLS = (lS: Lab[]) => {
-  console.log(lS);
-
   lS.forEach((lab) =>{
   
     if(lab.location == '丹青楼'){
@@ -35,26 +33,20 @@ const collectLS = (lS: Lab[]) => {
     }else if(lab.location === '交通楼'){
       locationName.value.JiaoTong?.push(lab)
     }
-  })
-
-  console.log(locationName.value);
-  
+  })  
 }
 collectLS(allLabs.value)
 
-  const locationMap: { [key: string]: Lab[] } = {
-    DanQing: locationName.value.DanQing,
-    ChengDong: locationName.value.ChengDong,
-    Zhu: locationName.value.Zhu,
-    LinKe: locationName.value.LinKe,
-    JiaJu: locationName.value.JiaJu,
-    JiaoTong: locationName.value.JiaoTong
+const locationMap: { [key: string]: Lab[] } = {
+  DanQing: locationName.value.DanQing ||[],
+  ChengDong: locationName.value.ChengDong ||[],
+  Zhu: locationName.value.Zhu ||[],
+  LinKe: locationName.value.LinKe ||[],
+  JiaJu: locationName.value.JiaJu ||[],
+  JiaoTong: locationName.value.JiaoTong ||[]
 };
 
-const currentLocationF = (v: string) => {
-    console.log(v);
-    return locationMap[v];
-};
+const currentLocationF = (v: string) => locationMap[v];
 
 </script>
 <template>
@@ -81,9 +73,9 @@ const currentLocationF = (v: string) => {
               {{ scope.row.config}}      
             </template>
           </el-table-column>
-          <el-table-column label="负责人" width="200">
+          <el-table-column label="容纳人数" width="200">
             <template #default="scope">
-              {{ scope.row.manager.name}}  / {{ scope.row.manager.phone }}    
+              {{ scope.row.capacity}}     
             </template>
           </el-table-column>
           <el-table-column label="操作" width="150">
