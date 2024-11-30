@@ -3,20 +3,23 @@ import { createNoticeBoard } from '@/components/Notice'
 import { locationItems } from '@/datasource/const'
 import { AdminService } from '@/services/AdminService'
 import type { Lab } from '@/datasource/type'
-import { Check, Minus, Plus } from '@element-plus/icons-vue'
-import { computed, ref } from 'vue'
+import { Check, Minus, Plus,CloseBold } from '@element-plus/icons-vue'
+import { computed, ref, watch } from 'vue'
 
-const prop = defineProps<{ lab: Lab}>()
 const labR = ref<Lab>({})
 const dialogVisible = ref(false)
-const manTable = ref<Lab>({})
+const capacityR = ref(null)
 const textarea = ref('')
 const selectedValue = ref('')
 selectedValue.value = labR.value.location || ''
-
+const messageR = ref('实验室号、地点、容纳人数(数字)不可为空')
 
 //
-
+watch(capacityR, (newValue, oldValue) => {
+    if (newValue!== null && isNaN(Number(newValue))) {
+        capacityR.value = null;
+      }
+    });
 //
 const addLabF = async () => {
   await AdminService.addLabService(labR.value)
@@ -66,21 +69,25 @@ const addLabF = async () => {
       <br>
       <el-row :gutter="10" style="margin-bottom: 10px">
         <el-col :span="6">
-          <el-input v-model="manTable.name" placeholder="负责人姓名"></el-input>
-        </el-col>
-        <el-col :span="6">
-          <el-input v-model.number="manTable.phone" placeholder="负责人电话"></el-input>
+          <el-input v-model.number="capacityR" placeholder="容纳人数"></el-input>
         </el-col>
         <el-col :span="6">
           
         </el-col>
       </el-row>
    </div>
-   <el-button
-        type="success"
-        :icon="Check"
-        @click="addLabF"
-      </el-button>
+   <el-tooltip v-if="!(capacityR && labR.name && selectedValue)" :content="messageR" placement="bottom" effect="light">
+      <el-button type="disabled" :icon="CloseBold" :disabled="!(capacityR && labR.name && selectedValue)"></el-button>
+    </el-tooltip>
+    <el-tooltip v-else content="提交" placement="bottom" effect="light">
+      <el-button
+          type="success"
+          :icon="Check"
+          @click="addLabF"
+          :disabled="!(capacityR && labR.name && selectedValue)"
+      ></el-button>
+    </el-tooltip>
+  
   </el-dialog>
 </template>
 <style scoped>
