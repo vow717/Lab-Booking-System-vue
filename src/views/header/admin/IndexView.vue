@@ -27,11 +27,11 @@ watch(route, () => {
 })
 </script>
 <template>
-  <el-menu
+  <el-menu 
     :default-active="activeIndexR"
     mode="horizontal"
     :ellipsis="false"
-    class="el-menu-demo"
+    class="el-menu-demo my-menu"
     router>
     <el-menu-item>
       <img style="width: 100px" src="#" alt="logo" />
@@ -42,7 +42,7 @@ watch(route, () => {
   </el-menu>
 </template>
 <style scoped>
-.el-menu--horizontal > .el-menu-item:nth-child(1) {
-  margin-right: auto;
+.my-menu{
+  border-bottom:none
 }
 </style>
