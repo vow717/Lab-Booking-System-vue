@@ -1,45 +1,75 @@
 <script setup lang="ts">
+import { listReservations } from '@/datasource/datasourse'
+import { ref } from 'vue'
+
+//const myReservations = TeacherService.listReservationsService()
+
+const myReservations = listReservations()
 const days = ['######', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
 const periods = ['第一二节', '第三四节', '第五六节', '第七八节']
+const showCourses = ref<
+  { courseName: string; labName: string; period: number; day: number; week: string }[]
+>([])
+//处理预约信息,将相同的课程名、实验室名、时间段、星期的预约信息合并,并将周次合并
+//展现在课表上
+const dealReservations = () => {
+  let reservations = myReservations
+  while (reservations.length) {
+    const reservation = reservations[0]
+    const courseName = reservation.courseName
+    const labName = reservation.laboratoryName
+    const period = reservation.period
+    const day = reservation.day
+    const weeks: number[] = []
 
-const courses = [
-  {
-    period: 1,
-    days: 1,
-    course: [
-      { name: 'websssss', class: '201', week: '1-6' },
-      { name: 'websssss', class: '201', week: '8-12' }
-    ]
-  },
-  {
-    period: 4,
-    days: 5,
-    course: [
-      { name: 'websssss', class: '501', week: '1-6' },
-      { name: 'websssss', class: '501', week: '8-12' }
-    ]
-  },
-  {
-    period: 3,
-    days: 3,
-    course: [
-      { name: 'websssss', class: '301', week: '1-6' },
-      { name: 'websssss', class: '301', week: '8-12' },
-      { name: 'websssss', class: '301', week: '14-18' }
-    ]
-  },
-  {
-    period: 2,
-    days: 2,
-    course: [{ name: 'c++sssss', class: '301', week: '1-6' }]
+    reservations = reservations.filter(item => {
+      if (
+        item.courseName === courseName &&
+        item.laboratoryName === labName &&
+        item.period === period &&
+        item.day === day
+      ) {
+        weeks.push(item.week as number)
+        return false
+      }
+      return true
+    })
+    //升序排序
+    weeks.sort((a, b) => a - b)
+    console.log(weeks)
+    let weekShow = '' + weeks[0] + '-'
+    let nowBefore = weeks[0]
+    for (let i = 0; i < weeks.length; i++) {
+      if (weeks[i + 1] - weeks[i] == 1) {
+        continue
+      } else {
+        weekShow += `${weeks[i]}`
+
+        if (i != weeks.length - 1) {
+          weekShow += `,${weeks[i + 1]}` + '-'
+        } else {
+          break
+        }
+        nowBefore = weeks[i + 1]
+        console.log(weekShow)
+      }
+      console.log(weekShow)
+    }
+    if (courseName && period && day && weekShow && labName) {
+      showCourses.value.push({
+        courseName: courseName,
+        labName: labName,
+        period: period,
+        day: day,
+        week: weekShow
+      })
+    }
   }
-]
-
-const showCourses = (period: number, day: number) => {
-  return courses
-    .filter(course => course.period === period && course.days === day)
-    .map(course => course.course)[0]
 }
+const manageCourses = (period: number, day: number) => {
+  return showCourses.value.filter(item => item.period === period && item.day === day)
+}
+dealReservations()
 </script>
 <template>
   <div>
@@ -54,9 +84,9 @@ const showCourses = (period: number, day: number) => {
           <div>{{ period }}</div>
         </td>
         <td v-for="(day, indexd) in days.length - 1" :key="indexd">
-          <div v-for="(item, index) in showCourses(indexr + 1, indexd + 1)" :key="index">
-            <div>{{ item.name }}</div>
-            <div>{{ item.class }}</div>
+          <div v-for="(item, index) in manageCourses(indexr + 1, indexd + 1)" :key="index">
+            <div>{{ item.courseName }}</div>
+            <div>{{ item.labName }}</div>
             <div>{{ item.week }}</div>
           </div>
         </td>

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { type DEF2Course, type Reservation } from '@/datasource/type'
+import { TeacherService } from '@/services/TeacherService'
+import { ElMessageBox } from 'element-plus'
 import { ref, watch } from 'vue'
 
 //定义最多可预约的周数
@@ -19,23 +21,36 @@ const weeks = orders.split(',')
 
 const wantOrderR = ref<number[]>([])
 
-const confirmReservation = () => {
-  //向后端提交预约数据
+const confirmReservation = async () => {
+  //加一个确认提交的modal
+  const confirmResult = await ElMessageBox.confirm('确定提交预约吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
 
-  wantOrderR.value = []
-  props.closeDialog3()
+  //向后端提交预约数据
+  if (confirmResult === 'confirm') {
+    await TeacherService.addReservationService(reservationR.value)
+    wantOrderR.value = []
+    props.closeDialog3()
+  } else {
+    console.log('已取消删除操作')
+  }
 }
 
 //要提交的预约记录
-const reservationR = ref<Reservation>({
-  courseId: props.course?.id,
-  laboratoryId: props.lab.id,
-  weeks: wantOrderR.value.join(','),
-  period: props.time?.period,
-  day: props.time?.day
-})
+const reservationR = ref<Reservation[]>([])
 watch(wantOrderR, () => {
-  reservationR.value.weeks = wantOrderR.value.join(',')
+  wantOrderR.value.forEach(week => {
+    reservationR.value.push({
+      courseId: props.course?.id,
+      laboratoryId: props.lab.id,
+      week: week,
+      period: props.time?.period,
+      day: props.time?.day
+    })
+  })
 })
 </script>
 <template>

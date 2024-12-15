@@ -71,7 +71,7 @@ const router = createRouter({
             },
             {
               path: 'Course',
-              component: () => import('@/views/teacher/editcourse/ExportCourseView.vue')
+              component: () => import('@/views/teacher/editcourse/ExperimentView.vue')
             },
             {
               path: 'bookLab',

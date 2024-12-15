@@ -53,22 +53,6 @@ const courses = ref<DEF2Course[]>([
     require_config: 'Windows 2000',
     require_number: 20,
     total: 2
-  },
-  {
-    id: '7',
-    name: 'ruby实验',
-    type: 'DEF2',
-    require_config: 'Windows 98',
-    require_number: 130,
-    total: 14
-  },
-  {
-    id: '8',
-    name: 'c#实验',
-    type: 'DEF2',
-    require_config: 'Windows 95',
-    require_number: 70,
-    total: 7
   }
 ])
 
@@ -102,34 +86,47 @@ const isHighlighted = computed(() => {
     <p>当老师导入课表，课表里面的实验课，就会被筛选type然后加载在这个页面。</p>
     <p>老师就可以对每个实验课课程预约实验室。</p>
   </div>
-  <div class="cardcontainer">
-    <!--用卡片形式摆列所有的课程courses-->
-    <!--加个高光类，如果key(course.id)==current选的course,启动这个类-->
-    <el-card
-      v-for="course in courses"
-      :key="course.id"
-      :class="{ highlight: isHighlighted(course.id) }">
-      <div>
-        <p>课程名称：{{ course.name }}</p>
-        <p>需求配置：{{ course.require_config }}</p>
-        <p>上课人数:{{ course.require_number }}</p>
-        <p>已选课时/总课时：{{ course.reserved }}/{{ course.total }}</p>
-        <el-button @click="openDialog(course)">选择</el-button>
-      </div>
-    </el-card>
-  </div>
-  <el-divider />
-  <div v-if="tagVisible">
-    <ChildDialog :course="currentCourse" :closeDialog1="handleCloseDialog" />
+  <div class="main-layout">
+    <!--卡片用侧边栏的格式放在右边悬挂-->
+    <div class="cardcontainer">
+      <!--用卡片形式摆列所有的课程courses-->
+      <!--加个高光类，如果key(course.id)==current选的course,启动这个类-->
+      <el-card
+        v-for="course in courses"
+        :key="course.id"
+        :class="{ highlight: isHighlighted(course.id) }">
+        <div>
+          <p>课程名称：{{ course.name }}</p>
+          <el-button @click="openDialog(course)">选择</el-button>
+        </div>
+      </el-card>
+    </div>
+
+    <div v-if="tagVisible">
+      <ChildDialog :course="currentCourse" :closeDialog1="handleCloseDialog" />
+    </div>
   </div>
 </template>
 
 <style scoped>
+/* 添加整体布局容器的样式 */
+.main-layout {
+  display: flex;
+  width: 100%;
+}
 .cardcontainer {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  width: 25%; /* 设置课程卡片容器宽度占比25% */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 .highlight {
   background-color: #f0f0f0;
+}
+.el-card {
+  width: 250px;
+}
+div[v-if='tagVisible'] {
+  width: 70%;
 }
 </style>

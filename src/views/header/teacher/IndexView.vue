@@ -6,11 +6,7 @@ const menus = ref<{ name: string; path: string; children?: { name: string; path:
   { name: '查看课表', path: '/teacher/schedule' },
   {
     name: '编辑课程',
-    path: '/teacher/editCourse',
-    children: [
-      { name: '编辑实验课', path: '/teacher/editCourse/experimental' },
-      { name: '编辑理论课', path: '/teacher/editCourse/theoretical' }
-    ]
+    path: '/teacher/Course'
   },
   { name: '导入课表', path: '/teacher/importSchedule' },
   { name: '预约实验室', path: '/teacher/bookLab' },

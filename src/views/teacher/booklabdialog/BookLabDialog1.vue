@@ -10,6 +10,13 @@ const props = defineProps<{
 
 const dialogVisible = ref(false)
 const currentLab = ref<{ id: string; name: string; config: string; capacity: number }>({})
+//监听课程信息的变化,一变课表dialogVisible就变为false
+watch(
+  () => props.course,
+  () => {
+    dialogVisible.value = false
+  }
+)
 
 const labs = ref([
   {
@@ -98,12 +105,12 @@ const handleCloseDialog = () => {
 }
 </script>
 <template>
-  <div>
+  <div class="child-dialog-container">
     <!--正方形的实验室卡片-->
     <div>
       <p>课程信息:</p>
       <p>{{ props.course?.name }}</p>
-      <p>{{ props.course?.require_config }}</p>
+      <p>实验要求：{{ props.course?.require_number }}人；{{ props.course?.require_config }}</p>
     </div>
     <br />
     <div class="card-container">
@@ -112,24 +119,24 @@ const handleCloseDialog = () => {
           <p>-实验室名称-：</p>
           <p>{{ lab.name }}</p>
           <p>-实验室配置-:</p>
-          <p>{{ lab.config }}</p>
+          <p>{{ lab.capacity }}人；{{ lab.config }}</p>
           <el-button @click="confirmReservation(lab)">预约</el-button>
         </div>
       </el-card>
     </div>
-    <el-dialog
-      v-model="dialogVisible"
-      title="预约实验室"
-      :close-on-click-modal="false"
-      :destroy-on-close="true">
+    <div v-if="dialogVisible">
       <ChildDialog :course="props.course" :closeDialog2="handleCloseDialog" :lab="currentLab" />
-    </el-dialog>
+    </div>
   </div>
 </template>
 <style scoped>
+.child-dialog-container {
+  width: 1200px; /* 设置固定宽度 */
+  box-sizing: border-box; /* 确保边框、内边距等不额外撑大宽度 */
+}
 .card-container {
   display: flex;
-  max-height: 400px;
+  max-height: 800px;
   overflow-y: auto; /* 当内容在垂直方向溢出时显示滚动条 */
 
   flex-wrap: wrap;
