@@ -9,7 +9,6 @@ const courses = ref<DEF2Course[]>([
     id: '1',
     name: 'web实验',
     type: 'DEF2',
-    reserved: 0,
     require_config: 'Windows 11',
     require_number: 100,
     total: 12
@@ -18,7 +17,6 @@ const courses = ref<DEF2Course[]>([
     id: '2',
     name: 'java实验',
     type: 'DEF2',
-    reserved: 0,
     require_config: 'Windows 10',
     require_number: 80,
     total: 8
@@ -27,7 +25,7 @@ const courses = ref<DEF2Course[]>([
     id: '3',
     name: 'c++实验',
     type: 'DEF2',
-    reserved: 0,
+
     require_config: 'Windows 8',
     require_number: 120,
     total: 10
@@ -36,7 +34,6 @@ const courses = ref<DEF2Course[]>([
     id: '4',
     name: 'python实验',
     type: 'DEF2',
-    reserved: 0,
     require_config: 'Windows 7',
     require_number: 60,
     total: 6
@@ -45,7 +42,6 @@ const courses = ref<DEF2Course[]>([
     id: '5',
     name: 'php实验',
     type: 'DEF2',
-    reserved: 0,
     require_config: 'Windows XP',
     require_number: 40,
     total: 4
@@ -54,7 +50,6 @@ const courses = ref<DEF2Course[]>([
     id: '6',
     name: 'go实验',
     type: 'DEF2',
-    reserved: 0,
     require_config: 'Windows 2000',
     require_number: 20,
     total: 2
@@ -63,7 +58,6 @@ const courses = ref<DEF2Course[]>([
     id: '7',
     name: 'ruby实验',
     type: 'DEF2',
-    reserved: 0,
     require_config: 'Windows 98',
     require_number: 130,
     total: 14
@@ -72,7 +66,6 @@ const courses = ref<DEF2Course[]>([
     id: '8',
     name: 'c#实验',
     type: 'DEF2',
-    reserved: 0,
     require_config: 'Windows 95',
     require_number: 70,
     total: 7
