@@ -78,6 +78,10 @@ const router = createRouter({
               component: () => import('@/views/teacher/BookLabView.vue')
             },
             {
+              path: 'reservationmanager',
+              component: () => import('@/views/teacher/reservationmanager/ReservationsView.vue')
+            },
+            {
               path: 'notice',
               component: () => import('@/views/teacher/NoticeView.vue')
             }

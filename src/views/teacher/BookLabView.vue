@@ -46,6 +46,7 @@ const courses = ref<DEF2Course[]>([
     require_number: 40,
     total: 4
   },
+
   {
     id: '6',
     name: 'go实验',
@@ -53,6 +54,14 @@ const courses = ref<DEF2Course[]>([
     require_config: 'Windows 2000',
     require_number: 20,
     total: 2
+  },
+  {
+    id: '7',
+    name: 'C#实验',
+    type: 'DEF2',
+    require_config: 'Windows XP',
+    require_number: 80,
+    total: 4
   }
 ])
 
@@ -82,10 +91,6 @@ const isHighlighted = computed(() => {
 })
 </script>
 <template>
-  <div>
-    <p>当老师导入课表，课表里面的实验课，就会被筛选type然后加载在这个页面。</p>
-    <p>老师就可以对每个实验课课程预约实验室。</p>
-  </div>
   <div class="main-layout">
     <!--卡片用侧边栏的格式放在右边悬挂-->
     <div class="cardcontainer">
@@ -119,6 +124,8 @@ const isHighlighted = computed(() => {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  height: 80vh;
+  overflow-y: auto;
 }
 .highlight {
   background-color: #f0f0f0;

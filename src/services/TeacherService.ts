@@ -49,4 +49,9 @@ export class TeacherService {
     const data = await usePost<Reservation[]>(`teacher/reservations`, reservations)
     return data as unknown as Ref<Reservation[]>
   }
+  //删除预约记录
+  static async deleteReservationService(reservationId: string) {
+    const data = await useDelete<Reservation>(`teacher/reservation/${reservationId}`)
+    return data as unknown as Ref<Reservation>
+  }
 }

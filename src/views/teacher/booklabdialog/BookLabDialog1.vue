@@ -115,13 +115,17 @@ const handleCloseDialog = () => {
     <br />
     <div class="card-container">
       <el-card v-for="lab in showLabs" :key="lab.id">
-        <div>
-          <p>-实验室名称-：</p>
-          <p>{{ lab.name }}</p>
-          <p>-实验室配置-:</p>
-          <p>{{ lab.capacity }}人；{{ lab.config }}</p>
-          <el-button @click="confirmReservation(lab)">预约</el-button>
-        </div>
+        <el-popover placement="top-start" title="实验室信息" :width="200" trigger="hover">
+          <p>教室容量：{{ lab.capacity }}</p>
+          {{ lab.config }}
+          <template #reference>
+            <div>
+              <p>{{ lab.name }}</p>
+
+              <el-button type="primary" @click="confirmReservation(lab)">预约</el-button>
+            </div>
+          </template>
+        </el-popover>
       </el-card>
     </div>
     <div v-if="dialogVisible">
@@ -136,14 +140,13 @@ const handleCloseDialog = () => {
 }
 .card-container {
   display: flex;
-  max-height: 800px;
+  max-height: 300px;
   overflow-y: auto; /* 当内容在垂直方向溢出时显示滚动条 */
-
   flex-wrap: wrap;
-  gap: 10px; /* 卡片之间的间距 */
+  gap: 7px; /* 卡片之间的间距 */
 }
 
 .el-card {
-  flex: 0 0 calc(20% - 10px);
+  flex: 0 0 calc(15% - 7px);
 }
 </style>
