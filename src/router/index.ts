@@ -25,6 +25,29 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'user',
+          component: () => import('@/views/UserView.vue'),
+          meta: {
+            roles: [Consty.ADMIN]
+          },
+          children: [
+            {
+              path: 'news',
+          component: () => import('@/views/NewsView.vue'),
+            },
+            {
+              path: 'self',
+          component: () => import('@/views/SelfView.vue'),
+            }]
+        },
+        {
+          path: 'self',
+          component: () => import('@/views/SelfView.vue'),
+          meta: {
+            roles: [Consty.ADMIN]
+          },
+        },
+        {
           path: 'admin',
           component: () => import('@/views/admin/IndexView.vue'),
           meta: {
