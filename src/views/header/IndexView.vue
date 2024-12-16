@@ -3,9 +3,9 @@ import * as consty from '@/datasource/const'
 import router from '@/router'
 import { CommonService } from '@/services'
 import { InfoFilled ,User,Tools} from '@element-plus/icons-vue'
-import { defineAsyncComponent, type Component } from 'vue'
+import { defineAsyncComponent, watch ,ref, type Component } from 'vue'
+import { useRoute } from 'vue-router'
 const role = CommonService.getRole()
-
 let realComponent: Component
 if (role == consty.ADMIN) {
   realComponent = defineAsyncComponent(() => import('@/views/header/admin/IndexView.vue'))
@@ -17,6 +17,16 @@ const logoutF = () => {
   sessionStorage.clear()
   router.push('/login')
 }
+const route = useRoute()
+watch(route, () => {
+  })
+const newF = () =>{
+  router.push('/user/news')
+}
+const selfF = () =>{
+  router.push('/user/self')
+
+}
 </script>
 <template>
   <el-row class="my-row" style="padding: 3px" align="middle">
@@ -26,18 +36,15 @@ const logoutF = () => {
       <component :is="realComponent" />
     </el-col>
     <el-col :span="4"></el-col>
-    <el-col :span="1" id="logout" color="blue" class="flex flex-wrap items-center mb-4">
-      <el-popconfirm width="220" :icon="InfoFilled" icon-color="#626AEF" title="确定退出登录吗?">
-        <template #reference>
-          <el-button link class="my-button logout">
+    <el-col :span="1" id="user" color="blue" class="flex flex-wrap items-center mb-4">
+          <el-button link class="my-button user">
             <el-icon><User /></el-icon>
-          </el-button>
-        </template>
-        <template #actions="{ cancel }">
-          <el-button size="small" @click="cancel">No!</el-button>
-          <el-button type="danger" size="small" @click="logoutF()">Yes?</el-button>
-        </template>
-      </el-popconfirm>
+          </el-button>  
+          <div id="info">
+            <el-button class="info" @click="selfF">个人中心</el-button>
+            <el-button class="info" @click="newF">消息中心</el-button>
+            <el-button class="info" @click="logoutF">退出登录</el-button>
+          </div>     
     </el-col>
     <el-col :span="1" class="flex flex-wrap items-center mb-4">
       <el-button link class="my-button setting" @click="$router.push('/settings')">
@@ -48,13 +55,43 @@ const logoutF = () => {
   </el-row>
 </template>
 <style scoped>
-#logout :hover {
+.test{
+  width: 200px;
+  height: 200px;
+  display: none;
+}
+#user{
+position: relative;
+}
+#info{
+  display: none;
+  position:absolute;
+  z-index: 1;
+  width: 100px;
+  height: auto;
+  background-color: #f7f5f5;
+  border-radius: 4px;
+  box-shadow: 0px 12px 32px 4px rgba(0, 0, 0, .04), 0px 8px 20px rgba(0, 0, 0, .08);
+  padding-top: 10px;
+}
+#user:hover{
   cursor: pointer;
+  #info{
+    display: block;
+    position: fixed;
+    right: 200px;
+    
+  }
+}
+.info{
+  margin: 8px 5px 8px 5px;
 }
 .my-button {
+  display: block;
   font-size: 1.5rem;
+  width:150px;
 }
-.logout {
+.user {
   color: #ff2020;
 }
 .my-row {  
