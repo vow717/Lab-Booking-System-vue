@@ -1,4 +1,4 @@
-import type { DEF2Course, Reservation } from '@/datasource/type'
+import type { DEF2Course, LabFree, Reservation } from '@/datasource/type'
 import { useDelete, useGet, usePatch, usePost } from '@/fetch'
 import { useTeacherStore } from '@/stores/TeacherStore'
 import type { Ref } from 'vue'
@@ -45,13 +45,18 @@ export class TeacherService {
     return data as unknown as Ref<Reservation[]>
   }
   //添加预约记录
-  static async addReservationService(reservations: Reservation[]) {
-    const data = await usePost<Reservation[]>(`teacher/reservations`, reservations)
+  static async addReservationService(reservation: Reservation) {
+    const data = await usePost<Reservation[]>(`teacher/reservations`, reservation)
     return data as unknown as Ref<Reservation[]>
   }
   //删除预约记录
   static async deleteReservationService(reservationId: string) {
     const data = await useDelete<Reservation>(`teacher/reservation/${reservationId}`)
     return data as unknown as Ref<Reservation>
+  }
+  //查询day week那天空闲的实验室以及其空余的时间段
+  static async listFreeLabService(day: number, week: number) {
+    const data = await useGet<LabFree[]>(`teacher/freeLab/${day}/${week}`)
+    return data as unknown as Ref<LabFree[]>
   }
 }

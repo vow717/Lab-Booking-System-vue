@@ -1,4 +1,4 @@
-import type { Lab, Reservation } from '@/datasource/type'
+import type { DEF2Course, Lab, Reservation } from '@/datasource/type'
 const labs: Lab[] = [
   {
     id: '1',
@@ -390,7 +390,69 @@ const teachers: User[] = [
     createTime: '2046-05-10T12:00'
   }
 ]
+const courses: DEF2Course[] = [
+  {
+    id: '1',
+    name: 'web实验',
+    type: 'DEF2',
+    require_config: 'Windows 11',
+    require_number: 100,
+    total: 12
+  },
+  {
+    id: '2',
+    name: 'java实验',
+    type: 'DEF2',
+    require_config: 'Windows 10',
+    require_number: 80,
+    total: 8
+  },
+  {
+    id: '3',
+    name: 'c++实验',
+    type: 'DEF2',
 
+    require_config: 'Windows 8',
+    require_number: 120,
+    total: 10
+  },
+  {
+    id: '4',
+    name: 'python实验',
+    type: 'DEF2',
+    require_config: 'Windows 7',
+    require_number: 60,
+    total: 6
+  },
+  {
+    id: '5',
+    name: 'php实验',
+    type: 'DEF2',
+    require_config: 'Windows XP',
+    require_number: 40,
+    total: 4
+  },
+
+  {
+    id: '6',
+    name: 'go实验',
+    type: 'DEF2',
+    require_config: 'Windows 2000',
+    require_number: 20,
+    total: 2
+  },
+  {
+    id: '7',
+    name: 'C#实验',
+    type: 'DEF2',
+    require_config: 'Windows XP',
+    require_number: 80,
+    total: 4
+  }
+]
+export function listCourses() {
+  return courses
+}
 export function listLabs() {
   return labs
 }

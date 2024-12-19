@@ -6,6 +6,11 @@ import ChildDialog from './booklabdialog/BookLabDialog1.vue'
 //这里虚拟创建一下
 const courses = ref<DEF2Course[]>([
   {
+    id: '0',
+    name: '临时预约',
+    require_number: 0
+  },
+  {
     id: '1',
     name: 'web实验',
     type: 'DEF2',

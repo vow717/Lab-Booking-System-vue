@@ -33,19 +33,20 @@ const router = createRouter({
           children: [
             {
               path: 'news',
-          component: () => import('@/views/NewsView.vue'),
+              component: () => import('@/views/NewsView.vue')
             },
             {
               path: 'self',
-          component: () => import('@/views/SelfView.vue'),
-            }]
+              component: () => import('@/views/SelfView.vue')
+            }
+          ]
         },
         {
           path: 'self',
           component: () => import('@/views/SelfView.vue'),
           meta: {
             roles: [Consty.ADMIN]
-          },
+          }
         },
         {
           path: 'admin',
@@ -103,6 +104,10 @@ const router = createRouter({
             {
               path: 'reservationmanager',
               component: () => import('@/views/teacher/reservationmanager/ReservationsView.vue')
+            },
+            {
+              path: 'fastbook',
+              component: () => import('@/views/teacher/FastBookView.vue')
             },
             {
               path: 'notice',

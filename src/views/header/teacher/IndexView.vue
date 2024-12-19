@@ -11,6 +11,7 @@ const menus = ref<{ name: string; path: string; children?: { name: string; path:
   { name: '导入课表', path: '/teacher/importSchedule' },
   { name: '预约实验室', path: '/teacher/bookLab' },
   { name: '预约记录', path: '/teacher/reservationmanager' },
+  { name: '快速预约', path: '/teacher/fastbook' },
   { name: '查看公告', path: '/teacher/notice' }
 ])
 

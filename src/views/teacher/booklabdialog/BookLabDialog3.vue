@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type DEF2Course, type Reservation } from '@/datasource/type'
+import { type DEF2Course, type ReservationOrder } from '@/datasource/type'
 import { TeacherService } from '@/services/TeacherService'
 import { ElMessageBox } from 'element-plus'
 import { ref, watch } from 'vue'
@@ -40,17 +40,17 @@ const confirmReservation = async () => {
 }
 
 //要提交的预约记录
-const reservationR = ref<Reservation[]>([])
+const reservationR = ref<ReservationOrder>({})
 watch(wantOrderR, () => {
-  wantOrderR.value.forEach(week => {
-    reservationR.value.push({
-      courseId: props.course?.id,
-      laboratoryId: props.lab.id,
-      week: week,
-      period: props.time?.period,
-      day: props.time?.day
-    })
-  })
+  reservationR.value = {
+    courseId: props.course?.id,
+    courseName: props.course?.name,
+    laboratoryId: props.lab.id,
+    laboratoryName: props.lab.name,
+    weeks: wantOrderR.value,
+    period: props.time?.period,
+    day: props.time?.day
+  }
 })
 </script>
 <template>

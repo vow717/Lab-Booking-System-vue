@@ -52,7 +52,6 @@ export interface Manager {
 export interface Lab {
   id?: string
   name?: string
-  location?: string
   status?: string //实验室状态,如'开放'等
   manager?: Manager //实验室管理人
   config?: string
@@ -68,18 +67,38 @@ export interface notice {
   createTime?: string
   updateTime?: string
 }
-
 //预约记录
 export interface Reservation {
   id?: string
   laboratoryId?: string
   teacherId?: string
   laboratoryName?: string
+  teacherName?: string
+  courseName?: string //如果是临时预约，courseName就是预约的事件
+  courseId?: string //courseId=0的时候是临时预约
+  period?: number //第几节课
+  day?: number //星期几
+  week?: number //周数
+}
+//前后端批量预约的数据结构,对应后端的DTO类
+export interface ReservationOrder {
+  id?: string
+  laboratoryId?: string
+  teacherId?: string
+  teacherName?: string
+  laboratoryName?: string
   courseName?: string
   courseId?: string
   period?: number //第几节课
   day?: number //星期几
-  week?: number //周数
+  weeks?: number[] //周数
+}
+
+//实验室空闲时间的数据结构
+export interface LabFree {
+  laboratoryId?: string
+  laboratoryName?: string
+  freePeriods?: string //空闲时间段1,2,3,4这样的字符串
 }
 
 export interface LabNum {
