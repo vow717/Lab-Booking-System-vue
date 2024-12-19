@@ -15,23 +15,23 @@ export interface User {
   updateTime?: string
 }
 
-//不用预约的理论课
-export interface ABC1Course {
-  id?: string
-  name?: string
-  type?: string
-  teacherId?: string
-  teacherName?: string
-  total?: number
-  theory?: [
-    {
-      day: number
-      class: string
-      week: string
-      period: number
-    }
-  ]
-}
+// //不用预约的理论课
+// export interface ABC1Course {
+//   id?: string
+//   name?: string
+//   type?: string
+//   teacherId?: string
+//   teacherName?: string
+//   total?: number
+//   theory?: [
+//     {
+//       day: number
+//       class: string
+//       week: string
+//       period: number
+//     }
+//   ]
+// }
 
 //需要预约的实验课
 export interface DEF2Course {
@@ -40,16 +40,20 @@ export interface DEF2Course {
   type?: string
   teacherId?: string
   teacherName?: string
-  total?: number
-  reserved?: number
-  require_config?: string
-  require_number?: number
+  total?: number //总课时
+  require_config?: string //实验室要求
+  require_number?: number //人数限制
 }
 
+export interface Manager {
+  name: string
+  phone: string
+}
 export interface Lab {
   id?: string
   name?: string
-  manager?: User //实验室管理人
+  status?: string //实验室状态,如'开放'等
+  manager?: Manager //实验室管理人
   config?: string
   capacity?: number //容纳人数
   createTime?: string
@@ -59,40 +63,43 @@ export interface notice {
   id?: string
   title?: string
   content?: string
+  publisher?: string //发布人名字
   createTime?: string
   updateTime?: string
 }
-
 //预约记录
 export interface Reservation {
   id?: string
   laboratoryId?: string
   teacherId?: string
   laboratoryName?: string
+  teacherName?: string
+  courseName?: string //如果是临时预约，courseName就是预约的事件
+  courseId?: string //courseId=0的时候是临时预约
+  period?: number //第几节课
+  day?: number //星期几
+  week?: number //周数
+}
+//前后端批量预约的数据结构,对应后端的DTO类
+export interface ReservationOrder {
+  id?: string
+  laboratoryId?: string
+  teacherId?: string
+  teacherName?: string
+  laboratoryName?: string
   courseName?: string
   courseId?: string
-  period?: number
-  day?: number
-  weeks?: string //,分割的周数，例如1,2,3,4,7,8,9
+  period?: number //第几节课
+  day?: number //星期几
+  weeks?: number[] //周数
 }
 
-export interface LabNum{
-  DanQing?:number,
-  ChengDong?:number,
-  Zhu?:number,
-  LinKe?:number,
-  JiaJu?:number,
-  JiaoTong?:number
-    
-  }
-  export interface LabName{
-    DanQing?:Array<Lab>,
-    ChengDong?:Array<Lab>,
-    Zhu?:Array<Lab>,
-    LinKe?:Array<Lab>,
-    JiaJu?:Array<Lab>,
-    JiaoTong?:Array<Lab>   
-  }
+//实验室空闲时间的数据结构
+export interface LabFree {
+  laboratoryId?: string
+  laboratoryName?: string
+  freePeriods?: string //空闲时间段1,2,3,4这样的字符串
+}
 
 export interface LabNum {
   DanQing?: number
@@ -111,3 +118,19 @@ export interface LabName {
   JiaoTong?: Array<Lab>
 }
 
+export interface LabNum {
+  DanQing?: number
+  ChengDong?: number
+  Zhu?: number
+  LinKe?: number
+  JiaJu?: number
+  JiaoTong?: number
+}
+export interface LabName {
+  DanQing?: Array<Lab>
+  ChengDong?: Array<Lab>
+  Zhu?: Array<Lab>
+  LinKe?: Array<Lab>
+  JiaJu?: Array<Lab>
+  JiaoTong?: Array<Lab>
+}

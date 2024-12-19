@@ -97,7 +97,11 @@ const enoughTime = (period: number, day: number) => {}
         </td>
       </tr>
     </tbody>
-    <el-dialog v-model="dialogVisible" :close-on-click-modal="false" :destroy-on-close="true">
+    <el-dialog
+      v-model="dialogVisible"
+      :close-on-click-modal="false"
+      :destroy-on-close="true"
+      draggable>
       <ChildDialog
         :course="props.course"
         :closeDialog3="handleCloseDialog"

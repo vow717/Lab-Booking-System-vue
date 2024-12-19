@@ -33,19 +33,20 @@ const router = createRouter({
           children: [
             {
               path: 'news',
-          component: () => import('@/views/NewsView.vue'),
+              component: () => import('@/views/NewsView.vue')
             },
             {
               path: 'self',
-          component: () => import('@/views/SelfView.vue'),
-            }]
+              component: () => import('@/views/SelfView.vue')
+            }
+          ]
         },
         {
           path: 'self',
           component: () => import('@/views/SelfView.vue'),
           meta: {
             roles: [Consty.ADMIN]
-          },
+          }
         },
         {
           path: 'admin',
@@ -93,22 +94,20 @@ const router = createRouter({
               component: () => import('@/views/teacher/ImportScheduleView.vue')
             },
             {
-              path: 'editCourse',
-              component: () => import('@/views/teacher/editcourse/EditExperimentView.vue'),
-              children: [
-                {
-                  path: 'theoretical',
-                  component: () => import('@/views/teacher/editcourse/EditTheoryView.vue')
-                },
-                {
-                  path: 'experimental',
-                  component: () => import('@/views/teacher/editcourse/EditExperimentView.vue')
-                }
-              ]
+              path: 'Course',
+              component: () => import('@/views/teacher/editcourse/ExperimentView.vue')
             },
             {
               path: 'bookLab',
               component: () => import('@/views/teacher/BookLabView.vue')
+            },
+            {
+              path: 'reservationmanager',
+              component: () => import('@/views/teacher/reservationmanager/ReservationsView.vue')
+            },
+            {
+              path: 'fastbook',
+              component: () => import('@/views/teacher/FastBookView.vue')
             },
             {
               path: 'notice',

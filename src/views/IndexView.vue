@@ -5,7 +5,6 @@ import HeaderView from '@/views/header/IndexView.vue'
   <div class="container">
     <HeaderView />
     <br />
-    <br />
     <RouterView />
   </div>
 </template>

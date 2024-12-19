@@ -9,8 +9,34 @@ const props = defineProps<{
 }>()
 
 const dialogVisible = ref(false)
+const currentChangeCourse = ref<DEF2Course>({ id: '0', name: '', require_number: 0 })
 const currentLab = ref<{ id: string; name: string; config: string; capacity: number }>({})
+//监听课程信息的变化,一变课表dialogVisible就变为false
+watch(
+  () => props.course,
+  () => {
+    dialogVisible.value = false
+  }
+)
 
+const options = [
+  {
+    value: '补课',
+    label: '补课'
+  },
+  {
+    value: '考试',
+    label: '考试'
+  },
+  {
+    value: '讲题',
+    label: '讲题'
+  },
+  {
+    value: '其他',
+    label: '其他'
+  }
+]
 const labs = ref([
   {
     id: '1',
@@ -73,6 +99,7 @@ const labs = ref([
     capacity: 90
   }
 ])
+
 const showLabs = ref<{ id: string; name: string; config: string; capacity: number }[]>(
   labs.value.filter(lab => lab.capacity >= props.course?.require_number)
 )
@@ -94,49 +121,68 @@ const confirmReservation = (lab: {
 }
 const handleCloseDialog = () => {
   dialogVisible.value = false
+  currentChangeCourse.value = { id: '0', name: '', require_number: 0 }
   props.closeDialog1()
 }
 </script>
 <template>
-  <div>
+  <div class="child-dialog-container">
     <!--正方形的实验室卡片-->
     <div>
-      <p>课程信息:</p>
-      <p>{{ props.course?.name }}</p>
-      <p>{{ props.course?.require_config }}</p>
+      <p>预约信息:</p>
+      <template v-if="props.course?.id == '0'">
+        <!--选择临时预约的事件，例如补课，考试，讲题，其他，如果是其他可以有个输入框由用户输入-->
+        <el-select v-model="currentChangeCourse.name" placeholder="请选择课程" style="width: 20%">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"></el-option>
+        </el-select>
+      </template>
+      <template v-else>
+        <p>课程名称：{{ props.course?.name }}</p>
+        <p>实验要求：{{ props.course?.require_number }}人；{{ props.course?.require_config }}</p>
+      </template>
     </div>
     <br />
-    <div class="card-container">
+    <div class="card-container" v-if="props.course?.id != '0' || currentChangeCourse.name != ''">
       <el-card v-for="lab in showLabs" :key="lab.id">
-        <div>
-          <p>-实验室名称-：</p>
-          <p>{{ lab.name }}</p>
-          <p>-实验室配置-:</p>
-          <p>{{ lab.config }}</p>
-          <el-button @click="confirmReservation(lab)">预约</el-button>
-        </div>
+        <el-popover placement="top-start" title="实验室信息" :width="200" trigger="hover">
+          <p>教室容量：{{ lab.capacity }}</p>
+          {{ lab.config }}
+          <template #reference>
+            <div>
+              <p>{{ lab.name }}</p>
+
+              <el-button type="primary" @click="confirmReservation(lab)">预约</el-button>
+            </div>
+          </template>
+        </el-popover>
       </el-card>
     </div>
-    <el-dialog
-      v-model="dialogVisible"
-      title="预约实验室"
-      :close-on-click-modal="false"
-      :destroy-on-close="true">
-      <ChildDialog :course="props.course" :closeDialog2="handleCloseDialog" :lab="currentLab" />
-    </el-dialog>
+    <div v-if="dialogVisible">
+      <ChildDialog
+        :course="currentChangeCourse.name != '' ? currentChangeCourse : props.course"
+        :lab="currentLab"
+        :closeDialog3="handleCloseDialog" />
+    </div>
   </div>
 </template>
 <style scoped>
+.child-dialog-container {
+  width: 1200px; /* 设置固定宽度 */
+  box-sizing: border-box; /* 确保边框、内边距等不额外撑大宽度 */
+}
 .card-container {
   display: flex;
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto; /* 当内容在垂直方向溢出时显示滚动条 */
-
   flex-wrap: wrap;
-  gap: 10px; /* 卡片之间的间距 */
+  gap: 7px; /* 卡片之间的间距 */
 }
 
 .el-card {
-  flex: 0 0 calc(20% - 10px);
+  flex: 0 0 calc(15% - 7px);
 }
 </style>
