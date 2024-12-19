@@ -37,11 +37,26 @@ export class AdminService {
     }
 
     // 添加实验室
-  @StoreCache(infosStore.groupLabsS, true)
-  static async addLabService(lab: Lab) {
-  const data = await usePost<Lab[]>(`${ADMIN}/processes`, lab)
-    return data.data.value?.data as unknown as Ref<Lab[]>
-  }
+    @StoreCache(infosStore.groupLabsS, true)
+    static async addLabService(lab: Lab) {
+      const data = await usePost<Lab[]>(`${ADMIN}/processes`, lab)
+      return data.data.value?.data as unknown as Ref<Lab[]>
+    }
+    //添加一个用户
+    @StoreCache(infosStore.groupUsersS,true)
+    static async addUserService(user:User){
+      const data = await usePost<User[]>(`${ADMIN}/users`,user)
+      return data.data.value?.data as unknown as Ref<User[]>
+    }
+      //添加多个用户
+      @StoreCache(infosStore.groupUsersS, true)
+      @ELLoading()
+      static async addUsersService(users: User[]) {
+        console.log(users);   
+        const data = await usePost<User[]>(`${ADMIN}/users`, users)
+        return data.data.value?.data as unknown as Ref<User[]>
+      }
+
       @ELLoading()
     @StoreCache(usersStore.allTeachersS)
      static async listTeachersService() {

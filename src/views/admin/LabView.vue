@@ -3,7 +3,7 @@ import { AdminService } from '@/services/AdminService';
 import { ref } from 'vue';
 import type { Lab,LabName,LabNum} from '@/datasource/type';
 import { locationItems } from '@/datasource/const';
-import EditLabVue from '@/views/admin/operationLabView.vue'
+import EditLabVue from '@/views/admin/OperationLabView.vue'
 import AddLabVue from './operation/AddLabVue.vue';
 const allLabs = await AdminService.listLabsService()
 const activeName = ref('0')
@@ -19,18 +19,18 @@ const locationName = ref<LabName>({
 //
 const collectLS = (lS: Lab[]) => {
   lS.forEach((lab) =>{
-  
-    if(lab.location == '丹青楼'){
+    console.log(lab.name?.slice(0,2));
+    if(lab.name?.slice(0,2) == '丹青'){
       locationName.value.DanQing?.push(lab)
-    }else if(lab.location === '成栋楼'){
+    }else if(lab.name?.slice(0,2) === '成栋'){
       locationName.value.ChengDong?.push(lab)
-    }else if(lab.location === '主楼'){
+    }else if(lab.name?.slice(0,2) === '主楼'){
       locationName.value.Zhu?.push(lab)
-    }else if(lab.location === '林科楼'){
+    }else if(lab.name?.slice(0,2) === '林科'){
       locationName.value.LinKe?.push(lab)
-    }else if(lab.location === '家具楼'){
+    }else if(lab.name?.slice(0,2) === '家具'){
       locationName.value.JiaJu?.push(lab)
-    }else if(lab.location === '交通楼'){
+    }else if(lab.name?.slice(0,2) === '交通'){
       locationName.value.JiaoTong?.push(lab)
     }
   })  
