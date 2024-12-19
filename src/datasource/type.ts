@@ -49,7 +49,6 @@ export interface DEF2Course {
 export interface Lab {
   id?: string
   name?: string
-  location?: string
   manager?: User //实验室管理人
   config?: string
   capacity?: number //容纳人数

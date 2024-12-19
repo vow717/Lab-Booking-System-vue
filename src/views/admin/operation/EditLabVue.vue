@@ -11,18 +11,21 @@ const labR = ref<Lab>(JSON.parse(JSON.stringify(prop.lab)))
 const dialogTableVisible = ref(true)
 const capacityR = ref<Number>(JSON.parse(JSON.stringify(prop.lab.capacity)))
 console.log(capacityR);
-
+const editText = ref('')
 const textarea = ref('')
 const selectedValue = ref('')
-selectedValue.value = labR.value.location || ''
+selectedValue.value = labR.value.name?.slice(0,2) || ''
 const messageR = ref('实验室号、地点、容纳人数(数字)不可为空')
 watch(capacityR, (newValue, oldValue) => {
     if (newValue!== null && isNaN(Number(newValue))) {
-        capacityR.value = ref<Number>(JSON.parse(JSON.stringify(prop.lab.capacity)));
+        capacityR.value = JSON.parse(JSON.stringify(prop.lab.capacity))
       }
     });
 //
 const updateLabF = async() => {
+  labR.value.name = selectedValue.value + editText
+  console.log(labR.value.name);
+  
   labR.value.capacity = capacityR.value as number
 await AdminService.updateLabService(labR.value)
 createNoticeBoard('实验室信息更新成功', '')
@@ -37,7 +40,7 @@ createNoticeBoard('实验室信息更新成功', '')
     <div>
       <el-row :gutter="10" style="margin-bottom: 10px">
         <el-col :span="6">
-          <el-input class="myInput" v-model="labR.name" placeholder="实验室号"></el-input>
+          <el-input class="myInput" v-model="editText" placeholder="实验室号"></el-input>
         </el-col>
         <el-col :span="6">
           <el-select 
@@ -83,9 +86,10 @@ createNoticeBoard('实验室信息更新成功', '')
           type="success"
           :icon="Check"
           @click="updateLabF"
-          :disabled="!(capacityR && labR.name && selectedValue)"
+          :disabled="!(capacityR && editText && selectedValue)"
       ></el-button>
     </el-tooltip>
+    {{ labR }}
   </el-dialog>
 </template>
 <style scoped>

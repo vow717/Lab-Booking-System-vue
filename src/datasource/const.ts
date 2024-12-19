@@ -1,6 +1,9 @@
 export const ADMIN = 'R2md'
 export const TEACHER = 'kU4T'
 
+export const rolesItems:string[]=[
+  'admin','teacher']
+
 export const locationItems: { name: string,v:string }[] = [
   { name: '丹青楼',v:"DanQing" },
   { name: '成栋楼', v:"ChengDong"},
