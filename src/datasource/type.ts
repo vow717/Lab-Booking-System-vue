@@ -59,7 +59,7 @@ export interface Lab {
   createTime?: string
   updateTime?: string
 }
-export interface notice {
+export interface Notice {
   id?: string
   title?: string
   content?: string
