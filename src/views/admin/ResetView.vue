@@ -8,7 +8,8 @@ import { createNoticeBoard } from '@/components/Notice';
 const inAccount = ref("")
 const teacherR = ref<User>()
 const viewInfoR = ref(false)
-const message = ref("重置此账号的密码")
+const message1 = ref("重置此账号的密码")
+const message2 = ref('无此账号用户')
 const allTeachers = await AdminService.listTeachersService()
 console.log(allTeachers);
 
@@ -37,7 +38,7 @@ inAccount.value = ''
         <el-tooltip
         class="box-item"
         effect="dark"
-        :content="message"
+        :content="message1"
         placement="right-start"
       >
       <el-button type="success" :icon="Check" circle :disabled="!teacherR?.name"
@@ -49,6 +50,7 @@ inAccount.value = ''
 </el-row>
 <el-row>
     <el-col :span="8"></el-col>
+    <el-text v-if="!teacherR">{{ message2 }}</el-text>
     <el-col v-if="viewInfoR" :span="8">
         <br>
            姓名：  {{ teacherR?.name }} <br>

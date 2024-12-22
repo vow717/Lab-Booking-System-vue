@@ -18,7 +18,9 @@ const allUsersR = ref<User[]>()
   element.value = ''
 }
 const submitF = async () => {
+  if(allUsersR.value){
   await AdminService.addUsersService(allUsersR.value)
+  }
 }
 </script>
 <template>

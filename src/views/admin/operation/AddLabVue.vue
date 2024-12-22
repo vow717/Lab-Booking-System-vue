@@ -11,8 +11,8 @@ const dialogVisible = ref(false)
 const capacityR = ref(null)
 const textarea = ref('')
 const selectedValue = ref('')
-selectedValue.value = labR.value.location || ''
-const messageR = ref('实验室号、地点、容纳人数(数字)不可为空')
+selectedValue.value = labR.value.name?.slice(0,2) || ''
+const messageLabR = ref('实验室号、地点、容纳人数(数字)不可为空')
 
 //
 watch(capacityR, (newValue, oldValue) => {
@@ -76,7 +76,7 @@ const addLabF = async () => {
         </el-col>
       </el-row>
    </div>
-   <el-tooltip v-if="!(capacityR && labR.name && selectedValue)" :content="messageR" placement="bottom" effect="light">
+   <el-tooltip v-if="!(capacityR && labR.name && selectedValue)" :content="messageLabR" placement="bottom" effect="light">
       <el-button type="disabled" :icon="CloseBold" :disabled="!(capacityR && labR.name && selectedValue)"></el-button>
     </el-tooltip>
     <el-tooltip v-else content="提交" placement="bottom" effect="light">

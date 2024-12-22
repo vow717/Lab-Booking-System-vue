@@ -66,7 +66,7 @@ position: relative;
 #info{
   display: none;
   position:absolute;
-  z-index: 1;
+  z-index: 10;
   width: 100px;
   height: auto;
   background-color: #f7f5f5;

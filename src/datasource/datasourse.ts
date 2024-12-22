@@ -1,4 +1,4 @@
-import type { DEF2Course, Lab, Reservation ,User} from '@/datasource/type
+import type { DEF2Course, Lab, Reservation ,User,notice} from '@/datasource/type'
 const labs: Lab[] = [
   { id: "1", name: '丹青901',capacity:60,config:'Window11;CPU:酷睿 i9 系列;内存:32GB;独立显卡:NVIDIA ',createTime: '2046-05-10T12:00' },
   { id: "2", name: '丹青902',capacity:90,config:'Window7;CPU:酷睿 i7 系列;内存:32GB;独立显卡:NVIDIA ',createTime: '2046-04-10T09:00' },
@@ -421,6 +421,29 @@ const courses: DEF2Course[] = [
     total: 4
   }
 ]
+
+
+const notices :notice [] = [
+{
+  id:'1',title:'升级丹青楼901系统为win11',content:'学校有钱啦！祝贺丹青901设备远超其他实验室设备等级~',
+  publisher:'王波',createTime:'2046-05-10T12:00',updateTime:'2046-05-11T12:00'
+},
+{
+  id:'2',title:'升级丹青楼902系统为win11',content:'学校有钱啦！祝贺丹青902设备远超其他实验室设备等级~',
+  publisher:'王波',createTime:'2046-05-10T12:00',updateTime:'2046-05-07T12:00'
+},
+{
+  id:'3',title:'升级成栋1001硬件全面换新',content:'学校有钱啦！祝贺成栋1001设备远超其他实验室设备等级~',
+  publisher:'王波',createTime:'2046-05-10T12:00',updateTime:'2046-05-10T12:00'
+},
+{
+  id:'4',title:'主楼201实验室暂停预约通知',content:'放假了不能预约了家人们，回家吧，回家吧孩子，别学了',
+  publisher:'王波',createTime:'2046-05-10T12:00',updateTime:'2046-05-01T12:00'
+},
+]
+
+
+
 export function listCourses() {
   return courses
 }
@@ -429,4 +452,7 @@ export function listLabs() {
 }
 export function listTeachers() {
   return teachers
+}
+export function listNotices() {
+  return notices
 }

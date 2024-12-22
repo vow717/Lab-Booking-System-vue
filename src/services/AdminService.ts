@@ -1,6 +1,6 @@
 import { useDelete, useGet, usePatch, usePost } from '@/fetch'
 import { useInfosStore } from '@/stores/InfosStore'
-import type {Lab,User} from '@/datasource/type'
+import type {Lab,User,Notice} from '@/datasource/type'
 import { ELLoading, StoreCache, StoreClear } from './Decorators'
 import { useUsersStore } from '@/stores/UsersStore'
 import type { Ref } from 'vue'
@@ -19,8 +19,6 @@ export class AdminService {
       return data as unknown as Ref<Lab[]>
     }
     
-
-
     @StoreCache(infosStore.groupLabsS, true)
     static async delLabsService(lid: string) {
       const data = await useDelete<Lab[]>(`${ADMIN}/processes/${lid}`)
@@ -45,7 +43,7 @@ export class AdminService {
     //添加一个用户
     @StoreCache(infosStore.groupUsersS,true)
     static async addUserService(user:User){
-      const data = await usePost<User[]>(`${ADMIN}/users`,user)
+      const data = await usePost<User[]>(`${ADMIN}/user`,user)
       return data.data.value?.data as unknown as Ref<User[]>
     }
       //添加多个用户
@@ -56,6 +54,32 @@ export class AdminService {
         const data = await usePost<User[]>(`${ADMIN}/users`, users)
         return data.data.value?.data as unknown as Ref<User[]>
       }
+
+      //添加通知
+      @StoreCache(infosStore.groupNoticesS, true)
+      @ELLoading()
+      static async addNoticeService(notice:Notice){
+        console.log(notice);   
+        const data = await usePost<Notice[]>(`${ADMIN}/notice`, notice)
+        return data.data.value?.data as unknown as Ref<Notice[]>
+      }
+
+      //删除一个通知
+      @StoreCache(infosStore.groupNoticesS, true)
+      @ELLoading()
+      static async delNoticeService (nid:string) {
+        const data = await useDelete<Notice>(`${ADMIN}/notice/${nid}`)
+        return data as unknown as Ref<Notice[]>
+      }
+      //删除多个通知
+      @StoreCache(infosStore.groupNoticesS, true)
+      @ELLoading()
+      static async delNoticesService (nids:Array<string>) {
+        console.log(nids);  
+        const data = await useDelete<Notice[]>(`${ADMIN}/notices`)
+        return data as unknown as Ref<Notice[]>
+      }
+
 
       @ELLoading()
     @StoreCache(usersStore.allTeachersS)
