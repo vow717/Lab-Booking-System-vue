@@ -52,7 +52,7 @@ const loginF = async () => {
           <el-icon><Orange /></el-icon>
           <el-icon><IceTea /></el-icon>
         </el-divider>
-        老师账号密码:teacher，管理员账号密码:admin
+        老师账号密码:teacher，管理员账号密码:2046000000
         <el-form>
           <el-form-item>
             <el-input
