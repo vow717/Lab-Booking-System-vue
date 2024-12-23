@@ -3,7 +3,6 @@ import type {Notice} from '@/datasource/type'
 import {listNotices} from '@/datasource/datasourse'
 import { ref,watch } from 'vue';
 import { useRoute } from 'vue-router'
-import router from '@/router'
 import AddNoticeVue from '@/views/admin/operation/AddNoticeVue.vue'
 import EditNoticeVue from '@/views/admin/OperationNoticeView.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -84,7 +83,7 @@ watch((noticesIdR),()=>{
             <el-table-column prop="content" label="content" width="500" />
             <el-table-column label="操作" width="250">
             <template #default="scope">
-            <EditNoticeVue :notice="scope.row" />
+            <EditNoticeVue :notice="scope.row"  />
             <el-checkbox-group
             v-model="noticesIdR"
             @change="handleNoticesChange">
