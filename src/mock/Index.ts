@@ -1,5 +1,5 @@
-import type { ResultVO,Lab ,User} from '@/datasource/type'
-import {listLabs,listTeachers} from '@/datasource/datasourse'
+import { listLabs, listTeachers } from '@/datasource/datasourse'
+import type { Lab, ResultVO, User } from '@/datasource/type'
 import { createServer, Response } from 'miragejs'
 
 const server = createServer({})
@@ -39,7 +39,6 @@ server.post('/login', (schema, request) => {
   return resultVO
 })
 
-
 server.get('admin/labs', (_schema, request) => {
   console.log(request.params.uid)
   const resultVO: ResultVO<Lab[]> = {
@@ -58,7 +57,6 @@ server.delete('admin/processes/:pid', (_schema, request) => {
 
   return resultVO
 })
-
 
 server.get('admin/teachers', (_schema, request) => {
   console.log(request.params.uid)

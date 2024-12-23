@@ -7,17 +7,14 @@ import { ref } from 'vue'
 
 let showReservations = listReservations()
 const needDelete = ref<string[]>([])
-//按课程名，实验室名，节数，星期名，周数排序
-showReservations.sort((a, b) => {
-  return (
-    a.courseName.localeCompare(b.courseName) ||
-    a.laboratoryName.localeCompare(b.laboratoryName) ||
-    a.period - b.period ||
-    a.day - b.day ||
-    a.week - b.week
-  )
+//按课程名
+const coursesName = new Set<string>()
+showReservations.forEach(item => {
+  coursesName.add(item.courseName)
 })
-
+const showAll = (name: string) => {
+  return showReservations.filter(item => item.courseName == name)
+}
 const delDay = (day: number) => {
   return ['周一', '周二', '周三', '周四', '周五', '周六', '周日'][day - 1]
 }
@@ -48,30 +45,35 @@ const delF = async (ids: string[]) => {
     批量删除
   </el-button>
   <div>
-    <el-table :data="showReservations" style="width: 100%">
-      <el-table-column prop="courseName" label="课程名"></el-table-column>
-      <el-table-column label="实验室名" prop="laboratoryName"></el-table-column>
-      <el-table-column label="星期数">
-        <template #default="{ row }">
-          <span>{{ delDay(row.day) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="节数">
-        <template #default="{ row }">
-          <span>{{ delPeriod(row.period) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="week" label="周数"></el-table-column>
-      <el-table-column label="操作">
-        <template #default="{ row }">
-          <el-button type="danger" @click="delF([row.id])">删除</el-button>
-          <!--空格-->
-          <el-divider direction="vertical"></el-divider>
-          <input type="checkbox" v-model="needDelete" :value="row.id" />
-        </template>
-      </el-table-column>
-    </el-table>
-
+    <el-collapse accordion>
+      <template v-for="(item, index) in coursesName" :key="index">
+        <el-collapse-item :title="item" :name="item">
+          <el-table :data="showAll(item)" style="width: 100%">
+            <el-table-column prop="courseName" label="课程名"></el-table-column>
+            <el-table-column label="实验室名" prop="laboratoryName"></el-table-column>
+            <el-table-column label="星期数">
+              <template #default="{ row }">
+                <span>{{ delDay(row.day) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="节数">
+              <template #default="{ row }">
+                <span>{{ delPeriod(row.period) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="week" label="周数"></el-table-column>
+            <el-table-column label="操作">
+              <template #default="{ row }">
+                <el-button type="danger" @click="delF([row.id])">删除</el-button>
+                <!--空格-->
+                <el-divider direction="vertical"></el-divider>
+                <input type="checkbox" v-model="needDelete" :value="row.id" />
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-collapse-item>
+      </template>
+    </el-collapse>
     <el-row></el-row>
   </div>
 </template>

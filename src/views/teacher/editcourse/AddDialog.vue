@@ -22,7 +22,8 @@ const submitF = async () => {
   //提交表单
   if (confirmResult === 'confirm') {
     //提交表单
-    await TeacherService.addCourseService([courseForm.value])
+    console.log('提交表单')
+    await TeacherService.addCourseService(courseForm.value)
     closeDialog()
     createElNotificationSuccess('添加课程成功')
   } else {

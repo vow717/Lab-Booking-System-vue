@@ -40,18 +40,21 @@ export const useFetch = createFetch({
       if (token) {
         options.headers = {
           ...options.headers,
-          token: token
+          token: token,
+          'Content-Type': 'application/json'
         }
       }
       return { options }
     },
     afterFetch: ctx => {
       const data: ResultVO<{}> = ctx.data
+      console.log('data:', data)
       if (data.code != 200) {
         return Promise.reject(data.message)
       }
       // 调用 parseObject 函数对数据进行处理
-      parseObject(data)
+      parseObject(data.data)
+
       return ctx
     },
     onFetchError: ctx => {

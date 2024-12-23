@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { listReservations } from '@/datasource/datasourse'
+import { TeacherService } from '@/services/TeacherService'
 import { ref } from 'vue'
 
-//const myReservations = TeacherService.listReservationsService()
+const myReservations = TeacherService.listReservationsService()
 
-const myReservations = listReservations()
+//const myReservations = listReservations()
 const days = ['######', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
 const periods = ['第一二节', '第三四节', '第五六节', '第七八节']
 const showCourses = ref<

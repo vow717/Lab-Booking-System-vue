@@ -14,22 +14,23 @@ import {
   Watermelon
 } from '@element-plus/icons-vue'
 
+import type { User } from '@/datasource/type'
 import { CommonService } from '@/services/index'
 import { ref } from 'vue'
 
 const userForm = ref({
-  number: '',
+  account: '',
   password: ''
 })
 
 const resetUser = () => {
-  userForm.value.number = ''
+  userForm.value.account = ''
   userForm.value.password = ''
 }
 
 const loginF = async () => {
-  const user = {
-    number: userForm.value.number,
+  const user: User = {
+    account: userForm.value.account,
     password: userForm.value.password
   }
   resetUser()
@@ -55,7 +56,7 @@ const loginF = async () => {
         <el-form>
           <el-form-item>
             <el-input
-              v-model="userForm.number"
+              v-model="userForm.account"
               :prefix-icon="UserFilled"
               size="large"
               placeholder="请输入您的账号"
@@ -78,7 +79,7 @@ const loginF = async () => {
                 type="primary"
                 :icon="Check"
                 @click="loginF"
-                :disabled="!userForm.number || !userForm.password">
+                :disabled="!userForm.account || !userForm.password">
                 登入
               </el-button>
               <el-button @click="resetUser()" :icon="Refresh">重置</el-button>

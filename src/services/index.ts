@@ -29,12 +29,12 @@ export class CommonService {
     switch (role) {
       case consty.ADMIN:
         path = '/admin'
-        console.log("/admin");
-        
+        console.log('/admin')
+
         break
       case consty.TEACHER:
         path = '/teacher'
-        console.log("/teacher");
+        console.log('/teacher')
         break
     }
     router.push(path)

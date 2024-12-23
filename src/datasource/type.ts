@@ -58,6 +58,7 @@ export interface Lab {
   capacity?: number //容纳人数
   createTime?: string
   updateTime?: string
+  count?: number //实验室的预约次数,用于前端判定火爆程度，只用作前端展示
 }
 export interface notice {
   id?: string

@@ -1,15 +1,26 @@
-import type { DEF2Course, LabFree, Reservation } from '@/datasource/type'
+import type { DEF2Course, Lab, LabFree, Reservation } from '@/datasource/type'
 import { useDelete, useGet, usePatch, usePost } from '@/fetch'
+import { useInfosStore } from '@/stores/InfosStore'
 import { useTeacherStore } from '@/stores/TeacherStore'
 import type { Ref } from 'vue'
 import { ELLoading, StoreCache, StoreClear } from './Decorators'
 
 export class TeacherService {
+  //-----------------实验室-----------------
+  @ELLoading()
+  @StoreCache(useInfosStore().groupLabsS)
+  static async listLabsService() {
+    const data = await useGet<Lab[]>(`teacher/labs`)
+    console.log('data:', data)
+    return data as unknown as Ref<Lab[]>
+  }
   //-----------------课程-----------------
   //获取教师的所有课程
   @ELLoading()
+  @StoreClear(useTeacherStore().clear)
   @StoreCache(useTeacherStore().myCoursesS)
   static async listCoursesService() {
+    console.log('listCoursesService')
     const data = await useGet<DEF2Course[]>(`teacher/courses`)
     return data as unknown as Ref<DEF2Course[]>
   }
@@ -18,8 +29,8 @@ export class TeacherService {
   @ELLoading()
   @StoreClear(useTeacherStore().clear)
   @StoreCache(useTeacherStore().myCoursesS)
-  static async addCourseService(courses: DEF2Course[]) {
-    const data = await usePost<DEF2Course>(`teacher/courses`, courses)
+  static async addCourseService(course: DEF2Course) {
+    const data = await usePost<DEF2Course>(`teacher/courses`, course)
     return data as unknown as Ref<DEF2Course>
   }
   //修改课程
