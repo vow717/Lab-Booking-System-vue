@@ -69,11 +69,18 @@ const router = createRouter({
             },
             {
               path: 'notice',
-              component: () => import('@/views/admin/NoticeView.vue')
-            }
+              component: () => import('@/views/admin/NoticeView.vue'),
+              children:[
+                {
+                  path: 'notices/:id',
+                  component:import('@/views/admin/OperationNoticeView.vue')
+              }
+              ]
+            },
+          
+
           ]
         },
-
         {
           path: 'teacher',
           component: () => import('@/views/teacher/IndexView.vue'),
@@ -114,7 +121,8 @@ const router = createRouter({
               component: () => import('@/views/teacher/NoticeView.vue')
             }
           ]
-        }
+        },
+        
       ]
     },
     {

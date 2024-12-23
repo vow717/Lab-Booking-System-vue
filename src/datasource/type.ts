@@ -60,7 +60,7 @@ export interface Lab {
   updateTime?: string
   count?: number //实验室的预约次数,用于前端判定火爆程度，只用作前端展示
 }
-export interface notice {
+export interface Notice {
   id?: string
   title?: string
   content?: string

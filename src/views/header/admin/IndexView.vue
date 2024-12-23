@@ -33,9 +33,7 @@ watch(route, () => {
     :ellipsis="false"
     class="el-menu-demo my-menu"
     router>
-    <el-menu-item>
-      <img style="width: 100px" src="#" alt="logo" />
-    </el-menu-item>
+      <img  class="my-logo" src="/public/assart/logo1.png" alt="logo" />
     <template v-for="(menu, index) in menus" :key="index">
       <el-menu-item :index="menu.path">{{ menu.name }}</el-menu-item>
     </template>
@@ -44,5 +42,9 @@ watch(route, () => {
 <style scoped>
 .my-menu{
   border-bottom:none
+}
+.my-logo{
+width: 200px;
+height: 60px;
 }
 </style>
