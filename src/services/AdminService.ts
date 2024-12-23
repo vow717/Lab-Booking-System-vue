@@ -74,9 +74,9 @@ export class AdminService {
       //删除多个通知
       @StoreCache(infosStore.groupNoticesS, true)
       @ELLoading()
-      static async delNoticesService (nids:Array<string>) {
+      static async delNoticesService (nids:String[]) {
         console.log(nids);  
-        const data = await useDelete<Notice[]>(`${ADMIN}/notices`)
+        const data = await useDelete<String[]>(`${ADMIN}/notices`,nids)
         return data as unknown as Ref<Notice[]>
       }
 

@@ -73,7 +73,7 @@ const router = createRouter({
               children:[
                 {
                   path: 'notices/:id',
-                  component:import('@/views/admin/operation/NoticeExample.vue')
+                  component:import('@/views/admin/OperationNoticeView.vue')
               }
               ]
             },
