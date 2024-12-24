@@ -120,7 +120,7 @@ const isHighlighted = computed(() => {
         v-for="course in courses"
         :key="course.id"
         :class="{ highlight: isHighlighted(course.id) }"
-        v-if="courses.length > 0">
+        v-if="courses?.length > 0">
         <div>
           <p>课程名称：{{ course.name }}</p>
           <el-button @click="openDialog(course)">选择</el-button>

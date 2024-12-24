@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import type { Reservation } from '@/datasource/type'
 import { TeacherService } from '@/services/TeacherService'
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
-const myReservations = TeacherService.listReservationsService()
+const myReservations = await TeacherService.listReservationsService()
 
-//const myReservations = listReservations()
 const days = ['######', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
 const periods = ['第一二节', '第三四节', '第五六节', '第七八节']
 const showCourses = ref<
@@ -13,8 +13,10 @@ const showCourses = ref<
 //处理预约信息,将相同的课程名、实验室名、时间段、星期的预约信息合并,并将周次合并
 //展现在课表上
 const dealReservations = () => {
-  let reservations = myReservations
-  while (reservations.length) {
+  console.log('myReservations', myReservations)
+  let reservations: Reservation[] = myReservations
+  console.log(reservations)
+  while (reservations.length > 0) {
     const reservation = reservations[0]
     const courseName = reservation.courseName
     const labName = reservation.laboratoryName
@@ -69,10 +71,17 @@ const dealReservations = () => {
 const manageCourses = (period: number, day: number) => {
   return showCourses.value.filter(item => item.period === period && item.day === day)
 }
-dealReservations()
+
+watch(myReservations, () => {
+  dealReservations()
+})
+onMounted(() => {
+  dealReservations()
+})
 </script>
 <template>
   <div>
+    {{ myReservations }}
     <tbody>
       <tr>
         <td v-for="(day, index) in days" :key="index">

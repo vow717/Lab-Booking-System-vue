@@ -63,6 +63,7 @@ export class TeacherService {
   //获取某个实验室的预约记录
   static async listLabReservationsService(labId: string) {
     const data = await useGet<Reservation[]>(`teacher/labs/${labId}`)
+    console.log('listdata:', data)
     return data as unknown as Ref<Reservation[]>
   }
   //删除预约记录
@@ -70,7 +71,7 @@ export class TeacherService {
     const data = await useDelete<Reservation>(`teacher/reservation/${reservationId}`)
     return data as unknown as Ref<Reservation>
   }
-  //查询
+
   //查询day week那天空闲的实验室以及其空余的时间段
   static async listFreeLabService(day: number, week: number) {
     const data = await useGet<LabFree[]>(`teacher/freeLab/${day}/${week}`)

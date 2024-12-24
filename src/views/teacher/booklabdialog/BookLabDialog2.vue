@@ -33,14 +33,20 @@ const periods = ['第一二节', '第三四节', '第五六节', '第七八节']
 
 //这个数据到时候是从预约表里找该实验室的预约数据
 const reservations = await TeacherService.listLabReservationsService(props.lab.id as string)
+console.log('reservations', reservations)
 
 const transformReservation = () => {
+  console.log('!')
   const result: TransformedReservation[] = []
   // 用于存储已经处理过的 (period, day) 组合
   const processed = new Set()
-  if (!reservations.value) return result
-  else {
-    reservations.value.forEach(reservation => {
+  console.log('reservations', reservations.value)
+  if (reservations == null) {
+    console.log('!!!')
+    return result
+  } else {
+    console.log('!!')
+    reservations.forEach(reservation => {
       const { period, day, courseName, week } = reservation
       const key = `${period}-${day}`
       if (!processed.has(key)) {
@@ -48,7 +54,7 @@ const transformReservation = () => {
         const newObj = {
           period: period,
           days: day,
-          course: []
+          course: [{}]
         }
         result.push(newObj)
       }
@@ -65,7 +71,7 @@ const transformReservation = () => {
   }
 }
 const coursesShow = ref<TransformedReservation[]>(transformReservation())
-
+console.log('coursesShow', coursesShow.value)
 //根据period和day找到该实验室的全部预约数据并且还要根据course.name和course.class来讲此课程此教室的全部预约记录的week的数组拼接成字符串
 const showCourses = (period: number, day: number) => {
   if (!coursesShow.value) return []
