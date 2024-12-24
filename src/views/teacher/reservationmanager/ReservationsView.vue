@@ -27,10 +27,8 @@ const delF = async (ids: string[]) => {
     type: 'warning'
   })
   if (confirmResult === 'confirm') {
-    for (let i = 0; i < ids.length; i++) {
-      await TeacherService.deleteReservationService(ids[i])
-      showReservations.value = showReservations.value.filter(item => item.id !== ids[i])
-    }
+    await TeacherService.deleteReservationService(ids)
+    showReservations.value = showReservations.value.filter(item => ids.indexOf(item.id) == -1)
   } else {
     console.log('已取消删除操作')
   }

@@ -11,8 +11,7 @@ const menus = ref<{ name: string; path: string; children?: { name: string; path:
   { name: '导入课表', path: '/teacher/importSchedule' },
   { name: '预约实验室', path: '/teacher/bookLab' },
   { name: '预约记录', path: '/teacher/reservationmanager' },
-  { name: '快速预约', path: '/teacher/fastbook' },
-  { name: '查看公告', path: '/teacher/notice' }
+  { name: '快速预约', path: '/teacher/fastbook' }
 ])
 
 const route = useRoute()
@@ -30,6 +29,8 @@ watch(
 <template>
   <div>
     <el-menu :default-active="activeIndexR" mode="horizontal" router>
+      <img class="my-logo" src="/public/assart/logo1.png" alt="logo" />
+
       <template v-for="(menu, index) in menus" :key="index">
         <!-- 如果菜单有子菜单，则显示下拉菜单 -->
         <el-sub-menu v-if="menu.children" :index="menu.path" :key="index">

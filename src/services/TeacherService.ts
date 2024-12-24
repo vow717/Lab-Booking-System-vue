@@ -48,15 +48,18 @@ export class TeacherService {
   }
   //-----------------预约记录-----------------
   //获取教师的所有预约记录
+  @StoreCache(useTeacherStore().myReservationsS)
   static async listReservationsService() {
-    const data = ref<Reservation[]>()
-    data.value = await useGet<Reservation[]>(`teacher/reservations`)
+    const data = await useGet<Reservation[]>(`teacher/reservations`)
     return data as unknown as Ref<Reservation[]>
   }
   //添加预约记录
+  @ELLoading()
+  @StoreClear(useTeacherStore().clear)
+  @StoreCache(useTeacherStore().myReservationsS)
   static async addReservationService(reservation: ReservationOrder) {
-    await usePost<Reservation[]>(`teacher/reservations`, reservation)
-    return
+    const data = await usePost<Reservation[]>(`teacher/reservations`, reservation)
+    return data.data.value?.data as unknown as Ref<Reservation[]>
   }
   //获取某个实验室的预约记录
   static async listLabReservationsService(labId: string) {
@@ -65,8 +68,11 @@ export class TeacherService {
     return data as unknown as Ref<Reservation[]>
   }
   //删除预约记录
-  static async deleteReservationService(reservationId: string) {
-    await useDelete<Reservation>(`teacher/reservations/${reservationId}`)
+  @ELLoading()
+  @StoreClear(useTeacherStore().clear)
+  @StoreCache(useTeacherStore().myReservationsS)
+  static async deleteReservationService(reservationsId: string[]) {
+    await useDelete<Reservation>(`teacher/reservations`, reservationsId)
     return
   }
 
