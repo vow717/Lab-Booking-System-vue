@@ -41,8 +41,8 @@ export interface DEF2Course {
   teacherId?: string
   teacherName?: string
   total?: number //总课时
-  require_config?: string //实验室要求
-  require_number?: number //人数限制
+  requireConfig?: string //实验室要求
+  requireNumber?: number //人数限制
 }
 
 export interface Manager {

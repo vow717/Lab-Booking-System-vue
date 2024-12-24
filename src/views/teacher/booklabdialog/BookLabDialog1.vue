@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DEF2Course } from '@/datasource/type'
+import type { DEF2Course, Lab } from '@/datasource/type'
 import { TeacherService } from '@/services/TeacherService'
 import { ref, watch } from 'vue'
 import ChildDialog from './BookLabDialog2.vue'
@@ -102,13 +102,16 @@ const labs = await TeacherService.listLabsService()
 //   }
 // ])
 
-const showLabs = ref<{ id: string; name: string; config: string; capacity: number }[]>(
-  labs.value.filter(lab => lab.capacity >= props.course?.require_number)
+const showLabs = ref<Lab[]>(
+  labs.value.filter(lab => lab => lab.capacity ?? 0 >= (props.course?.require_number ?? 0))
 )
 watch(
   () => props.course,
   () => {
-    showLabs.value = labs.value.filter(lab => lab.capacity >= props.course?.require_number)
+    showLabs.value = labs.value.filter(
+      lab => lab.capacity ?? 0 >= (props.course?.require_number ?? 0)
+    )
+    console.log(showLabs.value)
   }
 )
 
@@ -144,7 +147,11 @@ const handleCloseDialog = () => {
       </template>
       <template v-else>
         <p>课程名称：{{ props.course?.name }}</p>
-        <p>实验要求：{{ props.course?.require_number }}人；{{ props.course?.require_config }}</p>
+        <p>
+          实验要求：{{ props.course?.require_number ?? 0 }}人；{{
+            props.course?.require_config ?? '无'
+          }}
+        </p>
       </template>
     </div>
     <br />
@@ -165,9 +172,9 @@ const handleCloseDialog = () => {
     </div>
     <div v-if="dialogVisible">
       <ChildDialog
-        :course="currentChangeCourse.name != '' ? currentChangeCourse : props.course"
+        :course="props.course?.id == '0' ? currentChangeCourse : props.course"
         :lab="currentLab"
-        :closeDialog3="handleCloseDialog" />
+        :closeDialog2="handleCloseDialog" />
     </div>
   </div>
 </template>

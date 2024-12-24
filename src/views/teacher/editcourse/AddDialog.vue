@@ -11,7 +11,7 @@ const closeDialog = () => {
 }
 const courseForm = ref<DEF2Course>({})
 const submitOk = computed(
-  () => courseForm.value.name && courseForm.value.require_number && courseForm.value.total
+  () => courseForm.value.name && courseForm.value.requireNumber && courseForm.value.total
 )
 const submitF = async () => {
   const confirmResult = await ElMessageBox.confirm('确定添加此课程吗？', '提示', {
@@ -40,10 +40,10 @@ const submitF = async () => {
         <el-input v-model="courseForm.name"></el-input>
       </el-form-item>
       <el-form-item label="实验环境">
-        <el-input v-model="courseForm.require_config"></el-input>
+        <el-input v-model="courseForm.requireConfig"></el-input>
       </el-form-item>
       <el-form-item label="实验人数">
-        <el-input v-model="courseForm.require_number" type="number"></el-input>
+        <el-input v-model="courseForm.requireNumber" type="number"></el-input>
       </el-form-item>
       <el-form-item label="实验课时">
         <el-input v-model="courseForm.total" type="number"></el-input>

@@ -1,14 +1,19 @@
 <script setup lang="ts">
 import type { DEF2Course } from '@/datasource/type'
+import { TeacherService } from '@/services/TeacherService'
 import { defineProps, ref } from 'vue'
 import ChildDialog from './BookLabDialog3.vue'
 // 接收父组件传递的课程信息
 const props = defineProps<{
   course: DEF2Course | null
   closeDialog2: () => void
-  lab: { id: string; name: string; config: string; capacity: number }
+  lab: DEF2Course
 }>()
-
+interface TransformedReservation {
+  period: number
+  days: number
+  course: { name: string; class: string; week: number }[]
+}
 // 这里可以编写子组件中关于模态框确定预约等相关逻辑
 const confirmReservation = (period: number, day: number) => {
   currentTime.value = { period, day }
@@ -27,46 +32,84 @@ const days = ['######', '星期一', '星期二', '星期三', '星期四', '星
 const periods = ['第一二节', '第三四节', '第五六节', '第七八节']
 
 //这个数据到时候是从预约表里找该实验室的预约数据
-const reservations = ref([])
+const reservations = await TeacherService.listLabReservationsService(props.lab.id as string)
 
-//这个数据到时候室从预约表里提取的有效数据
-const courses = [
-  {
-    period: 1,
-    days: 1,
-    course: [
-      { name: 'websssss', class: '201', week: '1-6' },
-      { name: 'websssss', class: '201', week: '8-12' }
-    ]
-  },
-  {
-    period: 4,
-    days: 5,
-    course: [
-      { name: 'websssss', class: '501', week: '1-6' },
-      { name: 'websssss', class: '501', week: '8-12' }
-    ]
-  },
-  {
-    period: 3,
-    days: 3,
-    course: [
-      { name: 'websssss', class: '301', week: '1-6' },
-      { name: 'websssss', class: '301', week: '8-12' },
-      { name: 'websssss', class: '301', week: '14-18' }
-    ]
-  },
-  {
-    period: 2,
-    days: 2,
-    course: [{ name: 'c++sssss', class: '301', week: '1-6' }]
+const transformReservation = () => {
+  const result: TransformedReservation[] = []
+  // 用于存储已经处理过的 (period, day) 组合
+  const processed = new Set()
+  if (!reservations.value) return result
+  else {
+    reservations.value.forEach(reservation => {
+      const { period, day, courseName, week } = reservation
+      const key = `${period}-${day}`
+      if (!processed.has(key)) {
+        processed.add(key)
+        const newObj = {
+          period: period,
+          days: day,
+          course: []
+        }
+        result.push(newObj)
+      }
+      const courseObj = {
+        name: courseName,
+        class: reservation.laboratoryId,
+        week: week
+      }
+      const target = result.find(item => item.period === period && item.days === day)
+      target.course.push(courseObj)
+    })
+    console.log('result', result)
+    return result
   }
-]
+}
+const coursesShow = ref<TransformedReservation[]>(transformReservation())
 
+//根据period和day找到该实验室的全部预约数据并且还要根据course.name和course.class来讲此课程此教室的全部预约记录的week的数组拼接成字符串
 const showCourses = (period: number, day: number) => {
-  return courses
-    .filter(course => course.period === period && course.days === day)
-    .map(course => course.course)[0]
+  if (!coursesShow.value) return []
+  else
+    return coursesShow.value
+      .filter(courseshow => courseshow.period === period && courseshow.days === day)
+      .map(courseshow => {
+        const courses: { name: string; class: string; week: string }[] = []
+        courseshow.course.forEach(course => {
+          if (!courses.find(item => item.name === course.name && item.class === course.class)) {
+            courses.push({ name: course.name, class: course.class, week: '' })
+          }
+          courses.forEach(item => {
+            const weeks: number[] = []
+            courseshow.course.forEach(course => {
+              if (course.name === item.name && course.class === item.class) {
+                weeks.push(course.week)
+              }
+            })
+            weeks.sort((a, b) => a - b)
+            let weekShow = '' + weeks[0] + '-'
+            let nowBefore = weeks[0]
+            for (let i = 0; i < weeks.length; i++) {
+              if (weeks[i + 1] - weeks[i] == 1) {
+                continue
+              } else {
+                weekShow += `${weeks[i]}`
+
+                if (i != weeks.length - 1) {
+                  weekShow += `,${weeks[i + 1]}` + '-'
+                } else {
+                  break
+                }
+                nowBefore = weeks[i + 1]
+                console.log(weekShow)
+              }
+              console.log(weekShow)
+            }
+            item.week = weekShow
+          })
+        })
+        return courses
+      })
+      .flat() // 二维数组扁平化
 }
 
 //判断实验室period节，day天的1-18周是否已经被选满

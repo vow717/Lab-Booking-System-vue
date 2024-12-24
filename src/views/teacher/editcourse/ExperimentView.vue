@@ -89,8 +89,8 @@ const EditF = (course: DEF2Course) => {
     <el-table :data="allCourses">
       <el-table-column type="index" label="#" />
       <el-table-column prop="name" label="课程名称" />
-      <el-table-column prop="require_config" label="实验环境" />
-      <el-table-column prop="require_number" label="实验人数" />
+      <el-table-column prop="requireConfig" label="实验环境" />
+      <el-table-column prop="requireNumber" label="实验人数" />
       <el-table-column prop="total" label="实验次数" />
 
       <el-table-column label="操作">

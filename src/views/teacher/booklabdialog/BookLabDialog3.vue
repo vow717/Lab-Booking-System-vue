@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { type DEF2Course, type ReservationOrder } from '@/datasource/type'
+import { type DEF2Course, type Reservation, type ReservationOrder } from '@/datasource/type'
 import { TeacherService } from '@/services/TeacherService'
 import { ElMessageBox } from 'element-plus'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 //定义最多可预约的周数
 const weekMax = 18
@@ -10,16 +10,24 @@ const weekMax = 18
 const props = defineProps<{
   course: DEF2Course | null
   closeDialog3: () => void
-  lab: { id: string; name: string; config: string; capacity: number }
+  lab: DEF2Course
   time: { period: number; day: number } | null
 }>()
 //前端根据实验室的id和currentCourse的period和day去找到该实验室的预约数据
+const reservations = await TeacherService.listLabReservationsService(props.lab.id)
+console.log('labName:', props.lab.name, 'reservations:', reservations)
+const reservationOrders = ref<Reservation[]>([])
+reservationOrders.value = computed(() => {
+  return reservations.value.filter(reservation => {
+    reservation.courseId === props.course?.id &&
+      reservation.period === props.time?.period &&
+      reservation.day === props.time?.day
+  })
+})
 //拿到数据后，前端根据数据渲染哪些哪些周的课程被预约了
 //这里模拟一下
-const orders = '1,2,3,4,7,8,9,12,13,14'
-const weeks = orders.split(',')
-
-const wantOrderR = ref<number[]>([])
+const weeks = ref<number[]>(reservations?.value?.map(reservation => reservation.week) ?? [])
+const wantOrderR = ref<number[]>()
 
 const confirmReservation = async () => {
   //加一个确认提交的modal
@@ -31,6 +39,7 @@ const confirmReservation = async () => {
 
   //向后端提交预约数据
   if (confirmResult === 'confirm') {
+    console.log(reservationR.value)
     await TeacherService.addReservationService(reservationR.value)
     wantOrderR.value = []
     props.closeDialog3()
@@ -66,7 +75,7 @@ watch(wantOrderR, () => {
           v-for="week in weekMax"
           :key="week"
           :label="week"
-          :disabled="weeks.includes(week.toString())">
+          :disabled="weeks.includes(week)">
           第{{ week }}周
         </el-checkbox>
       </el-checkbox-group>

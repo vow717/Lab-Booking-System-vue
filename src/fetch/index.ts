@@ -52,9 +52,9 @@ export const useFetch = createFetch({
       if (data.code != 200) {
         return Promise.reject(data.message)
       }
+      console.log('data:', data)
       // 调用 parseObject 函数对数据进行处理
-      parseObject(data.data)
-
+      //parseObject(data.data)
       return ctx
     },
     onFetchError: ctx => {
@@ -76,7 +76,7 @@ export async function useGet<T>(url: string) {
   return resp.data.value?.data
 }
 
-export async function useDelete<T>(url: string,data?:unknown) {
+export async function useDelete<T>(url: string, data?: unknown) {
   const resp = useFetch(url, { immediate: false }).delete().json<ResultVO<T>>()
   await resp.execute(true)
   return resp.data.value?.data
