@@ -1,8 +1,8 @@
-import type {Lab,User,notice } from '@/datasource/type'
+import type {Lab,User,Notice } from '@/datasource/type'
 import { shallowRef } from 'vue'
 const groupUsersS = shallowRef<User[]>()
 const groupLabsS = shallowRef<Lab[]>()
-const groupNoticesS = shallowRef<notice[]>()
+const groupNoticesS = shallowRef<Notice[]>()
 const clear = () => {
     groupUsersS.value = undefined
   groupLabsS.value = undefined

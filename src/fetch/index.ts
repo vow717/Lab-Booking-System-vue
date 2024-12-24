@@ -54,7 +54,7 @@ export const useFetch = createFetch({
       }
       console.log('data:', data)
       // 调用 parseObject 函数对数据进行处理
-      //parseObject(data.data)
+      //parseObject(data)
       return ctx
     },
     onFetchError: ctx => {
@@ -65,6 +65,7 @@ export const useFetch = createFetch({
 })
 
 export async function usePost<T>(url: string, data: unknown) {
+  console.log("data:",data)
   const resp = useFetch(url, { immediate: false }).post(data).json<ResultVO<T>>()
   await resp.execute(true)
   return resp

@@ -21,37 +21,42 @@ export class AdminService {
     
     @StoreCache(infosStore.groupLabsS, true)
     static async delLabsService(lid: string) {
-      const data = await useDelete<Lab[]>(`${ADMIN}/processes/${lid}`)
+      const data = await useDelete<Lab[]>(`${ADMIN}/labs/${lid}`)
       return data as unknown as Ref<Lab[]>
     }
 
     @StoreCache(infosStore.groupLabsS, true)
+    @StoreClear(useInfosStore().clear)
     static async updateLabService(lab: Lab) {
       // @ts-ignore
       lab.manager = JSON.stringify(lab.manager)
-      // @ts-ignore
-      const data = await usePatch<Lab[]>(`${TEACHER}/labs`, lab)
+      const data = await usePatch<Lab[]>(`${ADMIN}/labs/${lab.id}`, lab)
       return data as unknown as Ref<Lab[]>
     }
 
     // 添加实验室
     @StoreCache(infosStore.groupLabsS, true)
+    @StoreClear(useInfosStore().clear)
     static async addLabService(lab: Lab) {
-      const data = await usePost<Lab[]>(`${ADMIN}/processes`, lab)
+      // lab.id = "400"
+      // @ts-ignore
+      lab.manager = JSON.stringify(lab.manager)
+      console.log(lab);
+      const data = await usePost<Lab[]>(`${ADMIN}/labs`,lab)
       return data.data.value?.data as unknown as Ref<Lab[]>
     }
     //添加一个用户
     @StoreCache(infosStore.groupUsersS,true)
     static async addUserService(user:User){
-      const data = await usePost<User[]>(`${ADMIN}/user`,user)
+      const data = await usePost<User[]>(`${ADMIN}/users`,user)
       return data.data.value?.data as unknown as Ref<User[]>
     }
-      //添加多个用户
+      //批处理添加多个用户
       @StoreCache(infosStore.groupUsersS, true)
       @ELLoading()
       static async addUsersService(users: User[]) {
         console.log(users);   
-        const data = await usePost<User[]>(`${ADMIN}/users`, users)
+        const data = await usePost<User[]>(`${ADMIN}/users/batch`, users)
         return data.data.value?.data as unknown as Ref<User[]>
       }
 
@@ -76,7 +81,7 @@ export class AdminService {
       @ELLoading()
       static async delNoticesService (nids:String[]) {
         console.log(nids);  
-        const data = await useDelete<String[]>(`${ADMIN}/notices`,nids)
+        const data = await useDelete<String[]>(`${ADMIN}/notices/batch`,nids)
         return data as unknown as Ref<Notice[]>
       }
 
@@ -84,7 +89,7 @@ export class AdminService {
       @ELLoading()
     @StoreCache(usersStore.allTeachersS)
      static async listTeachersService() {
-       const data = await useGet<User[]>(`${ADMIN}/teachers`)
+       const data = await useGet<User[]>(`${ADMIN}/users/teachers`)
        return data as unknown as Ref<User[]>
      }  
 
