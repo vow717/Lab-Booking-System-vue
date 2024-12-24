@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { listReservations } from '@/datasource/datasourse'
+import { TeacherService } from '@/services/TeacherService'
 import { ElMessageBox } from 'element-plus'
 import { ref } from 'vue'
 
-//const reservations=TacherService.listReservations();
+const showReservations = await TeacherService.listReservationsService()
 
-let showReservations = listReservations()
 const needDelete = ref<string[]>([])
 //按课程名
 const coursesName = new Set<string>()
-showReservations.forEach(item => {
+showReservations.value.forEach(item => {
   coursesName.add(item.courseName)
 })
 const showAll = (name: string) => {
-  return showReservations.filter(item => item.courseName == name)
+  return showReservations.value.filter(item => item.courseName == name)
 }
 const delDay = (day: number) => {
   return ['周一', '周二', '周三', '周四', '周五', '周六', '周日'][day - 1]
@@ -29,8 +28,8 @@ const delF = async (ids: string[]) => {
   })
   if (confirmResult === 'confirm') {
     for (let i = 0; i < ids.length; i++) {
-      //await TeacherService.deleteReservationService(ids[i])
-      showReservations = showReservations.filter(item => item.id !== ids[i])
+      await TeacherService.deleteReservationService(ids[i])
+      showReservations.value = showReservations.value.filter(item => item.id !== ids[i])
     }
   } else {
     console.log('已取消删除操作')

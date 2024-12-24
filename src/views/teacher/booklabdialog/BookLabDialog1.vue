@@ -10,8 +10,8 @@ const props = defineProps<{
 }>()
 
 const dialogVisible = ref(false)
-const currentChangeCourse = ref<DEF2Course>({ id: '0', name: '', require_number: 0 })
-const currentLab = ref<{ id: string; name: string; config: string; capacity: number }>({})
+const currentChangeCourse = ref<DEF2Course>({ id: '0', name: '', requireNumber: 0 })
+const currentLab = ref<Lab>()
 //监听课程信息的变化,一变课表dialogVisible就变为false
 watch(
   () => props.course,
@@ -103,30 +103,25 @@ const labs = await TeacherService.listLabsService()
 // ])
 
 const showLabs = ref<Lab[]>(
-  labs.value.filter(lab => lab => lab.capacity ?? 0 >= (props.course?.require_number ?? 0))
+  labs.value.filter(lab => lab => lab.capacity ?? 0 >= (props.course?.requireNumber ?? 0))
 )
 watch(
   () => props.course,
   () => {
     showLabs.value = labs.value.filter(
-      lab => lab.capacity ?? 0 >= (props.course?.require_number ?? 0)
+      lab => lab.capacity ?? 0 >= (props.course?.requireNumber ?? 0)
     )
     console.log(showLabs.value)
   }
 )
 
-const confirmReservation = (lab: {
-  id: string
-  name: string
-  config: string
-  capacity: number
-}) => {
+const confirmReservation = (lab: Lab) => {
   currentLab.value = lab
   dialogVisible.value = true
 }
 const handleCloseDialog = () => {
   dialogVisible.value = false
-  currentChangeCourse.value = { id: '0', name: '', require_number: 0 }
+  currentChangeCourse.value = { id: '0', name: '', requireNumber: 0 }
   props.closeDialog1()
 }
 </script>
@@ -148,8 +143,8 @@ const handleCloseDialog = () => {
       <template v-else>
         <p>课程名称：{{ props.course?.name }}</p>
         <p>
-          实验要求：{{ props.course?.require_number ?? 0 }}人；{{
-            props.course?.require_config ?? '无'
+          实验要求：{{ props.course?.requireNumber ?? 0 }}人；{{
+            props.course?.requireConfig ?? '无'
           }}
         </p>
       </template>

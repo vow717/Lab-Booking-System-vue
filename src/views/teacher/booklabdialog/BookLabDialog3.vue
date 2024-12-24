@@ -2,7 +2,7 @@
 import { type DEF2Course, type Reservation, type ReservationOrder } from '@/datasource/type'
 import { TeacherService } from '@/services/TeacherService'
 import { ElMessageBox } from 'element-plus'
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 //定义最多可预约的周数
 const weekMax = 18
@@ -14,19 +14,15 @@ const props = defineProps<{
   time: { period: number; day: number } | null
 }>()
 //前端根据实验室的id和currentCourse的period和day去找到该实验室的预约数据
-const reservations = await TeacherService.listLabReservationsService(props.lab.id)
-console.log('labName:', props.lab.name, 'reservations:', reservations)
+const reservations = await TeacherService.listLabReservationsService(props.lab.id as string)
 const reservationOrders = ref<Reservation[]>([])
-reservationOrders.value = computed(() => {
-  return reservations.value.filter(reservation => {
-    reservation.courseId === props.course?.id &&
-      reservation.period === props.time?.period &&
-      reservation.day === props.time?.day
-  })
+reservationOrders.value = reservations.value.filter(reservation => {
+  return reservation.period === props.time?.period && reservation.day === props.time?.day
 })
+console.log('reservationOrders:', reservationOrders.value)
 //拿到数据后，前端根据数据渲染哪些哪些周的课程被预约了
-//这里模拟一下
-const weeks = ref<number[]>(reservations?.value?.map(reservation => reservation.week) ?? [])
+const weeks = ref<number[]>()
+weeks.value = reservationOrders.value.map(reservation => reservation.week)
 const wantOrderR = ref<number[]>()
 
 const confirmReservation = async () => {
@@ -80,7 +76,6 @@ watch(wantOrderR, () => {
         </el-checkbox>
       </el-checkbox-group>
       <br />
-      <div>{{ reservationR }}</div>
       <el-button @click="confirmReservation">确定预约</el-button>
     </div>
   </div>

@@ -28,8 +28,8 @@ const submitF = async () => {
     createElNotificationSuccess('添加课程成功')
   } else {
     console.log('已取消操作')
+    closeDialog()
   }
-  closeDialog()
 }
 </script>
 <template>

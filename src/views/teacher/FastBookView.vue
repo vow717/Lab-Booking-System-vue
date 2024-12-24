@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { listCourses } from '@/datasource/datasourse'
-import type { LabFree } from '@/datasource/type'
+import { TeacherService } from '@/services/TeacherService'
 import { ref } from 'vue'
 
-const courses = listCourses()
+const courses = await TeacherService.listCoursesService()
 const selectCourseId = ref('')
 const selectDay = ref(0)
 const selectWeek = ref(0)
@@ -18,28 +17,11 @@ const days = [
 ]
 const weeks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 
-const freeLabs = ref<LabFree[]>([])
 const showFreeLabs = ref([])
-const findFreeLabs = () => {
+const findFreeLabs = async () => {
   //调用后端接口查询空余实验室
   //await
-  freeLabs.value = [
-    {
-      laboratoryId: '1',
-      laboratoryName: '实验室901',
-      freePeriods: '1,2,3,4'
-    },
-    {
-      laboratoryId: '3',
-      laboratoryName: '实验室903',
-      freePeriods: '1,4'
-    },
-    {
-      laboratoryId: '8',
-      laboratoryName: '实验室905',
-      freePeriods: '2,3,4'
-    }
-  ]
+  const freeLabs = await TeacherService.listFreeLabService(selectWeek.value, selectDay.value)
   freeLabs.value.forEach(item => {
     showFreeLabs.value.push({
       laboratoryName: item.laboratoryName,

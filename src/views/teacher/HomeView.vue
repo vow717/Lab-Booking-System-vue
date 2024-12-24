@@ -12,8 +12,7 @@ const showCourses = ref<
 //处理预约信息,将相同的课程名、实验室名、时间段、星期的预约信息合并,并将周次合并
 //展现在课表上
 const dealReservations = () => {
-  console.log('myReservations', myReservations)
-  let reservations = myReservations
+  let reservations = myReservations.value
   console.log(reservations)
   while (reservations.length > 0) {
     const reservation = reservations[0]
@@ -80,7 +79,6 @@ onMounted(() => {
 </script>
 <template>
   <div>
-    {{ myReservations }}
     <tbody>
       <tr>
         <td v-for="(day, index) in days" :key="index">

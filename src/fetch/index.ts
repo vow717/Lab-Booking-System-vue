@@ -48,11 +48,9 @@ export const useFetch = createFetch({
     },
     afterFetch: ctx => {
       const data: ResultVO<{}> = ctx.data
-      console.log('data:', data)
       if (data.code != 200) {
         return Promise.reject(data.message)
       }
-      console.log('data:', data)
       // 调用 parseObject 函数对数据进行处理
       //parseObject(data.data)
       return ctx
