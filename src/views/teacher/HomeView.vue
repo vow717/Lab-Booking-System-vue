@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Reservation } from '@/datasource/type'
 import { TeacherService } from '@/services/TeacherService'
 import { onMounted, ref, watch } from 'vue'
 
@@ -14,7 +13,7 @@ const showCourses = ref<
 //展现在课表上
 const dealReservations = () => {
   console.log('myReservations', myReservations)
-  let reservations: Reservation[] = myReservations
+  let reservations = myReservations
   console.log(reservations)
   while (reservations.length > 0) {
     const reservation = reservations[0]
