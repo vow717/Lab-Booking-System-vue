@@ -1,8 +1,9 @@
 import * as consty from '@/datasource/const'
 import type { User } from '@/datasource/type'
-import { usePost } from '@/fetch'
 import router from '@/router'
 import { useUserStore } from '@/stores/UserStore'
+import { useDelete, useGet, usePatch, usePost } from '@/fetch'
+import type{Ref} from 'vue'
 
 export class CommonService {
   static loginGuardService = async (user: User) => {
@@ -43,4 +44,9 @@ export class CommonService {
   static getRole() {
     return sessionStorage.getItem('role')
   }
+  static async updateSelfPassword(pass:String){
+    const data = await usePatch<String[]>(`users/${pass}`, pass)
+    return data as unknown as Ref<User[]>
+  }
+
 }

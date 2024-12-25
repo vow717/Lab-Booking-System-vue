@@ -25,6 +25,10 @@ const router = createRouter({
       },
       children: [
         {
+          path: 'settings',
+          component: () => import('@/views/header/UserSettingView.vue')
+        },
+        {
           path: 'user',
           component: () => import('@/views/UserView.vue'),
           meta: {
@@ -33,17 +37,17 @@ const router = createRouter({
           children: [
             {
               path: 'news',
-              component: () => import('@/views/NewsView.vue')
+              component: () => import('@/views/header/NewsView.vue')
             },
             {
               path: 'self',
-              component: () => import('@/views/SelfView.vue')
+              component: () => import('@/views/header/SelfView.vue')
             }
           ]
         },
         {
           path: 'self',
-          component: () => import('@/views/SelfView.vue'),
+          component: () => import('@/views/header/SelfView.vue'),
           meta: {
             roles: [Consty.ADMIN]
           }

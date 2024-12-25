@@ -78,9 +78,8 @@ position: relative;
   cursor: pointer;
   #info{
     display: block;
-    position: fixed;
-    right: 200px;
-    
+    position: absolute;
+    left: 2rem;
   }
 }
 .info{
