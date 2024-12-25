@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import type{ User } from '@/datasource/type';
-import { ADMIN,rolesItems,TEACHER } from '@/datasource/const';
+import { ADMIN} from '@/datasource/const';
 import { useUserStore } from '@/stores/UserStore';
 import { AdminService } from '@/services/AdminService';
 import { createNoticeBoard } from '@/components/Notice';
