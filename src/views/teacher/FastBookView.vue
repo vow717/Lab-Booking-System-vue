@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { listCourses } from '@/datasource/datasourse'
-import type { LabFree } from '@/datasource/type'
-import { ref } from 'vue'
+import { createElNotificationSuccess } from '@/components/message'
+import type { DEF2Course, ReservationOrder } from '@/datasource/type'
+import { TeacherService } from '@/services/TeacherService'
+import { ElMessageBox } from 'element-plus'
+import { ref, watch } from 'vue'
 
-const courses = listCourses()
-const selectCourseId = ref('')
+const courses = await TeacherService.listCoursesService()
+const selectCourse = ref<DEF2Course>()
 const selectDay = ref(0)
 const selectWeek = ref(0)
 const days = [
@@ -18,28 +20,16 @@ const days = [
 ]
 const weeks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 
-const freeLabs = ref<LabFree[]>([])
 const showFreeLabs = ref([])
-const findFreeLabs = () => {
+//但凡周和星期数改变，就重新查询空余实验室
+watch([selectWeek, selectDay], () => {
+  showFreeLabs.value = []
+})
+const findFreeLabs = async () => {
+  //查询前先清空之前的查询结果
+  showFreeLabs.value = []
   //调用后端接口查询空余实验室
-  //await
-  freeLabs.value = [
-    {
-      laboratoryId: '1',
-      laboratoryName: '实验室901',
-      freePeriods: '1,2,3,4'
-    },
-    {
-      laboratoryId: '3',
-      laboratoryName: '实验室903',
-      freePeriods: '1,4'
-    },
-    {
-      laboratoryId: '8',
-      laboratoryName: '实验室905',
-      freePeriods: '2,3,4'
-    }
-  ]
+  const freeLabs = await TeacherService.listFreeLabService(selectWeek.value, selectDay.value)
   freeLabs.value.forEach(item => {
     showFreeLabs.value.push({
       laboratoryName: item.laboratoryName,
@@ -51,21 +41,56 @@ const findFreeLabs = () => {
     })
   })
 }
+const bookLab = async (
+  labId: string,
+  labName: string,
+  week: number,
+  day: number,
+  period: number
+) => {
+  if (selectCourse.value == undefined) {
+    alert('请选择课程')
+    return
+  }
+  //调用后端接口预约实验室
+  const reservationOrder: ReservationOrder = {
+    courseId: selectCourse.value.id,
+    courseName: selectCourse.value.name,
+    laboratoryId: labId,
+    laboratoryName: labName,
+    weeks: [week],
+    day: day,
+    period: period
+  }
+  const confirmResult = await ElMessageBox.confirm('确定预约此实验室吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+  if (confirmResult === 'confirm') {
+    await TeacherService.addReservationService(reservationOrder)
+    createElNotificationSuccess('预约成功')
+    findFreeLabs()
+  } else {
+    console.log('已取消预约操作')
+  }
+}
 </script>
 <template>
   <div>
     <h3>快速查询空余实验室</h3>
     <el-divider></el-divider>
     <p>选择课程：</p>
-    <el-select v-model="selectCourseId" placeholder="请选择课程" style="width: 30%">
+    <!-- 这个value-key是为了让el-select组件知道选中的是哪个课程,不加这个属性的话,默认选中的是整个对象，这样的话会有显示问题，比如你不管选中哪个课程，显示的都是第一个课程 -->
+    <el-select v-model="selectCourse" value-key="id" placeholder="请选择课程" style="width: 30%">
       <el-option
         v-for="item in courses"
         :key="item.id"
         :label="item.name"
-        :value="item.id"></el-option>
+        :value="item"></el-option>
     </el-select>
     <el-divider></el-divider>
-    <el-row v-if="selectCourseId != ''">
+    <el-row>
       <el-col :span="4">
         <span>周数：</span>
         <el-select v-model="selectWeek" placeholder="请选择周数" style="width: 100%">
@@ -87,30 +112,54 @@ const findFreeLabs = () => {
       </el-col>
     </el-row>
     <el-divider></el-divider>
-    <el-table :data="showFreeLabs" style="width: 100%">
+    <el-table :data="showFreeLabs" style="width: 100%" v-if="showFreeLabs.length > 0">
       <el-table-column prop="laboratoryName" label="实验室名"></el-table-column>
       <el-table-column prop="1" label="第1,2节">
         <template #default="{ row }">
-          <span>{{ row[1] }}</span>
-          <input type="checkbox" :disabled="row[1] == '占'" />
+          <span style="font-size: large">{{ row[1] }}</span>
+          |
+          <el-button
+            type="primary"
+            @click="bookLab(row.laboratoryId, row.laboratoryName, selectWeek, selectDay, 1)"
+            :disabled="row[1] == '占'">
+            预约
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column prop="2" label="第3,4节">
         <template #default="{ row }">
-          <span>{{ row[2] }}</span>
-          <input type="checkbox" :disabled="row[2] == '占'" />
+          <span style="font-size: large">{{ row[2] }}</span>
+          |
+          <el-button
+            type="primary"
+            @click="bookLab(row.laboratoryId, row.laboratoryName, selectWeek, selectDay, 2)"
+            :disabled="row[2] == '占'">
+            预约
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column prop="3" label="第5,6节">
         <template #default="{ row }">
-          <span>{{ row[3] }}</span>
-          <input type="checkbox" :disabled="row[3] == '占'" />
+          <span style="font-size: large">{{ row[3] }}</span>
+          |
+          <el-button
+            type="primary"
+            @click="bookLab(row.laboratoryId, row.laboratoryName, selectWeek, selectDay, 3)"
+            :disabled="row[3] == '占'">
+            预约
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column prop="4" label="第7,8节">
         <template #default="{ row }">
-          <span>{{ row[4] }}</span>
-          <input type="checkbox" :disabled="row[4] == '占'" />
+          <span style="font-size: large">{{ row[4] }}</span>
+          |
+          <el-button
+            type="primary"
+            @click="bookLab(row.laboratoryId, row.laboratoryName, selectWeek, selectDay, 4)"
+            :disabled="row[4] == '占'">
+            预约
+          </el-button>
         </template>
       </el-table-column>
     </el-table>

@@ -40,10 +40,10 @@ const closeF = () => {
         <el-input v-model="courseForm.name"></el-input>
       </el-form-item>
       <el-form-item label="实验环境">
-        <el-input v-model="courseForm.require_config"></el-input>
+        <el-input v-model="courseForm.requireConfig"></el-input>
       </el-form-item>
       <el-form-item label="实验人数">
-        <el-input v-model="courseForm.require_number" type="number"></el-input>
+        <el-input v-model="courseForm.requireNumber" type="number"></el-input>
       </el-form-item>
       <el-form-item label="实验课时">
         <el-input v-model="courseForm.total" type="number"></el-input>

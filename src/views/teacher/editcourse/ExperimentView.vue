@@ -2,78 +2,30 @@
 import { createElNotificationSuccess } from '@/components/message'
 import type { DEF2Course } from '@/datasource/type'
 import { TeacherService } from '@/services/TeacherService'
+import { ElMessageBox } from 'element-plus'
 import { ref } from 'vue'
 import AddDialog from './AddDialog.vue'
 import ChildDialog from './EditDialog.vue'
-//模拟课程数据:
-// const coursesData = [
-//   {
-//     id: '1',
-//     name: 'web实验',
-//     type: 'DEF2',
-//     require_config: 'Windows 11',
-//     require_number: 100,
-//     total: 12
-//   },
-//   {
-//     id: '2',
-//     name: 'java实验',
-//     type: 'DEF2',
-//     require_config: 'Windows 10',
-//     require_number: 80,
-//     total: 8
-//   },
-//   {
-//     id: '3',
-//     name: 'c++实验',
-//     type: 'DEF2',
-//     require_config: 'Windows 8',
-//     require_number: 120,
-//     total: 10
-//   },
-//   {
-//     id: '4',
-//     name: 'python实验',
-//     type: 'DEF2',
-//     require_config: 'Windows 7',
-//     require_number: 60,
-//     total: 6
-//   },
-//   {
-//     id: '5',
-//     name: 'php实验',
-//     type: 'DEF2',
-//     require_config: 'Windows XP',
-//     require_number: 40,
-//     total: 4
-//   },
-//   {
-//     id: '6',
-//     name: 'go实验',
-//     type: 'DEF2',
-//     require_config: 'Windows 2000',
-//     require_number: 20,
-//     total: 2
-//   },
-//   {
-//     id: '7',
-//     name: 'ruby实验',
-//     type: 'DEF2',
-//     require_config: 'Windows 98',
-//     require_number: 10,
-//     total: 1
-//   }
-// ]
+
 const dialogVisible = ref(false)
-const currentCourse = ref<DEF2Course>({})
+const currentCourse = ref<DEF2Course>()
 const allCourses = await TeacherService.listCoursesService()
 
 const closeDialog = () => {
   dialogVisible.value = false
 }
-const DelF = async (id: number) => {
-  await TeacherService.deleteCourseService(id)
-  createElNotificationSuccess('删除成功')
+const DelF = async (id: string) => {
+  const confirmResult = await ElMessageBox.confirm('确定删除此课程吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+  if (confirmResult === 'confirm') {
+    await TeacherService.deleteCourseService(id)
+    createElNotificationSuccess('删除成功')
+  } else {
+    console.log('已取消删除操作')
+  }
 }
 const EditF = (course: DEF2Course) => {
   //编辑课程
@@ -96,7 +48,7 @@ const EditF = (course: DEF2Course) => {
       <el-table-column label="操作">
         <template #default="scope">
           <el-button type="primary" size="mini" @click="EditF(scope.row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click="DelF(scope.id)">删除</el-button>
+          <el-button type="danger" size="mini" @click="DelF(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

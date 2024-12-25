@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DEF2Course } from '@/datasource/type'
+import type { DEF2Course, Lab } from '@/datasource/type'
 import { TeacherService } from '@/services/TeacherService'
 import { defineProps, ref } from 'vue'
 import ChildDialog from './BookLabDialog3.vue'
@@ -7,12 +7,12 @@ import ChildDialog from './BookLabDialog3.vue'
 const props = defineProps<{
   course: DEF2Course | null
   closeDialog2: () => void
-  lab: DEF2Course
+  lab: Lab
 }>()
 interface TransformedReservation {
   period: number
   days: number
-  course: { name: string; class: string; week: number }[]
+  course: { name: string; class: string; teacherName: string; week: number }[]
 }
 // 这里可以编写子组件中关于模态框确定预约等相关逻辑
 const confirmReservation = (period: number, day: number) => {
@@ -33,20 +33,15 @@ const periods = ['第一二节', '第三四节', '第五六节', '第七八节']
 
 //这个数据到时候是从预约表里找该实验室的预约数据
 const reservations = await TeacherService.listLabReservationsService(props.lab.id as string)
-console.log('reservations', reservations)
 
 const transformReservation = () => {
-  console.log('!')
   const result: TransformedReservation[] = []
   // 用于存储已经处理过的 (period, day) 组合
   const processed = new Set()
-  console.log('reservations', reservations.value)
-  if (reservations == null) {
-    console.log('!!!')
+  if (reservations.value == null) {
     return result
   } else {
-    console.log('!!')
-    reservations.forEach(reservation => {
+    reservations.value.forEach(reservation => {
       const { period, day, courseName, week } = reservation
       const key = `${period}-${day}`
       if (!processed.has(key)) {
@@ -54,19 +49,19 @@ const transformReservation = () => {
         const newObj = {
           period: period,
           days: day,
-          course: [{}]
+          course: []
         }
         result.push(newObj)
       }
       const courseObj = {
         name: courseName,
+        teacherName: reservation.teacherName,
         class: reservation.laboratoryId,
         week: week
       }
       const target = result.find(item => item.period === period && item.days === day)
       target.course.push(courseObj)
     })
-    console.log('result', result)
     return result
   }
 }
@@ -79,10 +74,15 @@ const showCourses = (period: number, day: number) => {
     return coursesShow.value
       .filter(courseshow => courseshow.period === period && courseshow.days === day)
       .map(courseshow => {
-        const courses: { name: string; class: string; week: string }[] = []
+        const courses: { name: string; class: string; teacherName: string; week: string }[] = []
         courseshow.course.forEach(course => {
           if (!courses.find(item => item.name === course.name && item.class === course.class)) {
-            courses.push({ name: course.name, class: course.class, week: '' })
+            courses.push({
+              name: course.name,
+              class: course.class,
+              teacherName: course.teacherName,
+              week: ''
+            })
           }
           courses.forEach(item => {
             const weeks: number[] = []
@@ -140,6 +140,7 @@ const enoughTime = (period: number, day: number) => {}
           <button :disabled="false" @click="confirmReservation(indexr + 1, indexd + 1)">
             <div v-for="(item, index) in showCourses(indexr + 1, indexd + 1)" :key="index">
               <div>{{ item.name }}</div>
+              <div>{{ item.teacherName }}</div>
               <div>{{ item.week }}</div>
             </div>
           </button>
