@@ -11,3 +11,10 @@ export const locationItems: { name: string; v: string }[] = [
   { name: '家具楼', v: 'JiaJu' },
   { name: '交通楼', v: 'JiaoTong' }
 ]
+export const statusItems: string[] = [
+ '开放','关闭','维修中'
+]
+
+export const managerItems: {name:String,phone:string}[] = [
+  {name:'默认管理',phone:"00000000000"},{name:'丹青管理',phone:"11111111111"}, {name:'成栋管理',phone:"22222222222"}, {name:'林科管理',phone:"33333333333"}
+ ]

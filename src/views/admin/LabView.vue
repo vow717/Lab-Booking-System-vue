@@ -7,6 +7,7 @@ import EditLabVue from '@/views/admin/OperationLabView.vue'
 import AddLabVue from './operation/AddLabVue.vue';
 const allLabs = await AdminService.listLabsService()
 const activeName = ref('0')
+console.log(allLabs.value);
 
 const locationName = ref<LabName>({
     DanQing: [],
@@ -34,6 +35,16 @@ const collectLS = (lS: Lab[]) => {
       locationName.value.JiaoTong?.push(lab)
     }
   })  
+
+  // 对每个分类下的实验室进行排序，假设按name排序
+  for (const key in locationName.value) {
+        locationName.value[key as keyof LabName].sort((a, b) => {
+            if (a.name && b.name) {
+                return a.name.localeCompare(b.name);
+            }
+            return 0;
+        });
+    }
 }
 collectLS(allLabs.value)
 
@@ -61,19 +72,24 @@ const currentLocationF = (v: string) => locationMap[v];
         <el-collapse-item :title="l.name" >
              <el-table :data="currentLocationF(l.v)">
               <el-table-column type="index" label="#" />
-              <el-table-column label="实验室号" width="200">
+              <el-table-column label="实验室号" width="150">
             <template #default="scope" >
               <el-text>
                 {{ scope.row.name  }}
               </el-text>
             </template>
           </el-table-column>
-          <el-table-column label="配置" width="500">
+          <el-table-column label="配置" width="400">
             <template #default="scope">
               {{ scope.row.config}}      
             </template>
           </el-table-column>
-          <el-table-column label="容纳人数" width="200">
+          <el-table-column label="状态" width="150">
+            <template #default="scope">
+              {{ scope.row.status}}      
+            </template>
+          </el-table-column>
+          <el-table-column label="容纳人数" width="150">
             <template #default="scope">
               {{ scope.row.capacity}}     
             </template>
