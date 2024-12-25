@@ -2,6 +2,7 @@ import * as consty from '@/datasource/const'
 import type { User } from '@/datasource/type'
 import router from '@/router'
 import { useUserStore } from '@/stores/UserStore'
+
 import { useDelete, useGet, usePatch, usePost } from '@/fetch'
 import type{Ref} from 'vue'
 
@@ -20,12 +21,12 @@ export class CommonService {
     sessionStorage.setItem('token', token)
     sessionStorage.setItem('role', role)
 
-    // if (user.account == user.password) {
-    //   router.push('/settings')
-    //   return
-    // }
-
-    console.log('role', role)
+    if (user.account == user.password) {
+      router.push('/settings')
+      return
+    }if(user.role === consty.ADMIN){
+      router.push('/user/self')
+    }
     let path = '/login'
     switch (role) {
       case consty.ADMIN:
