@@ -47,8 +47,6 @@ export class AdminService {
     //添加一个用户
     @StoreCache(infosStore.groupUsersS,true)
     static async addUserService(user:User){
-      console.log(user);
-      
       const data = await usePost<User[]>(`${ADMIN}/users`,user)
       return data.data.value?.data as unknown as Ref<User[]>
     }
