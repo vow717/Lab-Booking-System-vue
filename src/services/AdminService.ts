@@ -38,7 +38,6 @@ export class AdminService {
     @StoreCache(infosStore.groupLabsS, true)
     @StoreClear(useInfosStore().clear)
     static async addLabService(lab: Lab) {
-      // lab.id = "400"
       // @ts-ignore
       lab.manager = JSON.stringify(lab.manager)
       console.log(lab);
@@ -58,6 +57,15 @@ export class AdminService {
         console.log(users);   
         const data = await usePost<User[]>(`${ADMIN}/users/batch`, users)
         return data.data.value?.data as unknown as Ref<User[]>
+      }
+
+      //删除单个用户
+      @StoreCache(infosStore.groupUsersS, true)
+      @ELLoading()
+      static async deluserService(uid:String){
+        console.log(uid);   
+        const data = await useDelete<String>(`${ADMIN}/users/${uid}`)
+        return data as unknown as Ref<User[]>
       }
 
       //添加通知
@@ -87,7 +95,7 @@ export class AdminService {
 
 
       @ELLoading()
-    @StoreCache(usersStore.allTeachersS)
+      @StoreCache(usersStore.allTeachersS)
      static async listTeachersService() {
        const data = await useGet<User[]>(`${ADMIN}/users/teachers`)
        return data as unknown as Ref<User[]>
@@ -97,5 +105,11 @@ export class AdminService {
      static async resetService(account:String){
       const data = await usePost<String>(`${ADMIN}/reset`,account)
       return data.data.value?.data as unknown as Ref<User[]>
+     }
+
+     //修改个人信息
+     static async editUserService(user:User){
+      const data = await usePatch<String>(`$user/update/${user.id}`,user)
+      return data as unknown as Ref<User[]>
      }
 }

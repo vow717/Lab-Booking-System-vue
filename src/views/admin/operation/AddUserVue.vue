@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { createMessageDialog } from '@/components/message/indexC'
-import { locationItems, rolesItems } from '@/datasource/const'
+import { locationItems, rolesItems ,ADMIN,TEACHER} from '@/datasource/const'
 import { AdminService } from '@/services/AdminService'
 import type { User } from '@/datasource/type'
 import { Check, Minus, Plus,CloseBold } from '@element-plus/icons-vue'
@@ -47,6 +47,8 @@ const addLabF = async () => {
     try {
         userR.value.name = nameValue
         userR.value.account = accountValue
+        userR.value.phone = phoneR.value
+        userR.value.role = selectedValue.value == "admin"? ADMIN:TEACHER;  
         await AdminService.addUserService(userR.value);
         createNoticeBoard('用户添加成功', '');
         dialogVisible.value = false;

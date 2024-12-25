@@ -442,8 +442,6 @@ const notices :notice [] = [
 },
 ]
 
-
-
 export function listCourses() {
   return courses
 }
