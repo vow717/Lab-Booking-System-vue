@@ -13,8 +13,7 @@ const showCourses = ref<
 //展现在课表上
 const dealReservations = () => {
   let reservations = myReservations.value
-  console.log(reservations)
-  while (reservations.length > 0) {
+  while (reservations?.length > 0) {
     const reservation = reservations[0]
     const courseName = reservation.courseName
     const labName = reservation.laboratoryName

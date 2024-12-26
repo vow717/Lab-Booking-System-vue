@@ -60,6 +60,8 @@ const handleCloseDialog = () => {
   dialogVisible.value = false
   currentChangeCourse.value = { id: '0', name: '', requireNumber: 0 }
   props.closeDialog1()
+  //重新加载页面
+  location.reload()
 }
 </script>
 <template>

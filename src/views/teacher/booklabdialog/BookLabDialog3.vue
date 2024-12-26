@@ -15,11 +15,27 @@ const props = defineProps<{
 }>()
 //前端根据实验室的id和currentCourse的period和day去找到该实验室的预约数据
 const reservations = await TeacherService.listLabReservationsService(props.lab.id as string)
+const myReservations = await TeacherService.listReservationsService()
+console.log(myReservations.value)
+const selectCourseReservations = ref<Reservation[]>()
+selectCourseReservations.value = myReservations.value.filter(reservation => {
+  return reservation.courseId === props.course?.id
+})
+
+watch(
+  () => props.course?.id,
+  () => {
+    console.log('courseId changed')
+    selectCourseReservations.value = myReservations.value.filter(reservation => {
+      return reservation.courseId == props.course?.id
+    })
+  }
+)
+
 const reservationOrders = ref<Reservation[]>([])
 reservationOrders.value = reservations.value.filter(reservation => {
   return reservation.period === props.time?.period && reservation.day === props.time?.day
 })
-console.log('reservationOrders:', reservationOrders.value)
 //拿到数据后，前端根据数据渲染哪些哪些周的课程被预约了
 const weeks = ref<number[]>()
 weeks.value = reservationOrders.value.map(reservation => reservation.week)
@@ -60,7 +76,11 @@ watch(wantOrderR, () => {
 </script>
 <template>
   <div>
-    <p>课程名称：{{ props.course?.name }}</p>
+    <p>
+      课程名称：{{ props.course?.name }}|{{ selectCourseReservations?.length ?? 0 }}/{{
+        props.course?.total
+      }}
+    </p>
     <p>实验室名称: {{ props.lab.name }}</p>
     <p>预约情况</p>
     <div>
@@ -76,7 +96,26 @@ watch(wantOrderR, () => {
         </el-checkbox>
       </el-checkbox-group>
       <br />
-      <el-button @click="confirmReservation">确定预约</el-button>
+      <p
+        v-if="
+          (wantOrderR?.length ?? 0) >
+          (props?.course?.total ?? 0) - (selectCourseReservations?.length ?? 0)
+        "
+        style="color: red">
+        已超过该课程的最大预约课时，超课时：{{
+          (wantOrderR?.length ?? 0) +
+          (selectCourseReservations?.length ?? 0) -
+          (props.course?.total ?? 0)
+        }}
+      </p>
+      <el-button
+        @click="confirmReservation"
+        :disabled="
+          (wantOrderR?.length ?? 0) >
+          (props.course?.total ?? 0) - (selectCourseReservations?.length ?? 0)
+        ">
+        确定预约
+      </el-button>
     </div>
   </div>
 </template>

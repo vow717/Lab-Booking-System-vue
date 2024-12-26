@@ -3,8 +3,11 @@ import type { User } from '@/datasource/type'
 import router from '@/router'
 import { useUserStore } from '@/stores/UserStore'
 
-import { useDelete, useGet, usePatch, usePost } from '@/fetch'
-import type{Ref} from 'vue'
+import { usePatch, usePost } from '@/fetch'
+import { useInfosStore } from '@/stores/InfosStore'
+import { useTeacherStore } from '@/stores/TeacherStore'
+import { useUsersStore } from '@/stores/UsersStore'
+import type { Ref } from 'vue'
 
 export class CommonService {
   static loginGuardService = async (user: User) => {
@@ -24,7 +27,8 @@ export class CommonService {
     if (user.account == user.password) {
       router.push('/settings')
       return
-    }if(user.role === consty.ADMIN){
+    }
+    if (user.role === consty.ADMIN) {
       router.push('/user/self')
     }
     let path = '/login'
@@ -45,9 +49,14 @@ export class CommonService {
   static getRole() {
     return sessionStorage.getItem('role')
   }
-  static async updateSelfPassword(pass:String){
+  //清空所有缓存store
+  static clearAllStore() {
+    useTeacherStore().clear()
+    useInfosStore().clear()
+    useUsersStore().clear()
+  }
+  static async updateSelfPassword(pass: String) {
     const data = await usePatch<String[]>(`users/${pass}`, pass)
     return data as unknown as Ref<User[]>
   }
-
 }

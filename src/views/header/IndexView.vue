@@ -2,8 +2,8 @@
 import * as consty from '@/datasource/const'
 import router from '@/router'
 import { CommonService } from '@/services'
-import { InfoFilled ,User,Tools} from '@element-plus/icons-vue'
-import { defineAsyncComponent, watch ,ref, type Component } from 'vue'
+import { Tools, User } from '@element-plus/icons-vue'
+import { defineAsyncComponent, watch, type Component } from 'vue'
 import { useRoute } from 'vue-router'
 const role = CommonService.getRole()
 let realComponent: Component
@@ -15,17 +15,16 @@ if (role == consty.ADMIN) {
 
 const logoutF = () => {
   sessionStorage.clear()
+  CommonService.clearAllStore()
   router.push('/login')
 }
 const route = useRoute()
-watch(route, () => {
-  })
-const newF = () =>{
+watch(route, () => {})
+const newF = () => {
   router.push('/user/news')
 }
-const selfF = () =>{
+const selfF = () => {
   router.push('/user/self')
-
 }
 </script>
 <template>
@@ -37,14 +36,14 @@ const selfF = () =>{
     </el-col>
     <el-col :span="4"></el-col>
     <el-col :span="1" id="user" color="blue" class="flex flex-wrap items-center mb-4">
-          <el-button link class="my-button user">
-            <el-icon><User /></el-icon>
-          </el-button>  
-          <div id="info">
-            <el-button class="info" @click="selfF">个人中心</el-button>
-            <el-button class="info" @click="newF">消息中心</el-button>
-            <el-button class="info" @click="logoutF">退出登录</el-button>
-          </div>     
+      <el-button link class="my-button user">
+        <el-icon><User /></el-icon>
+      </el-button>
+      <div id="info">
+        <el-button class="info" @click="selfF">个人中心</el-button>
+        <el-button class="info" @click="newF">消息中心</el-button>
+        <el-button class="info" @click="logoutF">退出登录</el-button>
+      </div>
     </el-col>
     <el-col :span="1" class="flex flex-wrap items-center mb-4">
       <el-button link class="my-button setting" @click="$router.push('/settings')">
@@ -55,45 +54,47 @@ const selfF = () =>{
   </el-row>
 </template>
 <style scoped>
-.test{
+.test {
   width: 200px;
   height: 200px;
   display: none;
 }
-#user{
-position: relative;
+#user {
+  position: relative;
 }
-#info{
+#info {
   display: none;
-  position:absolute;
+  position: absolute;
   z-index: 10;
   width: 100px;
   height: auto;
   background-color: #f7f5f5;
   border-radius: 4px;
-  box-shadow: 0px 12px 32px 4px rgba(0, 0, 0, .04), 0px 8px 20px rgba(0, 0, 0, .08);
+  box-shadow:
+    0px 12px 32px 4px rgba(0, 0, 0, 0.04),
+    0px 8px 20px rgba(0, 0, 0, 0.08);
   padding-top: 10px;
 }
-#user:hover{
+#user:hover {
   cursor: pointer;
-  #info{
+  #info {
     display: block;
     position: absolute;
     left: 2rem;
   }
 }
-.info{
+.info {
   margin: 8px 5px 8px 5px;
 }
 .my-button {
   display: block;
   font-size: 1.5rem;
-  width:150px;
+  width: 150px;
 }
 .user {
   color: #ff2020;
 }
-.my-row {  
+.my-row {
   border-bottom: 1px solid var(--el-menu-border-color);
 }
 .setting {

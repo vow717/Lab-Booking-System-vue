@@ -85,7 +85,7 @@ onMounted(() => {
           <el-icon><Orange /></el-icon>
           <el-icon><IceTea /></el-icon>
         </el-divider>
-        老师账号密码:2022000000，管理员账号密码:2046000000
+        吴可凡:2022，陈秋樾:2023，管理员账号密码:2046
         <el-form>
           <el-form-item>
             <el-input
