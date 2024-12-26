@@ -39,79 +39,16 @@ const options = [
   }
 ]
 const labs = await TeacherService.listLabsService()
-// const labs = ref([
-//   {
-//     id: '1',
-//     name: '实验室1',
-//     config: 'Windows 11',
-//     capacity: 100
-//   },
-//   {
-//     id: '2',
-//     name: '实验室2',
-//     config: 'Windows 10',
-//     capacity: 80
-//   },
-//   {
-//     id: '3',
-//     name: '实验室3',
-//     config: 'Windows 8',
-//     capacity: 120
-//   },
-//   {
-//     id: '4',
-//     name: '实验室4',
-//     config: 'Windows 7',
-//     capacity: 40
-//   },
-//   {
-//     id: '5',
-//     name: '实验室5',
-//     config: 'Windows XP',
-//     capacity: 20
-//   },
-//   {
-//     id: '6',
-//     name: '实验室6',
-//     config: 'Windows 2000',
-//     capacity: 60
-//   },
-//   {
-//     id: '7',
-//     name: '实验室7',
-//     config: 'Windows 98',
-//     capacity: 130
-//   },
-//   {
-//     id: '8',
-//     name: '实验室8',
-//     config: 'Windows 95',
-//     capacity: 50
-//   },
-//   {
-//     id: '9',
-//     name: '实验室9',
-//     config: 'Windows 3.1',
-//     capacity: 110
-//   },
-//   {
-//     id: '10',
-//     name: '实验室10',
-//     config: 'Windows 1.0',
-//     capacity: 90
-//   }
-// ])
 
 const showLabs = ref<Lab[]>(
-  labs.value.filter(lab => lab => lab.capacity ?? 0 >= (props.course?.requireNumber ?? 0))
+  labs.value.filter(lab => (lab.capacity ?? 0) >= (props.course?.requireNumber ?? 0))
 )
 watch(
   () => props.course,
   () => {
     showLabs.value = labs.value.filter(
-      lab => lab.capacity ?? 0 >= (props.course?.requireNumber ?? 0)
+      lab => (lab.capacity ?? 0) >= (props.course?.requireNumber ?? 0)
     )
-    console.log(showLabs.value)
   }
 )
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DEF2Course, Lab } from '@/datasource/type'
 import { TeacherService } from '@/services/TeacherService'
-import { defineProps, ref } from 'vue'
+import { defineProps, ref, watch } from 'vue'
 import ChildDialog from './BookLabDialog3.vue'
 // 接收父组件传递的课程信息
 const props = defineProps<{
@@ -32,8 +32,14 @@ const days = ['######', '星期一', '星期二', '星期三', '星期四', '星
 const periods = ['第一二节', '第三四节', '第五六节', '第七八节']
 
 //这个数据到时候是从预约表里找该实验室的预约数据
-const reservations = await TeacherService.listLabReservationsService(props.lab.id as string)
-
+let reservations = await TeacherService.listLabReservationsService(props.lab.id as string)
+watch(
+  () => props.lab.id,
+  async () => {
+    reservations = await TeacherService.listLabReservationsService(props.lab.id as string)
+    coursesShow.value = transformReservation()
+  }
+)
 const transformReservation = () => {
   const result: TransformedReservation[] = []
   // 用于存储已经处理过的 (period, day) 组合
@@ -66,7 +72,6 @@ const transformReservation = () => {
   }
 }
 const coursesShow = ref<TransformedReservation[]>(transformReservation())
-console.log('coursesShow', coursesShow.value)
 //根据period和day找到该实验室的全部预约数据并且还要根据course.name和course.class来讲此课程此教室的全部预约记录的week的数组拼接成字符串
 const showCourses = (period: number, day: number) => {
   if (!coursesShow.value) return []
@@ -119,7 +124,21 @@ const showCourses = (period: number, day: number) => {
 }
 
 //判断实验室period节，day天的1-18周是否已经被选满
-const enoughTime = (period: number, day: number) => {}
+const enoughTime = (period: number, day: number) => {
+  const courses = showCourses(period, day)
+  if (courses.length === 0) {
+    return true
+  }
+  const weeks = courses.map(course => course.week)
+  const weekSet = new Set<number>()
+  weeks.forEach(week => {
+    const [start, end] = week.split('-').map(Number)
+    for (let i = start; i <= end; i++) {
+      weekSet.add(i)
+    }
+  })
+  return weekSet.size < 18
+}
 </script>
 
 <template>
@@ -137,8 +156,13 @@ const enoughTime = (period: number, day: number) => {}
           <div>{{ period }}</div>
         </td>
         <td v-for="(day, indexd) in days.length - 1" :key="indexd">
-          <button :disabled="false" @click="confirmReservation(indexr + 1, indexd + 1)">
-            <div v-for="(item, index) in showCourses(indexr + 1, indexd + 1)" :key="index">
+          <button
+            @click="confirmReservation(indexr + 1, indexd + 1)"
+            :disabled="!enoughTime(indexr + 1, indexd + 1)">
+            <div
+              v-for="(item, index) in showCourses(indexr + 1, indexd + 1)"
+              :key="index"
+              style="margin: 5px">
               <div>{{ item.name }}</div>
               <div>{{ item.teacherName }}</div>
               <div>{{ item.week }}</div>

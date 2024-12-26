@@ -32,7 +32,7 @@ const router = createRouter({
           path: 'user',
           component: () => import('@/views/UserView.vue'),
           meta: {
-            roles: [Consty.ADMIN]
+            roles: [Consty.ADMIN, Consty.TEACHER]
           },
           children: [
             {
@@ -74,15 +74,13 @@ const router = createRouter({
             {
               path: 'notice',
               component: () => import('@/views/admin/NoticeView.vue'),
-              children:[
+              children: [
                 {
                   path: 'notices/:id',
-                  component:import('@/views/admin/OperationNoticeView.vue')
-              }
+                  component: import('@/views/admin/OperationNoticeView.vue')
+                }
               ]
-            },
-          
-
+            }
           ]
         },
         {
@@ -125,8 +123,7 @@ const router = createRouter({
               component: () => import('@/views/teacher/NoticeView.vue')
             }
           ]
-        },
-        
+        }
       ]
     },
     {

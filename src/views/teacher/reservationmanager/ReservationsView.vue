@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { TeacherService } from '@/services/TeacherService'
 import { ElMessageBox } from 'element-plus'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const showReservations = await TeacherService.listReservationsService()
 
@@ -11,8 +11,32 @@ const coursesName = new Set<string>()
 showReservations.value.forEach(item => {
   coursesName.add(item.courseName)
 })
+watch(showReservations, () => {
+  if (showReservations.value == null) {
+    return
+  }
+  showReservations.value.forEach(item => {
+    coursesName.add(item.courseName)
+  })
+})
 const showAll = (name: string) => {
-  return showReservations.value.filter(item => item.courseName == name)
+  if (showReservations.value == null) {
+    return []
+  }
+  //按实验室名，星期数，节数,周排序
+  return showReservations.value
+    .filter(item => item.courseName == name)
+    .sort((a, b) => {
+      if (a.laboratoryName != b.laboratoryName) {
+        return a.laboratoryName.localeCompare(b.laboratoryName)
+      } else if (a.day != b.day) {
+        return a.day - b.day
+      } else if (a.period != b.period) {
+        return a.period - b.period
+      } else {
+        return a.week - b.week
+      }
+    })
 }
 const delDay = (day: number) => {
   return ['周一', '周二', '周三', '周四', '周五', '周六', '周日'][day - 1]
@@ -27,8 +51,8 @@ const delF = async (ids: string[]) => {
     type: 'warning'
   })
   if (confirmResult === 'confirm') {
+    showReservations.value = showReservations?.value.filter(item => ids.indexOf(item.id) == -1)
     await TeacherService.deleteReservationService(ids)
-    showReservations.value = showReservations.value.filter(item => ids.indexOf(item.id) == -1)
   } else {
     console.log('已取消删除操作')
   }

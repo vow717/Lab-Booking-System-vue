@@ -4,73 +4,7 @@ import { TeacherService } from '@/services/TeacherService'
 import { computed, ref } from 'vue'
 import ChildDialog from './booklabdialog/BookLabDialog1.vue'
 //courses是会从数据库中获取的实验课课程
-const courses = await TeacherService.listCoursesService()
-// //这里虚拟创建一下
-// const courses = ref<DEF2Course[]>([
-//   {
-//     id: '0',
-//     name: '临时预约',
-//     require_number: 0
-//   },
-//   {
-//     id: '1',
-//     name: 'web实验',
-//     type: 'DEF2',
-//     require_config: 'Windows 11',
-//     require_number: 100,
-//     total: 12
-//   },
-//   {
-//     id: '2',
-//     name: 'java实验',
-//     type: 'DEF2',
-//     require_config: 'Windows 10',
-//     require_number: 80,
-//     total: 8
-//   },
-//   {
-//     id: '3',
-//     name: 'c++实验',
-//     type: 'DEF2',
-
-//     require_config: 'Windows 8',
-//     require_number: 120,
-//     total: 10
-//   },
-//   {
-//     id: '4',
-//     name: 'python实验',
-//     type: 'DEF2',
-//     require_config: 'Windows 7',
-//     require_number: 60,
-//     total: 6
-//   },
-//   {
-//     id: '5',
-//     name: 'php实验',
-//     type: 'DEF2',
-//     require_config: 'Windows XP',
-//     require_number: 40,
-//     total: 4
-//   },
-
-//   {
-//     id: '6',
-//     name: 'go实验',
-//     type: 'DEF2',
-//     require_config: 'Windows 2000',
-//     require_number: 20,
-//     total: 2
-//   },
-//   {
-//     id: '7',
-//     name: 'C#实验',
-//     type: 'DEF2',
-//     require_config: 'Windows XP',
-//     require_number: 80,
-//     total: 4
-//   }
-// ])
+let courses = await TeacherService.listCoursesService()
 
 // 控制实验室标签显示隐藏的变量
 const tagVisible = ref(false)
@@ -82,9 +16,12 @@ const openDialog = (course: DEF2Course) => {
   tagVisible.value = true
 }
 // 处理子组件发出的关闭模态框事件
-const handleCloseDialog = () => {
+const handleCloseDialog = async () => {
   console.log('关闭模态框')
   tagVisible.value = false
+  currentCourse.value = null
+  //有缓存，很快
+  courses = await TeacherService.listCoursesService()
 }
 
 // 选择高亮的课程

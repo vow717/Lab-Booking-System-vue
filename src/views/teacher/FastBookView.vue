@@ -6,6 +6,7 @@ import { ElMessageBox } from 'element-plus'
 import { ref, watch } from 'vue'
 
 const courses = await TeacherService.listCoursesService()
+const reservations = await TeacherService.listReservationsService()
 const selectCourse = ref<DEF2Course>()
 const selectDay = ref(0)
 const selectWeek = ref(0)
@@ -19,7 +20,8 @@ const days = [
   { value: 7, label: '周日' }
 ]
 const weeks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
-
+const canSelectCourses = ref<DEF2Course[]>()
+canSelectCourses.value = courses.value
 const showFreeLabs = ref([])
 //但凡周和星期数改变，就重新查询空余实验室
 watch([selectWeek, selectDay], () => {
@@ -31,13 +33,61 @@ const findFreeLabs = async () => {
   //调用后端接口查询空余实验室
   const freeLabs = await TeacherService.listFreeLabService(selectWeek.value, selectDay.value)
   freeLabs.value.forEach(item => {
+    let status1 =
+      item.freePeriods.indexOf('1') !== -1
+        ? '空闲'
+        : reservations.value.find(
+              reservation =>
+                reservation.laboratoryId === item.laboratoryId &&
+                reservation.day === selectDay.value &&
+                reservation.period === 1 &&
+                reservation.week === selectWeek.value
+            )
+          ? '占用'
+          : '有课'
+    let status2 =
+      item.freePeriods.indexOf('2') !== -1
+        ? '空闲'
+        : reservations.value.find(
+              reservation =>
+                reservation.laboratoryId === item.laboratoryId &&
+                reservation.day === selectDay.value &&
+                reservation.period === 2 &&
+                reservation.week === selectWeek.value
+            )
+          ? '占用'
+          : '有课'
+    let status3 =
+      item.freePeriods.indexOf('3') !== -1
+        ? '空闲'
+        : reservations.value.find(
+              reservation =>
+                reservation.laboratoryId === item.laboratoryId &&
+                reservation.day === selectDay.value &&
+                reservation.period === 3 &&
+                reservation.week === selectWeek.value
+            )
+          ? '占用'
+          : '有课'
+    let status4 =
+      item.freePeriods.indexOf('4') !== -1
+        ? '空闲'
+        : reservations.value.find(
+              reservation =>
+                reservation.laboratoryId === item.laboratoryId &&
+                reservation.day === selectDay.value &&
+                reservation.period === 4 &&
+                reservation.week === selectWeek.value
+            )
+          ? '占用'
+          : '有课'
     showFreeLabs.value.push({
       laboratoryName: item.laboratoryName,
       laboratoryId: item.laboratoryId,
-      1: item.freePeriods.indexOf('1') != -1 ? '空' : '占',
-      2: item.freePeriods.indexOf('2') != -1 ? '空' : '占',
-      3: item.freePeriods.indexOf('3') != -1 ? '空' : '占',
-      4: item.freePeriods.indexOf('4') != -1 ? '空' : '占'
+      1: status1,
+      2: status2,
+      3: status3,
+      4: status4
     })
   })
 }
@@ -69,8 +119,8 @@ const bookLab = async (
   })
   if (confirmResult === 'confirm') {
     await TeacherService.addReservationService(reservationOrder)
+    await findFreeLabs()
     createElNotificationSuccess('预约成功')
-    findFreeLabs()
   } else {
     console.log('已取消预约操作')
   }
@@ -84,7 +134,7 @@ const bookLab = async (
     <!-- 这个value-key是为了让el-select组件知道选中的是哪个课程,不加这个属性的话,默认选中的是整个对象，这样的话会有显示问题，比如你不管选中哪个课程，显示的都是第一个课程 -->
     <el-select v-model="selectCourse" value-key="id" placeholder="请选择课程" style="width: 30%">
       <el-option
-        v-for="item in courses"
+        v-for="item in canSelectCourses"
         :key="item.id"
         :label="item.name"
         :value="item"></el-option>
@@ -121,7 +171,7 @@ const bookLab = async (
           <el-button
             type="primary"
             @click="bookLab(row.laboratoryId, row.laboratoryName, selectWeek, selectDay, 1)"
-            :disabled="row[1] == '占'">
+            :disabled="row[1] != '空闲'">
             预约
           </el-button>
         </template>
@@ -133,7 +183,7 @@ const bookLab = async (
           <el-button
             type="primary"
             @click="bookLab(row.laboratoryId, row.laboratoryName, selectWeek, selectDay, 2)"
-            :disabled="row[2] == '占'">
+            :disabled="row[2] != '空闲'">
             预约
           </el-button>
         </template>
@@ -145,7 +195,7 @@ const bookLab = async (
           <el-button
             type="primary"
             @click="bookLab(row.laboratoryId, row.laboratoryName, selectWeek, selectDay, 3)"
-            :disabled="row[3] == '占'">
+            :disabled="row[3] != '空闲'">
             预约
           </el-button>
         </template>
@@ -157,7 +207,7 @@ const bookLab = async (
           <el-button
             type="primary"
             @click="bookLab(row.laboratoryId, row.laboratoryName, selectWeek, selectDay, 4)"
-            :disabled="row[4] == '占'">
+            :disabled="row[4] != '空闲'">
             预约
           </el-button>
         </template>

@@ -18,7 +18,6 @@ export class TeacherService {
   @ELLoading()
   @StoreCache(useTeacherStore().myCoursesS)
   static async listCoursesService() {
-    console.log('listCoursesService')
     const data = await useGet<DEF2Course[]>(`teacher/courses`)
     return data as unknown as Ref<DEF2Course[]>
   }
@@ -72,14 +71,20 @@ export class TeacherService {
   @StoreClear(useTeacherStore().clear)
   @StoreCache(useTeacherStore().myReservationsS)
   static async deleteReservationService(reservationsId: string[]) {
-    await useDelete<Reservation>(`teacher/reservations`, reservationsId)
-    return
+    let result: Reservation[] = reservationsId.map(id => {
+      return { id: id }
+    })
+    console.log('result:', result)
+    result = JSON.parse(JSON.stringify(result))
+    const data = await useDelete<Reservation[]>(`teacher/reservations`, result)
+    return data as unknown as Ref<Reservation[]>
   }
 
   //查询day week那天空闲的实验室以及其空余的时间段
   static async listFreeLabService(day: number, week: number) {
     const data = ref<LabFree[]>()
     data.value = await useGet<LabFree[]>(`teacher/reservation/fast/${week}/${day}`)
+    console.log('data:', data.value)
     return data as unknown as Ref<LabFree[]>
   }
 }

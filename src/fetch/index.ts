@@ -63,7 +63,7 @@ export const useFetch = createFetch({
 })
 
 export async function usePost<T>(url: string, data: unknown) {
-  console.log("data:",data)
+  console.log('data:', data)
   const resp = useFetch(url, { immediate: false }).post(data).json<ResultVO<T>>()
   await resp.execute(true)
   return resp
@@ -76,7 +76,8 @@ export async function useGet<T>(url: string) {
 }
 
 export async function useDelete<T>(url: string, data?: unknown) {
-  const resp = useFetch(url, { immediate: false }).delete(data).json<ResultVO<T>>()
+  console.log('data:', data)
+  const resp = useFetch(url, { immediate: false }).delete(JSON.stringify(data)).json<ResultVO<T>>()
   await resp.execute(true)
   return resp.data.value?.data
 }
