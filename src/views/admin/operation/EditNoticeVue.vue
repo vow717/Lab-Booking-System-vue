@@ -6,7 +6,7 @@ import { AdminService } from '@/services/AdminService'
 import { Check, CloseBold} from '@element-plus/icons-vue'
 import { ElButton, ElCol, ElDialog, ElInput, ElOption, ElRow, ElSelect } from 'element-plus'
 import {  ref, watch } from 'vue'
-const prop = defineProps<{ notice: Notice}>()
+const prop = defineProps<{ notice: Notice,page:number}>()
 const noticeR = ref<Notice>(JSON.parse(JSON.stringify(prop.notice)))
 const dialogTableVisible = ref(true)
 const titleR = ref(noticeR.value.title)
@@ -18,11 +18,12 @@ const message2R = ref('')
 const updateNoticeF = async() => {
     if(  noticeR.value.title === titleR.value && noticeR.value.content === textareaR.value){
         message2R.value = ('题目和内容未修改')
+        alert( message2R.value)
         return
     }
     noticeR.value.title === titleR.value
     noticeR.value.content === textareaR.value
-  await AdminService.updateLabService(noticeR.value)
+  await AdminService.updateNoticeService(prop.page,noticeR.value)
 createNoticeBoard('通知信息更新成功', '')
   dialogTableVisible.value = false
   noticeR.value = {}
@@ -55,7 +56,7 @@ createNoticeBoard('通知信息更新成功', '')
           type="success"
           :icon="Check"
           @click="updateNoticeF"
-          :disabled="!!titleR"
+          :disabled="!titleR"
       ></el-button>
     </el-tooltip>
     {{ noticeR }}

@@ -3,8 +3,10 @@ import { Lock } from '@element-plus/icons-vue'
 import { CommonService } from '@/services'
 import { createElNotificationSuccess,createElNotificationError} from '@/components/message'
 import { ref } from 'vue'
-
+import { useUserStore } from '@/stores/UserStore'
+import type { User } from '@/datasource/type'
 const pwdM = ref({ p1: '', p2: '' })
+const userStore = useUserStore()
 const resetPwd = async () => {
   if (!pwdM.value.p1 || !(pwdM.value.p1 == pwdM.value.p2)) {
     createElNotificationError('2次输入密码不同')

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { AdminService } from '@/services/AdminService';
 import { ref } from 'vue';
-import type { Lab,LabName,LabNum} from '@/datasource/type';
+import type { Lab,LabName} from '@/datasource/type';
 import { locationItems } from '@/datasource/const';
 import EditLabVue from '@/views/admin/OperationLabView.vue'
 import AddLabVue from './operation/AddLabVue.vue';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {Notice} from '@/datasource/type'
-import {listNotices} from '@/datasource/datasourse'
-import { ref,watch } from 'vue';
+// import {listNotices} from '@/datasource/datasourse'
+import { computed, ref,watch } from 'vue';
 import { useRoute } from 'vue-router'
 import AddNoticeVue from '@/views/admin/operation/AddNoticeVue.vue'
 import EditNoticeVue from '@/views/admin/OperationNoticeView.vue'
@@ -9,14 +9,32 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { DeleteFilled } from '@element-plus/icons-vue';
 import { AdminService } from '@/services/AdminService';
 import type { ComponentSize } from 'element-plus'
-
+import router from '@/router';
+import { useInfosStore } from '@/stores/InfosStore';
+const groupNotices = useInfosStore().groupNoticesS
 
 const noticesR = ref<Notice[]>([])
-const route = useRoute()
 const noticesIdR = ref<String[]>([])
 const allNoticesIdR = ref<String[]>([])
 const checkedCount = ref<number>(0)
-noticesR.value = listNotices()
+
+//分页
+const route = useRoute();
+
+const pageSize = ref(2)
+const size = ref<ComponentSize>('default')
+const background = ref(false)
+const disabled = ref(false)
+const currentPageR = ref(parseInt(route.params.page as string, 10))
+currentPageR.value = computed(() => parseInt(route.params.page as string, 10)).value;
+//
+await AdminService.listNoticeService(currentPageR.value).then((notices)=>{
+  noticesR.value = notices.value
+})
+
+watch(() => groupNotices.value,(newval)=>{
+  noticesR.value = newval as Notice[]
+})
 
 const checkAll = ref(false)
 const isIndeterminate = ref(false)
@@ -28,17 +46,16 @@ const handleCheckAllChange = (val: boolean) => {
   checkedCount.value = allNoticesIdR.value.length
 }
 //对通知排序 有待改善 数量多排序效率低
-noticesR.value.sort((a: Notice, b: Notice) => {
-  if (a.updateTime && b.updateTime) {
-    return new Date(b.updateTime).getTime() - new Date(a.updateTime).getTime();
-  }
-  return 0;
-});
+// noticesR.value.sort((a: Notice, b: Notice) => {
+//   if (a.updateTime && b.updateTime) {
+//     return new Date(b.updateTime).getTime() - new Date(a.updateTime).getTime();
+//   }
+//   return 0;
+// });
 
 noticesR.value.forEach((n)=>{
   allNoticesIdR.value.push(n.id as string)
 })
-
 const delNoticesF = () => {
     if(checkedCount.value <= 0){
         return  alert("至少选择一项删除")   
@@ -69,17 +86,21 @@ const delNoticesF = () => {
 }
 
 //分页
-
-const currentPage = ref(1)
-const pageSize = ref(2)
-const size = ref<ComponentSize>('default')
-const background = ref(false)
-const disabled = ref(false)
 const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`)
+  
+  
 }
-const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`)
+watch(currentPageR,async()=>{
+  await AdminService.listNoticeService(currentPageR.value).then((notices)=>{
+    noticesR.value = notices.value    
+})
+})
+const handleCurrentChange = async(val: number) => {
+  currentPageR.value = val
+  router.push(`/admin/notices/page/${currentPageR.value}`)
+//   await AdminService.listNoticeService(currentPage.value).then((notices)=>{
+//     noticesR.value = notices.value
+// })
 }
 </script>
 <template>
@@ -115,10 +136,12 @@ const handleCurrentChange = (val: number) => {
             <template #default="scope">
             <EditNoticeVue :notice="scope.row"  
             :allNoticesId="allNoticesIdR"
+            :currentPage="currentPageR"
             v-model:noticesid="noticesIdR" 
             v-model:checkedcount="checkedCount"
              v-model:checkall="checkAll"
-            v-model:indeterminate="isIndeterminate"/>
+            v-model:indeterminate="isIndeterminate"
+            />
           </template>
           </el-table-column>
         </el-table>
@@ -129,7 +152,7 @@ const handleCurrentChange = (val: number) => {
       <el-col>
         <div class="pagination-block">
     <el-pagination
-      v-model:current-page="currentPage"
+      v-model:current-page="currentPageR"
       v-model:page-size="pageSize"
       :size="size"
       :disabled="disabled"

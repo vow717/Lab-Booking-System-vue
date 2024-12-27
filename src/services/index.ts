@@ -55,8 +55,8 @@ export class CommonService {
     useInfosStore().clear()
     useUsersStore().clear()
   }
-  static async updateSelfPassword(pass: String) {
-    const data = await usePatch<String[]>(`users/${pass}`, pass)
-    return data as unknown as Ref<User[]>
+
+  static updateSelfPassword = async (pwd: string) => {
+    await usePost('passwords', { password: pwd })
   }
 }

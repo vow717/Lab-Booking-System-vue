@@ -12,7 +12,7 @@ const menus = [
   },
   {
     name: '通告管理',
-    path: '/admin/notice'
+    path: '/admin/notices/page/1'
   },
   {
     name: '重置密码',

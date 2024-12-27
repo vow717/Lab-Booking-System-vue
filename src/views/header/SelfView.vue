@@ -11,9 +11,8 @@ const userR = ref<User>()
 const editR = ref(false)
 const editUserR = ref<User>({})
 userR.value = useUserStore().userS.value
-editUserR.value = userR.value
+editUserR.value = {...userR.value }
 console.log(editUserR.value);
-
 const selectedValue = ref(userR.value?.role)
 if(userR.value?.role){
 userR.value.role = (userR.value as User).role === ADMIN ? "admin" :"teacher"
@@ -23,13 +22,15 @@ const startEdit =()=>{
     editR.value = true  
 }
 const commitF = async() =>{
-    if(editUserR.value == userR.value){
+    if(editUserR.value === userR.value){
         alert("未修改信息")
         return
     }else{
-        userR.value== editUserR.value
+        userR.value = {...editUserR.value }
+        console.log(  userR.value);
+        
        await AdminService.editUserService(userR.value as User);
-        createNoticeBoard('用户添加成功', '');
+        createNoticeBoard('用户信息修改成功', '');
         editUserR.value = {};
     }
 }
@@ -50,7 +51,7 @@ watch(userR,()=>{
 <el-col :span="6" class="my-col w-150px mb-2" ><el-input v-model="editUserR.account"   placeholder="账号："></el-input></el-col> <el-col :span="18"></el-col>
 <el-col :span="6" class="my-col w-150px mb-2"><el-input  v-model="editUserR.phone"   placeholder="手机号："></el-input></el-col> <el-col :span="16"></el-col>
 <el-col :span="18"></el-col>
-<el-col><el-button :disabled="!(editUserR.name &&editUserR.account && editUserR.phone)" @click="commitF">提交信息</el-button></el-col>
+<el-col><el-button :disabled="!(editUserR.name && editUserR.account && editUserR.phone)" @click="commitF">提交信息</el-button></el-col>
 {{ editUserR }}
 </el-row>   
 </div>

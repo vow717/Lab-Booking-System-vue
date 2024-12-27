@@ -4,12 +4,11 @@ import { createEditNoticeDialog } from './operation/index'
 import { AdminService } from '@/services/AdminService'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { EditPen,DeleteFilled } from '@element-plus/icons-vue';
-const prop = defineProps<{ notice: Notice,allNoticesId:String[]}>()
+const prop = defineProps<{ notice: Notice,allNoticesId:String[],currentPage:number}>()
 const noticesidM = defineModel<String[]>('noticesid')
 const checkedcountM = defineModel<number>('checkedcount')
 const checkAllM = defineModel<boolean>('checkall')
 const indeterminateM = defineModel<boolean>('indeterminate')
-
 const noticeR = prop.notice
 const allNotNicesIdR = prop.allNoticesId
 const delNoticeF = (lid: string) => {
@@ -19,7 +18,7 @@ const delNoticeF = (lid: string) => {
     type: 'warning'
   })
     .then(async () => {
-      await AdminService.delNoticeService(lid)
+      await AdminService.delNoticeService(prop.currentPage,lid)
     })
     .then(() => {
       ElMessage({
@@ -50,7 +49,7 @@ const handleNoticesChange = (value: string[]) => {
 </script>
 <template>
   <div>
-    <el-button type="primary" @click="createEditNoticeDialog(prop.notice)">
+    <el-button type="primary" @click="createEditNoticeDialog(prop.notice,prop.currentPage)">
       <el-icon><EditPen /></el-icon>
     </el-button>
     <el-button

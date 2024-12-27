@@ -102,31 +102,6 @@ export interface LabFree {
   freePeriods?: string //空闲时间段1,2,3,4这样的字符串
 }
 
-export interface LabNum {
-  DanQing?: number
-  ChengDong?: number
-  Zhu?: number
-  LinKe?: number
-  JiaJu?: number
-  JiaoTong?: number
-}
-export interface LabName {
-  DanQing?: Array<Lab>
-  ChengDong?: Array<Lab>
-  Zhu?: Array<Lab>
-  LinKe?: Array<Lab>
-  JiaJu?: Array<Lab>
-  JiaoTong?: Array<Lab>
-}
-
-export interface LabNum {
-  DanQing?: number
-  ChengDong?: number
-  Zhu?: number
-  LinKe?: number
-  JiaJu?: number
-  JiaoTong?: number
-}
 export interface LabName {
   DanQing?: Array<Lab>
   ChengDong?: Array<Lab>

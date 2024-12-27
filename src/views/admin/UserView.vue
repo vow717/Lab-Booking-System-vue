@@ -31,7 +31,7 @@ const teacherR = ref<User>()
 const viewInfoR = ref(false)
 const message1 = ref("重置此账号的密码")
 const message2 = ref('无此账号用户')
-const allTeachers = await AdminService.listTeachersService()
+let allTeachers = await AdminService.listTeachersService()
 console.log(allTeachers);
 
 watch(inAccount,()=>{
@@ -41,8 +41,10 @@ watch(inAccount,()=>{
     }
     })
 const delF = async() =>{
-await AdminService.deluserService(inAccount.value)
+await AdminService.deluserService(teacherR.value?.id as String)
 createNoticeBoard('删除用户成功', '')
+allTeachers = await AdminService.listTeachersService()
+console.log(allTeachers);
 inAccount.value = ''
 }
 
@@ -59,7 +61,7 @@ inAccount.value = ''
         <input type="file" @change="filesChange" />
         <br />
         <br />
-        <el-button type="success" @click="submitF" v-if="allUsersR">导入</el-button>
+        <el-button type="success" @click="submitF" v-if="allUsersR.length">导入</el-button>
       </el-col>
       <el-col :span="12">
       {{ allUsersR}}
@@ -71,8 +73,8 @@ inAccount.value = ''
   </div>
   <br>
   <div>
-<el-row>
-    <el-col  :span="8">
+    <el-row :gutter="10" style="margin-bottom: 10px"> 
+      <el-col  :span="8">
         <el-input placeholder="请输入要删除的账号：" class="my-input" v-model="inAccount"/>
     </el-col>
     <el-col :span="1"></el-col>
@@ -88,11 +90,10 @@ inAccount.value = ''
     </el-tooltip>
 
 </el-col>
-<el-col :span="6"></el-col>
+
 </el-row>
-<el-row>
-    <el-col :span="8"></el-col>
-    <el-text v-if="!teacherR">{{ message2 }}</el-text>
+<el-row :gutter="10" style="margin-bottom: 10px"> 
+  <el-text v-if="!teacherR && !viewInfoR">{{ message2 }}</el-text>
     <el-col v-if="viewInfoR" :span="8">
         <br>
            姓名：  {{ teacherR?.name }} <br>

@@ -51,7 +51,7 @@ inAccount.value = ''
 <el-row>
     <el-col :span="8"></el-col>
     <el-text v-if="!teacherR">{{ message2 }}</el-text>
-    <el-col v-if="viewInfoR" :span="8">
+    <el-col v-if="viewInfoR && teacherR" :span="8">
         <br>
            姓名：  {{ teacherR?.name }} <br>
            电话： {{ teacherR?.phone }}
