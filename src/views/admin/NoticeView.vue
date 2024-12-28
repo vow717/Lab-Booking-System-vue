@@ -12,6 +12,7 @@ import type { ComponentSize } from 'element-plus'
 import router from '@/router';
 import { useInfosStore } from '@/stores/InfosStore';
 const groupNotices = useInfosStore().groupNoticesS
+console.log(groupNotices.value);
 
 const noticesR = ref<Notice[]>([])
 const noticesIdR = ref<String[]>([])
@@ -21,8 +22,8 @@ const checkedCount = ref<number>(0)
 //分页
 const route = useRoute();
 
-const pageSize = ref(2)
-const size = ref<ComponentSize>('default')
+const pageSize = ref(3)
+const size = ref<ComponentSize>('small')
 const background = ref(false)
 const disabled = ref(false)
 const currentPageR = ref(parseInt(route.params.page as string, 10))
@@ -45,14 +46,6 @@ const handleCheckAllChange = (val: boolean) => {
   isIndeterminate.value = false
   checkedCount.value = allNoticesIdR.value.length
 }
-//对通知排序 有待改善 数量多排序效率低
-// noticesR.value.sort((a: Notice, b: Notice) => {
-//   if (a.updateTime && b.updateTime) {
-//     return new Date(b.updateTime).getTime() - new Date(a.updateTime).getTime();
-//   }
-//   return 0;
-// });
-
 noticesR.value.forEach((n)=>{
   allNoticesIdR.value.push(n.id as string)
 })
@@ -105,7 +98,8 @@ const handleCurrentChange = async(val: number) => {
 </script>
 <template>
 <div>
-    <el-row> <el-col :span="2"><AddNoticeVue /></el-col>
+    <el-row class="my-row"> 
+      <el-col :span="2"><AddNoticeVue /></el-col>
         <el-col :span="2">
           <el-button type="danger" @click="delNoticesF">
             <el-icon><DeleteFilled /></el-icon>
@@ -131,7 +125,7 @@ const handleCurrentChange = async(val: number) => {
                 </template>
             </el-table-column>
             <el-table-column prop="title" label="title" width="280" />
-            <el-table-column prop="content" label="content" width="500" />
+            <el-table-column prop="content" label="content" width="480" />
             <el-table-column label="操作" width="170">
             <template #default="scope">
             <EditNoticeVue :notice="scope.row"  
@@ -148,7 +142,7 @@ const handleCurrentChange = async(val: number) => {
     </el-scrollbar>
         </el-col>
     </el-row>
-    <el-row>
+    <el-row >
       <el-col>
         <div class="pagination-block">
     <el-pagination
@@ -170,10 +164,14 @@ const handleCurrentChange = async(val: number) => {
 </template>
 <style scoped>
 .pagination-block{
-  margin: 10px;
+  margin: 5px;
   display: flex;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
 }
+.my-row{
+  height: 2rem;
+  display: flex;
 
+}
 </style>
