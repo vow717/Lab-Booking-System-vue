@@ -55,13 +55,10 @@ watch(labNameR, (newValue, oldValue) => {
   <el-dialog v-model="dialogVisible" title="Message" width="800">
     <div>
       <el-row :gutter="10" style="margin-bottom: 10px">
-        <el-col :span="6">
-          <el-input class="myInput" v-model="labNameR" placeholder="实验室号"></el-input>
-        </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-select 
             v-model="selectedValue"
-            size="large"
+            size="defult"
             style="width: 240px" >
             <el-option
               v-for="(li, index) in locationItems"
@@ -70,6 +67,10 @@ watch(labNameR, (newValue, oldValue) => {
               :value="li.name"></el-option>
           </el-select>
         </el-col>
+        <el-col :span="6">
+          <el-input class="myInput" v-model="labNameR" placeholder="实验室号"></el-input>
+        </el-col>
+        
       </el-row>
       <br>
       <el-row :gutter="10" style="margin-bottom: 10px">

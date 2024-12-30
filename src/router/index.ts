@@ -36,10 +36,6 @@ const router = createRouter({
           },
           children: [
             {
-              path: 'news',
-              component: () => import('@/views/header/NewsView.vue')
-            },
-            {
               path: 'self',
               component: () => import('@/views/header/SelfView.vue')
             }

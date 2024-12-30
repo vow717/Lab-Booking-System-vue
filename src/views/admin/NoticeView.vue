@@ -34,7 +34,6 @@ const listNoticeF = async() => {
  }
  //
  noticesR.value.notices.forEach((n)=>{
-  console.log(n);
   curPageNoticesIdR.value.push(n.id as string)
 })
 })
@@ -45,13 +44,9 @@ const checkAll = ref(false)
 const isIndeterminate = ref(false)
 
 const handleCheckAllChange = (val: boolean) => {
-  console.log(checkNIdR.value);
-  console.log(val);
-  console.log(curPageNoticesIdR.value );
-  
-  checkNIdR.value = val ?  curPageNoticesIdR.value : []
+  checkNIdR.value = val == true ?  curPageNoticesIdR.value : []
   isIndeterminate.value = false
-  checkedCount.value = curPageNoticesIdR.value.length
+  checkedCount.value = checkNIdR.value.length
 }
 
 
@@ -98,21 +93,21 @@ const handleCurrentChange = async(val: number) => {
     <el-row class="my-row"> 
       <el-col :span="2" ><AddNoticeVue 
         :currentPage="currentPageR"
-         :listNoticeF="listNoticeF"/></el-col>
+         :listNoticeF="listNoticeF"/>
+        </el-col>
         <el-col :span="2">
-          <el-button type="danger" @click="delNoticesF">
-            <el-icon><DeleteFilled /></el-icon>
-          </el-button></el-col>
-          <el-col :span="2">
           <el-checkbox
-    v-model="checkAll"
+      v-model="checkAll"
     :indeterminate="isIndeterminate"
     @change="handleCheckAllChange"
   >
     Check all
   </el-checkbox>
-
         </el-col>
+        <el-col :span="2">
+          <el-button type="danger" @click="delNoticesF" v-if="checkNIdR.length">
+            <el-icon><DeleteFilled /></el-icon>
+          </el-button></el-col>
     </el-row>
     <el-row>
         <el-col>

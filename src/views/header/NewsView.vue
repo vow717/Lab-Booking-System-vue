@@ -10,13 +10,13 @@ const allNoticesIdR = ref<String[]>([])
 noticesR.value = listNotices()
 
 
-//对通知排序 有待改善 数量多排序效率低
-noticesR.value.sort((a: Notice, b: Notice) => {
-  if (a.updateTime && b.updateTime) {
-    return new Date(b.updateTime).getTime() - new Date(a.updateTime).getTime();
-  }
-  return 0;
-});
+// //对通知排序 有待改善 数量多排序效率低
+// noticesR.value.sort((a: Notice, b: Notice) => {
+//   if (a.updateTime && b.updateTime) {
+//     return new Date(b.updateTime).getTime() - new Date(a.updateTime).getTime();
+//   }
+//   return 0;
+// });
 
 noticesR.value.forEach((n)=>{
   allNoticesIdR.value.push(n.id as string)
