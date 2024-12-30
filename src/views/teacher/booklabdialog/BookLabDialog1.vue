@@ -3,6 +3,31 @@ import type { DEF2Course, Lab } from '@/datasource/type'
 import { TeacherService } from '@/services/TeacherService'
 import { ref, watch } from 'vue'
 import ChildDialog from './BookLabDialog2.vue'
+/*
+4*7*18=504个预约记录每个实验室最多
+我们界定个规定,
+0-30是暂闲，颜色为白色
+31-80是较闲，颜色为蓝色
+81-130是较忙，颜色为黄色  
+131-180繁忙，颜色为橙色
+181-504是火爆，颜色为红色
+颜色要淡一些
+
+*/
+const colorCount = (count: number) => {
+  if (count <= 30) {
+    return '#ffffff'
+  } else if (count <= 80) {
+    return '#87CEFA'
+  } else if (count <= 130) {
+    return '#FFD700'
+  } else if (count <= 180) {
+    return '#FFA500'
+  } else {
+    return '#FF0000'
+  }
+}
+
 // 接收父组件传递的课程信息
 const props = defineProps<{
   course: DEF2Course | null
@@ -10,7 +35,7 @@ const props = defineProps<{
 }>()
 
 const dialogVisible = ref(false)
-const currentChangeCourse = ref<DEF2Course>({ id: '0', name: '', requireNumber: 0 })
+const currentChangeCourse = ref<DEF2Course>({ id: '0', name: '', requireNumber: 0, total: 1000 })
 const currentLab = ref<Lab>()
 //监听课程信息的变化,一变课表dialogVisible就变为false
 watch(
@@ -39,7 +64,7 @@ const options = [
   }
 ]
 const labs = await TeacherService.listLabsService()
-
+console.log(labs.value)
 const showLabs = ref<Lab[]>(
   labs.value.filter(lab => (lab.capacity ?? 0) >= (props.course?.requireNumber ?? 0))
 )
@@ -90,7 +115,10 @@ const handleCloseDialog = () => {
     </div>
     <br />
     <div class="card-container" v-if="props.course?.id != '0' || currentChangeCourse.name != ''">
-      <el-card v-for="lab in showLabs" :key="lab.id">
+      <el-card
+        v-for="lab in showLabs"
+        :key="lab.id"
+        :style="{ backgroundColor: colorCount(lab.count ?? 0), opacity: 0.5 }">
         <el-popover placement="top-start" title="实验室信息" :width="200" trigger="hover">
           <p>教室容量：{{ lab.capacity }}</p>
           {{ lab.config }}

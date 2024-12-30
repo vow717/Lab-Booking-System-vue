@@ -21,7 +21,13 @@ const days = [
 ]
 const weeks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 const canSelectCourses = ref<DEF2Course[]>()
-canSelectCourses.value = courses.value
+//预约课时已经满的课程不显示
+canSelectCourses.value = courses.value.filter(course => {
+  return (
+    reservations.value.filter(reservation => reservation.courseId == course.id).length <
+    (course?.total ?? 0)
+  )
+})
 const showFreeLabs = ref([])
 //但凡周和星期数改变，就重新查询空余实验室
 watch([selectWeek, selectDay], () => {

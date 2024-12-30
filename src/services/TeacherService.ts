@@ -10,7 +10,7 @@ export class TeacherService {
   @StoreCache(useInfosStore().groupLabsS)
   static async listLabsService() {
     const data = await useGet<Lab[]>(`teacher/labs`)
-    console.log('data:', data)
+    console.log('dataService:', data)
     return data as unknown as Ref<Lab[]>
   }
   //-----------------课程-----------------

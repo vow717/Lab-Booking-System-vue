@@ -46,7 +46,8 @@ const isHighlighted = computed(() => {
       <el-card :class="{ highlight: isHighlighted('0') }">
         <div>
           <p>课程名称：临时预约</p>
-          <el-button @click="openDialog({ id: '0', name: '临时预约', requireNumber: 0 })">
+          <el-button
+            @click="openDialog({ id: '0', name: '临时预约', requireNumber: 0, total: 10000 })">
             选择
           </el-button>
         </div>
