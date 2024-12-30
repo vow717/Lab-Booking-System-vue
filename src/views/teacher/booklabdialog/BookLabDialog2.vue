@@ -3,6 +3,7 @@ import type { DEF2Course, Lab } from '@/datasource/type'
 import { TeacherService } from '@/services/TeacherService'
 import { defineProps, ref, watch } from 'vue'
 import ChildDialog from './BookLabDialog3.vue'
+
 // 接收父组件传递的课程信息
 const props = defineProps<{
   course: DEF2Course | null

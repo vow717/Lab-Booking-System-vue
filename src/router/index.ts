@@ -26,7 +26,7 @@ const router = createRouter({
       children: [
         {
           path: 'settings',
-          component: () => import('@/views/header/UserSettingView.vue')
+          component: () => import('@/views/UserSettingView.vue')
         },
         {
           path: 'user',
