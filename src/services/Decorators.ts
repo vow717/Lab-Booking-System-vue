@@ -1,10 +1,14 @@
 import { createElLoading } from '@/components/loading/index'
 import type { Ref } from 'vue'
+import type {Notice} from '@/datasource/type'
+
 export function StoreCache(dataR: Ref<any>, replace = false) {
   return (_: any, __: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value
     descriptor.value = async (...args: any[]) => {
       const val = dataR.value
+      console.log(Object.prototype.toString.call(val));
+      
       if (
         !replace &&
         (Object.prototype.toString.call(val) === '[object Array]' ||
@@ -17,6 +21,22 @@ export function StoreCache(dataR: Ref<any>, replace = false) {
     }
     return descriptor
   }
+}
+//为通知单独设置的缓存
+export function StoreCacheLength(dataR: Ref<{count:number,notices:Notice[]}>, replace = false) {
+  return (_: any, __: string, descriptor: PropertyDescriptor) => {
+    const originalMethod = descriptor.value
+    descriptor.value = async (...args: any[]) => {
+      const val = dataR.value
+      if (!replace) {
+        return Promise.resolve(dataR)
+      }
+      const r = await originalMethod.apply(descriptor, args)
+      return (dataR.value.count = r.count , dataR.value.notices = r.notices) && dataR
+    }
+    return descriptor
+  }
+
 }
 
 export function StoreClear(...clears: Function[]) {

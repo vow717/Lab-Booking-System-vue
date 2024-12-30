@@ -29,7 +29,7 @@ import { createNoticeBoard } from '@/components/Notice';
 const inAccount = ref("")
 const teacherR = ref<User>()
 const viewInfoR = ref(false)
-const message1 = ref("重置此账号的密码")
+const message1 = ref("删除此账号")
 const message2 = ref('无此账号用户')
 let allTeachers = await AdminService.listTeachersService()
 console.log(allTeachers);

@@ -1,7 +1,7 @@
 import { useDelete, useGet, usePatch, usePost } from '@/fetch'
 import { useInfosStore } from '@/stores/InfosStore'
 import type {Lab,User,Notice} from '@/datasource/type'
-import { ELLoading, StoreCache, StoreClear } from './Decorators'
+import { ELLoading, StoreCache,StoreCacheLength, StoreClear } from './Decorators'
 import { useUsersStore } from '@/stores/UsersStore'
 import { useUserStore } from '@/stores/UserStore'
 
@@ -70,45 +70,50 @@ export class AdminService {
         return data as unknown as Ref<User[]>
       }
 
-      //通知
-      @StoreCache(infosStore.groupNoticesS, true)
+    //通知
+      // @StoreCacheLength(infosStore.groupNoticesS, true)
       @ELLoading()
       static async listNoticeService(page:number){ 
         const data = await useGet<Notice[]>(`${ADMIN}/notices/page/${page}`)
-        return data as unknown as Ref<Notice[]>
+        console.log(data);    
+        return data as unknown as {count:number,notices:Notice[]}
+        // return data as unknown as Ref<{count:number,notices:Notice[]}>
       }
-      //添加通知
-      @StoreCache(infosStore.groupNoticesS, true)
+
+      //添加通知 
+      // @StoreCacheLength(infosStore.groupNoticesS, true)
       @ELLoading()
       static async addNoticeService(notice:Notice){
         console.log(notice);   
         const data = await usePost<Notice[]>(`${ADMIN}/notices`, notice)
-        return data.data.value?.data as unknown as Ref<Notice[]>
+        return data.data.value?.data as unknown as {count:number,notices:Notice[]}
       }
 
       @StoreClear(useInfosStore().clear)
-      @StoreCache(infosStore.groupNoticesS, true)
+      // @StoreCacheLength(infosStore.groupNoticesS, true)
       static async updateNoticeService(page:number,notice:Notice) {
         const data = await usePatch<Notice[]>(`${ADMIN}/notices/page/${page}`, notice)
         console.log(infosStore.groupNoticesS);
-        
-        return data as unknown as Ref<Notice[]>
+        return data as unknown as {count:number,notices:Notice[]}
       }
+
+      
       //删除一个通知
-      @StoreCache(infosStore.groupNoticesS, true)
+      // @StoreCacheLength(infosStore.groupNoticesS, true)
       @ELLoading()
       static async delNoticeService (page:number,nid:string) {
         const data = await useDelete<Notice>(`${ADMIN}/notices/page/${page}/${nid}`)
         console.log(infosStore.groupNoticesS);    
-        return data as unknown as Ref<Notice[]>
+        return data as unknown as {count:number,notices:Notice[]}
       }
+      
       //删除多个通知
-      @StoreCache(infosStore.groupNoticesS, true)
+      // @StoreCacheLength(infosStore.groupNoticesS, true)
       @ELLoading()
-      static async delNoticesService (nids:String[]) {
-        console.log(nids);  
-        const data = await useDelete<String[]>(`${ADMIN}/notices/batch`,nids)
-        return data as unknown as Ref<Notice[]>
+      static async delNoticesService (nids:String[],page:number) {
+        console.log(JSON.stringify(nids));  
+        const data = await useDelete<String[]>(`${ADMIN}/notices/page/${page}/batch`,nids)
+        return data as unknown as {count:number,notices:Notice[]}
       }
 
 

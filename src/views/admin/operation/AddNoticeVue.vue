@@ -1,27 +1,20 @@
 <script setup lang="ts">
 import { createMessageDialog } from '@/components/message/indexC'
-import { locationItems, rolesItems } from '@/datasource/const'
 import { AdminService } from '@/services/AdminService'
 import type { Notice } from '@/datasource/type'
-import { Check, Minus, Plus,CloseBold } from '@element-plus/icons-vue'
-import { computed, ref, watch } from 'vue'
+import { Check, Plus,CloseBold } from '@element-plus/icons-vue'
+import { ref } from 'vue'
 import { createNoticeBoard } from '@/components/Notice'
 import { useUserStore } from '@/stores/UserStore'
-/**
-export interface notice {
-  id?: string
-  title?: string
-  content?: string
-  publisher?: string //发布人名字
-  createTime?: string
-  updateTime?: string
-}
- */
- const publisherR = useUserStore().userS
+
+const props = defineProps<{
+    currentPage: number;
+    listNoticeF: () => Promise<void>;
+}>()
+const publisherR = useUserStore().userS
 const noticeR = ref<Notice>({title:"",content:"",publisher:publisherR.value?.name})
 const dialogVisible = ref(false)
 const messageR = ref('题目不可为空')
-const message2R = ref('')
 //
 
 
@@ -36,11 +29,11 @@ const addNoticeF = async () => {
         noticeR.value.title = titleValue
         noticeR.value.content = contentValue
         await AdminService.addNoticeService(noticeR.value);
+        await props.listNoticeF();
         createNoticeBoard('通知添加成功', '');
         dialogVisible.value = false;
         noticeR.value = {};
     } catch (error) {
-        // 这里可以添加对添加用户操作失败情况的处理逻辑，比如显示错误提示等
         createMessageDialog('通知添加失败，请稍后再试');
     }
 }
@@ -87,8 +80,8 @@ const addNoticeF = async () => {
   margin-bottom: 20px;
 }
 .myInput {
-    min-height: 50px; /* 设置一个合适的最小高度，可根据实际需求调整 */
+    min-height: 50px; 
     height: auto;
-    resize: vertical; /* 允许垂直方向拉伸，以便更自然地撑开 */
+    resize: vertical; 
 }
 </style>

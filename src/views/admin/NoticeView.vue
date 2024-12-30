@@ -10,82 +10,79 @@ import { DeleteFilled } from '@element-plus/icons-vue';
 import { AdminService } from '@/services/AdminService';
 import type { ComponentSize } from 'element-plus'
 import router from '@/router';
-import { useInfosStore } from '@/stores/InfosStore';
-const groupNotices = useInfosStore().groupNoticesS
-console.log(groupNotices.value);
-
-const noticesR = ref<Notice[]>([])
-const noticesIdR = ref<String[]>([])
-const allNoticesIdR = ref<String[]>([])
+// const groupNotices = useInfosStore().groupNoticesS
+// console.log(groupNotices.value);
+const noticesR = ref<{count:number,notices:Notice[]}>({count:0,notices:[]})
+const checkNIdR = ref<String[]>([])
+const curPageNoticesIdR = ref<String[]>([])
 const checkedCount = ref<number>(0)
 
 //分页
 const route = useRoute();
-
-const pageSize = ref(3)
+const pageNum = 8
 const size = ref<ComponentSize>('small')
 const background = ref(false)
 const disabled = ref(false)
 const currentPageR = ref(parseInt(route.params.page as string, 10))
 currentPageR.value = computed(() => parseInt(route.params.page as string, 10)).value;
 //
-await AdminService.listNoticeService(currentPageR.value).then((notices)=>{
-  noticesR.value = notices.value
+const listNoticeF = async() => {
+  await AdminService.listNoticeService(currentPageR.value).then((notices)=>{
+ if(notices){
+  noticesR.value.notices = notices.notices
+  noticesR.value.count = notices.count
+ }
+ //
+ noticesR.value.notices.forEach((n)=>{
+  console.log(n);
+  curPageNoticesIdR.value.push(n.id as string)
 })
-
-watch(() => groupNotices.value,(newval)=>{
-  noticesR.value = newval as Notice[]
 })
+}
+listNoticeF()
 
 const checkAll = ref(false)
 const isIndeterminate = ref(false)
 
-
 const handleCheckAllChange = (val: boolean) => {
-  noticesIdR.value = val ?  allNoticesIdR.value : []
+  console.log(checkNIdR.value);
+  console.log(val);
+  console.log(curPageNoticesIdR.value );
+  
+  checkNIdR.value = val ?  curPageNoticesIdR.value : []
   isIndeterminate.value = false
-  checkedCount.value = allNoticesIdR.value.length
+  checkedCount.value = curPageNoticesIdR.value.length
 }
-noticesR.value.forEach((n)=>{
-  allNoticesIdR.value.push(n.id as string)
-})
-const delNoticesF = () => {
-    if(checkedCount.value <= 0){
-        return  alert("至少选择一项删除")   
+
+
+const delNoticesF = async () => {
+    if (checkedCount.value <= 0) {
+        return ElMessage.warning("至少选择一项删除");
     }
-  ElMessageBox.confirm(`删除 ${checkedCount.value} 项将不可恢复，确定删除？`, 'Warning', {
-    confirmButtonText: 'OK',
-    cancelButtonText: 'Cancel',
-    type: 'warning'
-  })
-    .then(async () => {
-      await AdminService.delNoticesService(noticesIdR.value)
-      
-    })
-    .then(() => {
-      ElMessage({
-        type: 'success',
-        message: '删除成功'
-      })
-
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消删除'
-      })
-
-    })
-}
+    try {
+        // 确认删除操作
+        await ElMessageBox.confirm(`删除 ${checkedCount.value} 项将不可恢复，确定删除？`, 'Warning', {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            type: 'warning'
+        });
+        // 调用删除服务
+        await AdminService.delNoticesService(checkNIdR.value,currentPageR.value);
+        // 重新获取通知列表，使用当前页码
+        listNoticeF()
+        
+        ElMessage.success('删除成功');
+    } catch (error) {
+        ElMessage.info('取消删除');
+    }
+};
 
 //分页
-const handleSizeChange = (val: number) => {
-  
-  
-}
+
 watch(currentPageR,async()=>{
   await AdminService.listNoticeService(currentPageR.value).then((notices)=>{
-    noticesR.value = notices.value    
+    noticesR.value.notices = notices.notices  
+    noticesR.value.count = notices.count
 })
 })
 const handleCurrentChange = async(val: number) => {
@@ -99,7 +96,9 @@ const handleCurrentChange = async(val: number) => {
 <template>
 <div>
     <el-row class="my-row"> 
-      <el-col :span="2"><AddNoticeVue /></el-col>
+      <el-col :span="2" ><AddNoticeVue 
+        :currentPage="currentPageR"
+         :listNoticeF="listNoticeF"/></el-col>
         <el-col :span="2">
           <el-button type="danger" @click="delNoticesF">
             <el-icon><DeleteFilled /></el-icon>
@@ -118,7 +117,7 @@ const handleCurrentChange = async(val: number) => {
     <el-row>
         <el-col>
             <el-scrollbar>
-        <el-table :data="noticesR">
+        <el-table :data="noticesR.notices">
             <el-table-column prop="updateTime" label="Date" width="150" >
                 <template #default="scope">
                     {{ scope.row.updateTime?.substring(0, 10) }}
@@ -129,10 +128,12 @@ const handleCurrentChange = async(val: number) => {
             <el-table-column label="操作" width="170">
             <template #default="scope">
             <EditNoticeVue :notice="scope.row"  
-            :allNoticesId="allNoticesIdR"
+            :curPageNoticesId="curPageNoticesIdR"
             :currentPage="currentPageR"
-            v-model:noticesid="noticesIdR" 
+            :listNoticeF="listNoticeF"
+            v-model:allnotices="noticesR" 
             v-model:checkedcount="checkedCount"
+            v-model:checknid="checkNIdR"
              v-model:checkall="checkAll"
             v-model:indeterminate="isIndeterminate"
             />
@@ -147,13 +148,12 @@ const handleCurrentChange = async(val: number) => {
         <div class="pagination-block">
     <el-pagination
       v-model:current-page="currentPageR"
-      v-model:page-size="pageSize"
+      v-model:page-size="pageNum"
       :size="size"
       :disabled="disabled"
       :background="background"
       layout="prev, pager, next, jumper"
-      :total="allNoticesIdR.length"
-      @size-change="handleSizeChange"
+      :total="noticesR.count"
       @current-change="handleCurrentChange"
     />
   </div>

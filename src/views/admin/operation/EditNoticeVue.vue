@@ -24,6 +24,7 @@ const updateNoticeF = async() => {
     noticeR.value.title === titleR.value
     noticeR.value.content === textareaR.value
   await AdminService.updateNoticeService(prop.page,noticeR.value)
+
 createNoticeBoard('通知信息更新成功', '')
   dialogTableVisible.value = false
   noticeR.value = {}
