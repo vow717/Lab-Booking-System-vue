@@ -7,10 +7,10 @@ export const createEditProcessDialog = (lab: Lab) => {
   )
   render(node, document.body)
 }
-export const createEditNoticeDialog = (notice: Notice) => {
+export const createEditNoticeDialog = (notice: Notice,page:number) => {
   const node = h(
     defineAsyncComponent(() => import('./EditNoticeVue.vue')),
-    { notice }
+    { notice,page }
   )
   render(node, document.body)
 }

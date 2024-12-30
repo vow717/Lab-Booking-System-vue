@@ -72,14 +72,8 @@ const router = createRouter({
               component: () => import('@/views/admin/ResetView.vue')
             },
             {
-              path: 'notice',
-              component: () => import('@/views/admin/NoticeView.vue'),
-              children: [
-                {
-                  path: 'notices/:id',
-                  component: import('@/views/admin/OperationNoticeView.vue')
-                }
-              ]
+              path: 'notices/page/:page',
+              component: () => import('@/views/admin/NoticeView.vue')
             }
           ]
         },
