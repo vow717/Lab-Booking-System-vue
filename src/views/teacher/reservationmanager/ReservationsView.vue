@@ -60,17 +60,19 @@ const delF = async (ids: string[]) => {
 }
 </script>
 <template>
-  {{ needDelete }}
-  <br />
-  <el-button type="danger" @click="delF(needDelete)" :disabled="needDelete.length == 0">
+  <el-button
+    type="danger"
+    @click="delF(needDelete)"
+    :disabled="needDelete.length == 0"
+    size="large"
+    style="font-size: 22px">
     批量删除
   </el-button>
   <div>
     <el-collapse accordion>
       <template v-for="(item, index) in coursesName" :key="index">
-        <el-collapse-item :title="item" :name="item">
+        <el-collapse-item :title="item" :name="item" style="margin: 10px">
           <el-table :data="showAll(item)" style="width: 100%">
-            <el-table-column prop="courseName" label="课程名"></el-table-column>
             <el-table-column label="实验室名" prop="laboratoryName"></el-table-column>
             <el-table-column label="星期数">
               <template #default="{ row }">
@@ -88,7 +90,8 @@ const delF = async (ids: string[]) => {
                 <el-button type="danger" @click="delF([row.id])">删除</el-button>
                 <!--空格-->
                 <el-divider direction="vertical"></el-divider>
-                <input type="checkbox" v-model="needDelete" :value="row.id" />
+                <!--多选框调大些-->
+                <el-checkbox v-model="needDelete" :value="row.id" size="large"></el-checkbox>
               </template>
             </el-table-column>
           </el-table>

@@ -33,6 +33,9 @@ const loginF = async () => {
     initCode()
     throw new Error('验证码错误')
   }
+  if(!userForm.value.account || !userForm.value.password) {
+    throw new Error('账号或密码不能为空')
+  }
   const user: User = {
     account: userForm.value.account,
     password: userForm.value.password
@@ -71,9 +74,10 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div>
+  <img src="../assets/image/loginBackground.png" style="position: absolute; height: 99%; width: 99%">
     <div class="d1">
       <div class="d2">
+        <h2 style="text-align: center">实验室预约管理系统</h2>
         <el-divider>
           <el-icon><Watermelon /></el-icon>
           <el-icon><Fries /></el-icon>
@@ -93,6 +97,7 @@ onMounted(() => {
               :prefix-icon="UserFilled"
               size="large"
               placeholder="请输入您的账号"
+              @keydown.enter="loginF"
               :rules="[{ required: true, message: '账号不能为空', trigger: 'blur' }]" />
           </el-form-item>
 
@@ -103,12 +108,13 @@ onMounted(() => {
               size="large"
               :prefix-icon="SwitchButton"
               placeholder="请输入您的密码"
+              @keydown.enter="loginF"
               :rules="[{ required: true, message: '密码不能为空', trigger: 'blur' }]" />
           </el-form-item>
           <el-form-item>
             <el-row :gutter="10">
               <el-col :span="12">
-                <el-input placeholder="请输入验证码" v-model="formLogin.code"></el-input>
+                <el-input placeholder="请输入验证码" v-model="formLogin.code" @keydown.enter="loginF" />
               </el-col>
 
               <!--验证码右边到底部-->
@@ -134,8 +140,9 @@ onMounted(() => {
           </el-form-item>
         </el-form>
       </div>
-    </div>
-  </div>
+      </div>
+    </img>
+  </img>
 </template>
 <style>
 .d1 {
@@ -143,17 +150,20 @@ onMounted(() => {
   height: 100%;
   width: 100%;
   display: flex;
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
-  background-color: #93b7dd;
+  justify-content: center;
+  align-items: center;
+  
 }
 .d2 {
   position: relative;
-  height: 280px;
+  height: 350px;
   width: 480px;
   border-radius: 15px;
-
   background-color: white;
   padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-left: auto;
+  margin-right: 10%;
+  
 }
 </style>

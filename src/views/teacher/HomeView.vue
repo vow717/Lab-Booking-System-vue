@@ -105,7 +105,7 @@ onMounted(() => {
 tbody {
   display: flex;
   flex-direction: column;
-  font-family: Arial, sans-serif; /* 设置整体字体 */
+  font-family: 'Roboto', sans-serif;
 }
 
 tbody tr {
@@ -119,58 +119,62 @@ tbody tr td {
   width: 10%;
   display: flex;
   flex-direction: column;
-  border: 1px solid #ccc;
+  border: 2px solid #e0e0e0;
+  border-style: solid;
+  border-radius: 5px;
   padding: 12px;
   position: relative;
-  transition: all 0.3s ease; /* 添加过渡效果，让变化更平滑 */
+  transition: all 0.3s ease;
 }
 
 tbody tr td > div {
   flex-grow: 1;
   text-align: center;
-  background-color: #f9f9f9; /* 柔和的背景色 */
+  background-color: #f5f5f5;
   font-size: 14px;
   border-radius: 8px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
   padding: 8px;
-  overflow: hidden; /* 超出隐藏，防止内容过多溢出影响布局 */
+  overflow: hidden;
 }
 
 /* 表头样式 */
 tr:first-child td > div {
-  background-color: #3498db; /* 清新的蓝色表头背景 */
+  background-color: #2980b9;
   color: white;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 1px; /* 增加字母间距，更显精致 */
+  letter-spacing: 2px;
+  font-size: 16px;
 }
 
 /* 鼠标悬停在单元格上的效果 */
 tbody tr td:hover {
-  background-color: #ecf0f1; /* 悬停时的浅灰色背景 */
-  transform: scale(1.02); /* 稍微放大一点，增强交互感 */
-  z-index: 1; /* 提升层级，防止被其他元素覆盖 */
+  background-color: #e6e6e6;
+  transform: scale(1.05);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1;
 }
 
 /* 课程项内部标题样式 */
 .course-title {
-  font-size: 16px;
-  color: #333;
+  font-size: 18px;
+  color: #333333;
   margin-bottom: 5px;
   font-weight: bold;
 }
 
 /* 课程项内部实验室名称样式 */
 .lab-name {
-  font-size: 14px;
-  color: #777;
+  font-size: 16px;
+  color: #666666;
   margin-bottom: 8px;
 }
 
 /* 课程项内部周次信息样式 */
 .week-info {
-  font-size: 12px;
-  color: #555;
+  font-size: 14px;
+  color: #888888;
 }
 
 /* 给课程项添加渐变边框效果 */
@@ -182,17 +186,17 @@ tbody tr td > div:before {
   width: 100%;
   height: 100%;
   border-radius: 8px;
-  background: linear-gradient(45deg, #ffd700, #ffa500); /* 自定义渐变颜色，可调整 */
-  opacity: 0.1; /* 透明度设置，使其不那么突兀 */
-  pointer-events: none; /* 不影响交互 */
-  z-index: -1; /* 置于内容下方 */
+  background: linear-gradient(45deg, #ffc107, #ff9800);
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* 选中课程项时的样式（可通过添加类名等方式触发，这里仅做样式示例） */
 .selected-course {
-  background-color: #e74c3c !important; /* 醒目的红色背景 */
+  background-color: #e74c3c !important;
   color: white !important;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2) !important;
-  transform: scale(1.05) !important; /* 放大效果更明显 ,important 优先级更高*/
+  transform: scale(1.05) !important;
 }
 </style>

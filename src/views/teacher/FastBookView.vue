@@ -140,10 +140,19 @@ const bookLab = async (
     <!-- 这个value-key是为了让el-select组件知道选中的是哪个课程,不加这个属性的话,默认选中的是整个对象，这样的话会有显示问题，比如你不管选中哪个课程，显示的都是第一个课程 -->
     <el-select v-model="selectCourse" value-key="id" placeholder="请选择课程" style="width: 30%">
       <el-option
-        v-for="item in canSelectCourses"
+        v-for="item in courses"
         :key="item.id"
         :label="item.name"
-        :value="item"></el-option>
+        :value="item"
+        :disabled="canSelectCourses?.findIndex(course => course.id === item.id) === -1">
+        <!--悬浮如果不能选，提示预约课时已满-->
+        <span v-if="canSelectCourses?.findIndex(course => course.id === item.id) === -1">
+          {{ item.name }}
+          <el-tooltip content="预约课时已满" placement="top">
+            <el-tag type="danger">预约课时已满</el-tag>
+          </el-tooltip>
+        </span>
+      </el-option>
     </el-select>
     <el-divider></el-divider>
     <el-row>
@@ -163,8 +172,13 @@ const bookLab = async (
             :value="item.value"></el-option>
         </el-select>
       </el-col>
-      <el-col :span="4">
-        <el-button type="primary" @click="findFreeLabs">查询</el-button>
+      <el-col :span="4" style="margin-top: 20px">
+        <el-button
+          type="primary"
+          @click="findFreeLabs"
+          :disabled="selectDay === 0 || selectWeek === 0">
+          查询
+        </el-button>
       </el-col>
     </el-row>
     <el-divider></el-divider>
@@ -221,3 +235,5 @@ const bookLab = async (
     </el-table>
   </div>
 </template>
+
+<style scoped></style>
