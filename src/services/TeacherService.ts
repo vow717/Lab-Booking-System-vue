@@ -1,13 +1,13 @@
 import type { DEF2Course, Lab, LabFree, Reservation, ReservationOrder } from '@/datasource/type'
 import { useDelete, useGet, usePatch, usePost } from '@/fetch'
-import { useInfosStore } from '@/stores/LabsStore'
+import { useLabsStore } from '@/stores/LabsStore'
 import { useTeacherStore } from '@/stores/TeacherStore'
 import { ref, type Ref } from 'vue'
 import { ELLoading, StoreCache, StoreClear } from './Decorators'
 
 export class TeacherService {
   //-----------------实验室-----------------
-  @StoreCache(useInfosStore().groupLabsS)
+  @StoreCache(useLabsStore().groupLabsS)
   static async listLabsService() {
     const data = await useGet<Lab[]>(`teacher/labs`)
     console.log('dataService:', data)
