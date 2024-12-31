@@ -20,9 +20,6 @@ const logoutF = () => {
 }
 const route = useRoute()
 watch(route, () => {})
-const newF = () => {
-  router.push('/user/news')
-}
 const selfF = () => {
   router.push('/user/self')
 }
@@ -41,7 +38,6 @@ const selfF = () => {
       </el-button>
       <div id="info">
         <el-button class="info" @click="selfF">个人中心</el-button>
-        <el-button class="info" @click="newF">消息中心</el-button>
         <el-button class="info" @click="logoutF">退出登录</el-button>
       </div>
     </el-col>

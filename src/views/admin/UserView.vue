@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref,watch } from 'vue';
+import { h, ref,watch } from 'vue';
 import AddUserVue from './operation/AddUserVue.vue';
 import type{User} from '@/datasource/type'
 import { AdminService } from '@/services/AdminService';
@@ -25,6 +25,7 @@ const submitF = async () => {
 
 import { Check } from '@element-plus/icons-vue';
 import { createNoticeBoard } from '@/components/Notice';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 const inAccount = ref("")
 const teacherR = ref<User>()
@@ -40,12 +41,33 @@ watch(inAccount,()=>{
         viewInfoR.value = true
     }
     })
+   
 const delF = async() =>{
-await AdminService.deluserService(teacherR.value?.id as String)
-createNoticeBoard('删除用户成功', '')
-allTeachers = await AdminService.listTeachersService()
-console.log(allTeachers);
-inAccount.value = ''
+    try {
+        // 确认删除操作
+        await ElMessageBox.confirm(
+          h('div', [
+            '删除用户账号为 ',
+            h('span', { style: 'color: red; font-size: 20px;' }, teacherR.value?.account),
+            ' 将不可恢复，确定删除？'
+          ]),
+          'Warning',
+          {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            type: 'warning'
+          }
+        );
+        // 调用删除服务
+        await AdminService.deluserService(teacherR.value?.id as String)
+        createNoticeBoard('删除用户成功', '')
+        allTeachers = await AdminService.listTeachersService()
+        console.log(allTeachers);
+        inAccount.value = ''
+    } catch (error) {
+        ElMessage.info('取消删除');
+    }
+
 }
 
 </script>

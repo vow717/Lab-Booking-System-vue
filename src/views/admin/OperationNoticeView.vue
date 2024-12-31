@@ -57,7 +57,6 @@ import { nextTick } from 'vue';
 const handleNoticesChange = (value: string[]) => {
     checkedcountM.value = value.length;
     nextTick(() => {
-        console.log(checkedcountM.value, value.length);
         checkAllM.value = checkedcountM.value === curPageNoticesIdR.length;
         indeterminateM.value = checkedcountM.value as number > 0 && checkedcountM.value as number < allNoticesM.value?.count!;
     });

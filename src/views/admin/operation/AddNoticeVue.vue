@@ -6,11 +6,12 @@ import { Check, Plus,CloseBold } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import { createNoticeBoard } from '@/components/Notice'
 import { useUserStore } from '@/stores/UserStore'
+import router from '@/router';
 
 const props = defineProps<{
-    currentPage: number;
-    listNoticeF: () => Promise<void>;
+    curpagenoticesid: () => void;
 }>()
+const noticesM = defineModel<{count:number,notices:Notice[]}>('notices')
 const publisherR = useUserStore().userS
 const noticeR = ref<Notice>({title:"",content:"",publisher:publisherR.value?.name})
 const dialogVisible = ref(false)
@@ -28,8 +29,8 @@ const addNoticeF = async () => {
     try {
         noticeR.value.title = titleValue
         noticeR.value.content = contentValue
-        await AdminService.addNoticeService(noticeR.value);
-        await props.listNoticeF();
+        noticesM.value = await AdminService.addNoticeService(1,noticeR.value);
+        router.push(`/admin/notices/page/1`)
         createNoticeBoard('通知添加成功', '');
         dialogVisible.value = false;
         noticeR.value = {};
