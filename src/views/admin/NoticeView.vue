@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type {Notice} from '@/datasource/type'
-// import {listNotices} from '@/datasource/datasourse'
 import { computed, ref,watch } from 'vue';
 import { useRoute } from 'vue-router'
 import AddNoticeVue from '@/views/admin/operation/AddNoticeVue.vue'
@@ -10,8 +9,8 @@ import { DeleteFilled } from '@element-plus/icons-vue';
 import { AdminService } from '@/services/AdminService';
 import type { ComponentSize } from 'element-plus'
 import router from '@/router';
-// const groupNotices = useInfosStore().groupNoticesS
-// console.log(groupNotices.value);
+import { CommonService } from '@/services';
+
 const noticesR = ref<{count:number,notices:Notice[]}>({count:0,notices:[]})
 const checkNIdR = ref<String[]>([])
 const curPageNoticesIdR = ref<String[]>([])
@@ -23,20 +22,24 @@ const pageNum = 8
 const size = ref<ComponentSize>('small')
 const background = ref(false)
 const disabled = ref(false)
-const currentPageR = ref(parseInt(route.params.page as string, 10))
-currentPageR.value = computed(() => parseInt(route.params.page as string, 10)).value;
+const paramPageR = ref<string>(route.params.page as string)
+const currentPageR = ref(parseInt(paramPageR.value, 10))
+currentPageR.value = computed(() => parseInt(paramPageR.value, 10)).value;
 //
 const listNoticeF = async() => {
-  await AdminService.listNoticeService(currentPageR.value).then((notices)=>{
+  await CommonService.listNoticeService(currentPageR.value).then((notices)=>{
  if(notices){
-  noticesR.value.notices = notices.notices
-  noticesR.value.count = notices.count
+  noticesR.value.notices = notices.value.notices
+  noticesR.value.count = notices.value.count
  }
- //
- noticesR.value.notices.forEach((n)=>{
-  curPageNoticesIdR.value.push(n.id as string)
+ getCurPageNoticesIdF()
 })
-})
+}
+//
+const getCurPageNoticesIdF = () =>{
+  noticesR.value.notices.forEach((n)=>{
+    curPageNoticesIdR.value.push(n.id as string)
+  })
 }
 listNoticeF()
 
@@ -62,9 +65,12 @@ const delNoticesF = async () => {
             type: 'warning'
         });
         // 调用删除服务
-        await AdminService.delNoticesService(checkNIdR.value,currentPageR.value);
+        await AdminService.delNoticesService(checkNIdR.value,currentPageR.value).then((res)=>{
+          noticesR.value =  res.value
+        });
         // 重新获取通知列表，使用当前页码
-        listNoticeF()
+        // listNoticeF()
+        getCurPageNoticesIdF()
         
         ElMessage.success('删除成功');
     } catch (error) {
@@ -73,27 +79,25 @@ const delNoticesF = async () => {
 };
 
 //分页
+watch(currentPageR , async(newval)=>{
+  await CommonService.listNoticeService(currentPageR.value).then((res)=>{
+          noticesR.value =  res.value
+        });
+    getCurPageNoticesIdF()
+})
 
-watch(currentPageR,async()=>{
-  await AdminService.listNoticeService(currentPageR.value).then((notices)=>{
-    noticesR.value.notices = notices.notices  
-    noticesR.value.count = notices.count
-})
-})
 const handleCurrentChange = async(val: number) => {
   currentPageR.value = val
   router.push(`/admin/notices/page/${currentPageR.value}`)
-//   await AdminService.listNoticeService(currentPage.value).then((notices)=>{
-//     noticesR.value = notices.value
-// })
 }
 </script>
 <template>
 <div>
     <el-row class="my-row"> 
       <el-col :span="2" ><AddNoticeVue 
-        :currentPage="currentPageR"
-         :listNoticeF="listNoticeF"/>
+         :curpagenoticesid="getCurPageNoticesIdF"
+         v-model:notices="noticesR"
+         />
         </el-col>
         <el-col :span="2">
           <el-checkbox

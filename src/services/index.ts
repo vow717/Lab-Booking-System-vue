@@ -1,14 +1,16 @@
 import * as consty from '@/datasource/const'
-import type { User } from '@/datasource/type'
+import type { User,Notice } from '@/datasource/type'
 import router from '@/router'
 import { useUserStore } from '@/stores/UserStore'
-
-import { usePatch, usePost } from '@/fetch'
-import { useInfosStore } from '@/stores/InfosStore'
+import { usePatch, usePost,useGet} from '@/fetch'
+import { useLabsStore } from '@/stores/LabsStore'
 import { useTeacherStore } from '@/stores/TeacherStore'
 import { useUsersStore } from '@/stores/UsersStore'
-import type { Ref } from 'vue'
+import {useNoticesStore} from '@/stores/NoticesStore'
+import { ELLoading, StoreCache,StoreMapCache, StoreClear } from './Decorators'
+import type {Ref} from 'vue'
 
+const noticesStore = useNoticesStore()
 export class CommonService {
   static loginGuardService = async (user: User) => {
     const resp = await usePost<User>('login', user)
@@ -52,11 +54,19 @@ export class CommonService {
   //清空所有缓存store
   static clearAllStore() {
     useTeacherStore().clear()
-    useInfosStore().clear()
+    useLabsStore().clear()
     useUsersStore().clear()
+    useNoticesStore().clear()
   }
 
   static updateSelfPassword = async (pwd: string) => {
     await usePost('passwords', { password: pwd })
+  }
+  //通知
+  @ELLoading()
+  @StoreMapCache(noticesStore.groupNoticesMapS)
+  static async listNoticeService(page:number){ 
+    const data = await useGet<Notice[]>(`/notice/page/${page}`)  
+    return data as unknown as Ref<{count:number,notices:Notice[]}>
   }
 }
