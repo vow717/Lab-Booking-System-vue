@@ -7,7 +7,7 @@ import { Check, Minus, Plus,CloseBold } from '@element-plus/icons-vue'
 import { computed, ref, watch } from 'vue'
 
 const labR = ref<Lab>({})
-const allLabsM = defineModel('alllabs')
+const allLabsM = defineModel<Lab[]>('alllabs')
 const dialogVisible = ref(false)
 const capacityR = ref(null)
 const labNameR = ref('')
@@ -39,7 +39,9 @@ const addLabF = async () => {
     labR.value.capacity = capacityR.value as number
   }
   labR.value.manager = managerR.value
-  allLabsM.value = await AdminService.addLabService(labR.value)  
+await AdminService.addLabService(labR.value).then((res)=>{
+  allLabsM.value = res.value
+}) 
   createNoticeBoard('实验室添加成功', '')
   dialogVisible.value = false
   labR.value = {}
