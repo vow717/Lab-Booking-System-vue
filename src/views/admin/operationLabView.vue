@@ -5,6 +5,7 @@ import { AdminService } from '@/services/AdminService'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { EditPen,DeleteFilled } from '@element-plus/icons-vue';
 const prop = defineProps<{ labs: Lab}>()
+const allLabsM = defineModel('alllabs')
 const labsR = prop.labs
 const delPorcessF = (lid: string) => {
   ElMessageBox.confirm(`删除${labsR.name}将不可恢复，确定删除？`, 'Warning', {
@@ -13,7 +14,8 @@ const delPorcessF = (lid: string) => {
     type: 'warning'
   })
     .then(async () => {
-      await AdminService.delLabsService(lid)
+      allLabsM.value =  await AdminService.delLabsService(lid)
+      console.log( allLabsM.value );      
     })
     .then(() => {
       ElMessage({

@@ -64,6 +64,7 @@ const currentLocationF = (v: string) => locationMap[v];
 
 
 watch(allLabs, (newval) => {
+  console.log(newval); 
   // 清空 locationName 中的数据
   locationName.value.DanQing = [];
   locationName.value.ChengDong = [];
@@ -89,12 +90,18 @@ onMounted(async () => {
   const res = await AdminService.listLabsService();
   allLabs.value = res.value;
   collectLS(allLabs.value);
+  
 });
+watch(allLabs.value,(newval)=>{
+  console.log(newval);
+  
+})
 </script>
 <template>
   <div>
     <el-row :gutter="10" style="margin-bottom: 10px">
-      <el-col><AddLabVue /></el-col>
+      <el-col><AddLabVue 
+        v-model:alllabs="allLabs"/></el-col>
       <br>
       <el-col>
         <div class="demo-collapse">
@@ -127,7 +134,9 @@ onMounted(async () => {
                   </el-table-column>
                   <el-table-column label="操作" width="150">
                     <template #default="scope">
-                      <EditLabVue :labs="scope.row" />
+                      <EditLabVue 
+                      v-model:alllabs="allLabs"
+                      :labs="scope.row" />
                     </template>
                   </el-table-column>
                 </el-table>

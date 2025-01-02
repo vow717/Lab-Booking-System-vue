@@ -36,7 +36,6 @@ const updateLabF = async() => {
   labR.value.config = textarea.value
   labR.value.manager = managerR.value
   labR.value.status = statusR.value
-  console.log(labR.value);
 await AdminService.updateLabService(labR.value)
 
 createNoticeBoard('实验室信息更新成功', '')
