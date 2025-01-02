@@ -9,28 +9,36 @@ import {  ref, watch } from 'vue'
 const prop = defineProps<{ lab: Lab}>()
 const labR = ref<Lab>(JSON.parse(JSON.stringify(prop.lab)))
 const dialogTableVisible = ref(true)
+const comm = ref(true)
 const capacityR = ref<Number>(labR.value.capacity as number)
-console.log(capacityR);
 const labNameR = ref(labR.value.name?.slice(2))
 const textarea = ref(labR.value.config)
 const selectedValue =ref( labR.value.name?.slice(0,2) || '')
 const statusR = ref(labR.value.status)
 const managerR = ref<{name:String,phone:String}>(JSON.parse(labR.value.manager))
 const messageR = ref('实验室号、地点、状态、容纳人数(数字)不可为空')
+const message2R = ref('电话号为11位数字')
 watch(capacityR, (newValue, oldValue) => {
     if (newValue!== null && isNaN(Number(newValue))) {
         capacityR.value = JSON.parse(JSON.stringify(prop.lab.capacity))
       }
     });
 //
+watch(managerR.value,()=>{
+    if(managerR.value.phone?.length !== 11) {
+        comm.value = false
+    }else{comm.value = true}
+})
 const updateLabF = async() => {
-  labR.value.name = selectedValue.value + labNameR
+  labR.value.name = selectedValue.value + labNameR.value
   console.log(labR.value.name);
   labR.value.capacity = capacityR.value as number
   labR.value.config = textarea.value
   labR.value.manager = managerR.value
   labR.value.status = statusR.value
+  console.log(labR.value);
 await AdminService.updateLabService(labR.value)
+
 createNoticeBoard('实验室信息更新成功', '')
   dialogTableVisible.value = false
   labR.value = {}
@@ -96,6 +104,7 @@ createNoticeBoard('实验室信息更新成功', '')
         <el-col :span="6">
           <el-input v-model="managerR.phone" placeholder="管理员电话"></el-input>
         </el-col>
+        <el-text style="color: red;" v-if="!comm">{{ message2R }}</el-text>
       </el-row>
    </div>
 
@@ -107,7 +116,7 @@ createNoticeBoard('实验室信息更新成功', '')
           type="success"
           :icon="Check"
           @click="updateLabF"
-          :disabled="!(capacityR && labNameR && selectedValue && statusR)"
+          :disabled="!(capacityR && labNameR && selectedValue && statusR && comm)"
       ></el-button>
     </el-tooltip>
     {{ labR }}
@@ -117,4 +126,5 @@ createNoticeBoard('实验室信息更新成功', '')
 .myInput{
   height: 40px;
 }
+
 </style>
