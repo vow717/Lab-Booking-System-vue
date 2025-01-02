@@ -6,8 +6,6 @@ export function StoreCache(dataR: Ref<any>, replace = false) {
     const originalMethod = descriptor.value
     descriptor.value = async (...args: any[]) => {
       const val = dataR.value
-      console.log(Object.prototype.toString.call(val));
-      
       if (
         !replace &&
         (Object.prototype.toString.call(val) === '[object Array]' ||

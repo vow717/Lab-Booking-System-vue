@@ -19,6 +19,7 @@ export class AdminService {
    @StoreCache(labsStore.groupLabsS)
     static async listLabsService() {
       const data = await useGet<Lab[]>(`${ADMIN}/labs`)
+      console.log(data);  
       return data as unknown as Ref<Lab[]>
     }
     
