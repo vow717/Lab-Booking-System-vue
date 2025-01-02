@@ -92,10 +92,8 @@ onMounted(async () => {
   collectLS(allLabs.value);
   
 });
-watch(allLabs.value,(newval)=>{
-  console.log(newval);
-  
-})
+//
+
 </script>
 <template>
   <div>

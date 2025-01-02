@@ -6,7 +6,11 @@ import { AdminService } from '@/services/AdminService'
 import { Check, CloseBold} from '@element-plus/icons-vue'
 import { ElButton, ElCol, ElDialog, ElInput, ElOption, ElRow, ElSelect } from 'element-plus'
 import {  ref, watch } from 'vue'
-const prop = defineProps<{ notice: Notice,page:number}>()
+const prop = defineProps<{ 
+  notice: Notice,
+  page:number,
+  updateAllNotices:(notices:{count:number,notices:Notice[]}) => void;
+}>()
 const noticeR = ref<Notice>(JSON.parse(JSON.stringify(prop.notice)))
 const dialogTableVisible = ref(true)
 const titleR = ref(noticeR.value.title)
@@ -23,7 +27,9 @@ const updateNoticeF = async() => {
     }
     noticeR.value.title === titleR.value
     noticeR.value.content === textareaR.value
-  await AdminService.updateNoticeService(prop.page,noticeR.value)
+  await AdminService.updateNoticeService(prop.page,noticeR.value).then((res)=>{
+    prop.updateAllNotices(res.value)
+  })
 
 createNoticeBoard('通知信息更新成功', '')
   dialogTableVisible.value = false

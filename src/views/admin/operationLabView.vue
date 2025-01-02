@@ -32,10 +32,15 @@ const delPorcessF = (lid: string) => {
       })
     })
 }
+//
+const updateAllLabs = (Labs:Lab[]) =>{
+  console.log(Labs); 
+  allLabsM.value = Labs
+}
 </script>
 <template>
   <div>
-    <el-button type="primary" @click="createEditProcessDialog(prop.labs)">
+    <el-button type="primary" @click="createEditProcessDialog(prop.labs,updateAllLabs)">
       <el-icon><EditPen /></el-icon>
     </el-button>
     <el-button
