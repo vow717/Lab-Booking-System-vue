@@ -10,7 +10,7 @@ const close = () => {
 }
 </script>
 <template>
-  <el-dialog v-model="dialogVisible" title="消息" width="30%" @close="close" id="dialogVisible">
+  <el-dialog v-model="dialogVisible" title="错误" width="30%" @close="close" id="dialogVisible">
     <span>{{ props.message }}</span>
   </el-dialog>
 </template>

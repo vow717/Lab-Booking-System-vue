@@ -42,13 +42,15 @@ const options = [
 const labs = await TeacherService.listLabsService()
 console.log(labs.value)
 const showLabs = ref<Lab[]>(
-  labs.value.filter(lab => (lab.capacity ?? 0) >= (props.course?.requireNumber ?? 0))
+  labs.value.filter(
+    lab => (lab.capacity ?? 0) >= (props.course?.requireNumber ?? 0) && lab.status === '开放'
+  )
 )
 watch(
   () => props.course,
   () => {
     showLabs.value = labs.value.filter(
-      lab => (lab.capacity ?? 0) >= (props.course?.requireNumber ?? 0)
+      lab => (lab.capacity ?? 0) >= (props.course?.requireNumber ?? 0) && lab.status === '开放'
     )
   }
 )

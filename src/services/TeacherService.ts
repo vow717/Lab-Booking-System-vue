@@ -81,7 +81,7 @@ export class TeacherService {
   }
 
   //查询day week那天空闲的实验室以及其空余的时间段
-  static async listFreeLabService(day: number, week: number) {
+  static async listFreeLabService(week: number, day: number) {
     const data = ref<LabFree[]>()
     data.value = await useGet<LabFree[]>(`teacher/reservation/fast/${week}/${day}`)
     console.log('data:', data.value)

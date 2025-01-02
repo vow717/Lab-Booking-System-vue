@@ -1,14 +1,14 @@
 import * as consty from '@/datasource/const'
-import type { User,Notice } from '@/datasource/type'
+import type { Notice, User } from '@/datasource/type'
+import { useGet, usePost } from '@/fetch'
 import router from '@/router'
-import { useUserStore } from '@/stores/UserStore'
-import { usePatch, usePost,useGet} from '@/fetch'
 import { useLabsStore } from '@/stores/LabsStore'
+import { useNoticesStore } from '@/stores/NoticesStore'
 import { useTeacherStore } from '@/stores/TeacherStore'
 import { useUsersStore } from '@/stores/UsersStore'
-import {useNoticesStore} from '@/stores/NoticesStore'
-import { ELLoading, StoreCache,StoreMapCache, StoreClear } from './Decorators'
-import type {Ref} from 'vue'
+import { useUserStore } from '@/stores/UserStore'
+import type { Ref } from 'vue'
+import { ELLoading, StoreMapCache } from './Decorators'
 
 const noticesStore = useNoticesStore()
 export class CommonService {
@@ -65,8 +65,8 @@ export class CommonService {
   //通知
   @ELLoading()
   @StoreMapCache(noticesStore.groupNoticesMapS)
-  static async listNoticeService(page:number){ 
-    const data = await useGet<Notice[]>(`/notice/page/${page}`)  
-    return data as unknown as Ref<{count:number,notices:Notice[]}>
+  static async listNoticeService(page: number) {
+    const data = await useGet<Notice[]>(`/notice/page/${page}`)
+    return data as unknown as Ref<{ count: number; notices: Notice[] }>
   }
 }

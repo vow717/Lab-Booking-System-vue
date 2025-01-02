@@ -8,7 +8,7 @@ const menus = ref<{ name: string; path: string; children?: { name: string; path:
     name: '编辑课程',
     path: '/teacher/Course'
   },
-  { name: '查看公告', path: '/teacher/notice' },
+  { name: '查看公告', path: '/teacher/notice/page/1' },
   { name: '预约实验室', path: '/teacher/bookLab' },
   { name: '预约记录', path: '/teacher/reservationmanager' },
   { name: '快速预约', path: '/teacher/fastbook' }

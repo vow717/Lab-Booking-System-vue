@@ -109,7 +109,7 @@ const router = createRouter({
               component: () => import('@/views/teacher/FastBookView.vue')
             },
             {
-              path: 'notice',
+              path: 'notice/page/:page',
               component: () => import('@/views/teacher/NoticeView.vue')
             }
           ]

@@ -20,6 +20,24 @@ const days = [
   { value: 7, label: '周日' }
 ]
 const weeks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+const tempOrder: DEF2Course[] = [
+  {
+    id: '0',
+    name: '补课'
+  },
+  {
+    id: '0',
+    name: '考试'
+  },
+  {
+    id: '0',
+    name: '讲题'
+  },
+  {
+    id: '0',
+    name: '其他'
+  }
+]
 const canSelectCourses = ref<DEF2Course[]>()
 //预约课时已经满的课程不显示
 canSelectCourses.value = courses.value.filter(course => {
@@ -153,6 +171,11 @@ const bookLab = async (
           </el-tooltip>
         </span>
       </el-option>
+      <el-option
+        v-for="item in tempOrder"
+        :key="item.id"
+        :label="item.name"
+        :value="item"></el-option>
     </el-select>
     <el-divider></el-divider>
     <el-row>
