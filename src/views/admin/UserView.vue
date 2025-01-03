@@ -18,12 +18,20 @@ const allUsersR = ref<User[]>([])
   element.value = ''
 }
 const submitF = async () => {
-  if(allUsersR.value){
+  try{
+    if(allUsersR.value){
   await AdminService.addUsersService(allUsersR.value)
+  createNoticeBoard('导入用户成功', '');
   }
+  }catch{
+    alert("导入失败")
+  }finally{
+    allUsersR.value = []
+  }
+  
 }
 
-import { Check,Search ,DeleteFilled} from '@element-plus/icons-vue';
+import {Search ,DeleteFilled} from '@element-plus/icons-vue';
 import { createNoticeBoard } from '@/components/Notice';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
@@ -36,39 +44,47 @@ let allTeachers = await AdminService.listTeachersService()
 console.log(allTeachers);
 
 const searchF = async() =>{
+ try{ 
   await AdminService.listSearchTeacherAcountService(inAccount.value).then((res)=>{
-    teacherR.value= res.value
+    teacherR.value = res.value    
+    viewInfoR.value = true
   })
-  if(!teacherR.value){
+}catch{
+  if(!teacherR.value?.account){
+    teacherR.value = undefined
     alert("无此账号用户")
   }  
-} 
-const delF = async() =>{
-    try {
-        // 确认删除操作
-        await ElMessageBox.confirm(
-          h('div', [
-            '删除用户账号为 ',
-            h('span', { style: 'color: red; font-size: 20px;' }, teacherR.value?.account),
-            ' 将不可恢复，确定删除？'
-          ]),
-          'Warning',
-          {
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Cancel',
-            type: 'warning'
-          }
-        );
-        // 调用删除服务
-        await AdminService.deluserService(teacherR.value?.id as String)
-        createNoticeBoard('删除用户成功', '')
-        inAccount.value = ''
-        teacherR.value = undefined
-    } catch (error) {
-        ElMessage.info('取消删除');
-    }
-
 }
+} 
+const delF = async () => {
+  try {
+    // 确认删除操作
+    await ElMessageBox.confirm(
+      h('div', [
+        '删除用户账号为 ',
+        h('span', { style: 'color: red; font-size: 20px;' }, teacherR.value?.account),
+        ' 将不可恢复，确定删除？'
+      ]),
+      'Warning',
+      {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }
+    );
+    // 调用删除服务
+    await AdminService.deluserService(teacherR.value?.id as string);
+    createNoticeBoard('删除用户成功', '');
+  } catch (error) {
+    ElMessage.info('取消删除');
+  } finally {
+    inAccount.value = '';
+    teacherR.value = undefined;
+    viewInfoR.value = false
+
+    
+  }
+};
 
 </script>
 <template>

@@ -1,28 +1,66 @@
 <script setup lang="ts">
 import { AdminService } from '@/services/AdminService';
 import type{ User } from '@/datasource/type';
-import { ref, watch } from 'vue';
-import { Check } from '@element-plus/icons-vue';
+import {  h,ref, watch } from 'vue';
+import { Check ,Search} from '@element-plus/icons-vue';
 import { createNoticeBoard } from '@/components/Notice';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 const inAccount = ref("")
 const teacherR = ref<User>()
 const viewInfoR = ref(false)
 const message1 = ref("重置此账号的密码")
 const message2 = ref('无此账号用户')
-const allTeachers = await AdminService.listTeachersService()
-console.log(allTeachers);
 
-watch(inAccount,()=>{
-    teacherR.value = allTeachers.value.find((t) =>t.account === inAccount.value)
-    if(teacherR.value){
-        viewInfoR.value = true
-    }
-    })
+
+const searchF = async() =>{
+    try{ 
+  await AdminService.listSearchTeacherAcountService(inAccount.value).then((res)=>{
+    teacherR.value = res.value    
+    viewInfoR.value = true
+  })
+}catch{
+  if(!teacherR.value?.account){
+    teacherR.value = undefined
+    alert("无此账号用户")
+  }  
+}
+}
+
 const resetF = async() =>{
-await AdminService.resetService(inAccount.value)
-createNoticeBoard('重置密码成功', '')
-inAccount.value = ''
+
+    try {
+    // 确认删除操作
+    await ElMessageBox.confirm(
+      h('div', [
+        '重置用户账号为 ',
+        h('span', { style: 'color: red; font-size: 20px;' }, teacherR.value?.account),
+        ' 将不可恢复，确定重置？'
+      ]),
+      'Warning',
+      {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }
+    );
+    // 调用删除服务
+    if(teacherR.value?.account){
+        await AdminService.resetService(teacherR.value?.account)
+        createNoticeBoard('重置密码成功', '')
+        inAccount.value = ''
+        teacherR.value = undefined
+    }
+  } catch (error) {
+    ElMessage.info('取消重置');
+  } finally {
+    inAccount.value = '';
+    teacherR.value = undefined;
+    viewInfoR.value = false
+
+    
+  }
+
 }
 
 </script>
@@ -35,13 +73,17 @@ inAccount.value = ''
     </el-col>
     <el-col :span="1"></el-col>
     <el-col :span="1">
+      <el-button type="success" :icon="Search" circle :disabled="!inAccount"
+      @click="searchF"/>
+</el-col>
+    <el-col :span="1">
         <el-tooltip
         class="box-item"
         effect="dark"
         :content="message1"
         placement="right-start"
       >
-      <el-button type="success" :icon="Check" circle :disabled="!teacherR?.name"
+      <el-button type="success" :icon="Check" circle :disabled="!teacherR?.account"
       @click="resetF"/>
     </el-tooltip>
 
