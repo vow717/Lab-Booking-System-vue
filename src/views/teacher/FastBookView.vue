@@ -62,7 +62,6 @@ const findFreeLabs = async () => {
         ? '空闲'
         : reservations.value.find(
               reservation =>
-                reservation.laboratoryId === item.laboratoryId &&
                 reservation.day === selectDay.value &&
                 reservation.period === 1 &&
                 reservation.week === selectWeek.value
@@ -74,7 +73,6 @@ const findFreeLabs = async () => {
         ? '空闲'
         : reservations.value.find(
               reservation =>
-                reservation.laboratoryId === item.laboratoryId &&
                 reservation.day === selectDay.value &&
                 reservation.period === 2 &&
                 reservation.week === selectWeek.value
@@ -86,7 +84,6 @@ const findFreeLabs = async () => {
         ? '空闲'
         : reservations.value.find(
               reservation =>
-                reservation.laboratoryId === item.laboratoryId &&
                 reservation.day === selectDay.value &&
                 reservation.period === 3 &&
                 reservation.week === selectWeek.value
@@ -98,7 +95,6 @@ const findFreeLabs = async () => {
         ? '空闲'
         : reservations.value.find(
               reservation =>
-                reservation.laboratoryId === item.laboratoryId &&
                 reservation.day === selectDay.value &&
                 reservation.period === 4 &&
                 reservation.week === selectWeek.value

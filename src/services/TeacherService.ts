@@ -19,6 +19,7 @@ export class TeacherService {
   @StoreCache(useTeacherStore().myCoursesS)
   static async listCoursesService() {
     const data = await useGet<DEF2Course[]>(`teacher/courses`)
+
     return data as unknown as Ref<DEF2Course[]>
   }
 
