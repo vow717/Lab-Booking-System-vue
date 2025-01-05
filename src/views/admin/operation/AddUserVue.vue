@@ -15,11 +15,10 @@ const messageR = ref('姓名、账号、角色不可为空');
 const message2R = ref('');
 // 创建手机号输入框的引用
 const phoneInputRef = ref<HTMLInputElement | null>(null);
-
-
 watch(phoneR, (newValue, oldValue) => {
     const validValue = newValue.trim();
-    if (validValue) {
+    if(!validValue) return
+    else{
         const numValue = Number(validValue);
         if (!isNaN(numValue)) {
             // 判断转换为字符串后的长度是否为 11 位
@@ -48,7 +47,8 @@ const addLabF = async () => {
         createMessageDialog('姓名、账号不能为空');
         return;
     }
-    if (phoneR.value.length!== 11) {
+
+    if (phoneR.value.length!== 11 && phoneR.value.length!== 0) {
         message2R.value = '手机号必须为 11 位';
         // 聚焦到手机号输入框
         if (phoneInputRef.value) {
@@ -59,14 +59,15 @@ const addLabF = async () => {
     try {
         userR.value.name = nameValue;
         userR.value.account = accountValue;
-        userR.value.phone = phoneR.value;
+        if(phoneR.value){
+          userR.value.phone = phoneR.value;
+        }
         userR.value.role = selectedValue.value == "admin"? ADMIN : TEACHER;
         await AdminService.addUserService(userR.value);
         createNoticeBoard('用户添加成功', '');
         dialogVisible.value = false;
         userR.value = {};
     } catch (error) {
-        // 这里可以添加对添加用户操作失败情况的处理逻辑，比如显示错误提示等
         createMessageDialog('用户添加失败，请稍后再试');
     }
 };

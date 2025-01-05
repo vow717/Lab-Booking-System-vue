@@ -61,10 +61,14 @@ const handleNoticesChange = (value: string[]) => {
         indeterminateM.value = checkedcountM.value as number > 0 && checkedcountM.value as number < allNoticesM.value?.count!;
     });
 }
+const updateAllNotices = (notices:{count:number,notices:Notice[]}) =>{
+  console.log(notices); 
+  allNoticesM.value = notices
+}
 </script>
 <template>
   <div>
-    <el-button type="primary" @click="createEditNoticeDialog(prop.notice,prop.currentPage)">
+    <el-button type="primary" @click="createEditNoticeDialog(prop.notice,prop.currentPage,updateAllNotices)">
       <el-icon><EditPen /></el-icon>
     </el-button>
     <el-button

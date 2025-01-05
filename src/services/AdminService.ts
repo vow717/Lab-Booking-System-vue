@@ -125,6 +125,19 @@ export class AdminService {
 
   @ELLoading()
   @StoreCache(usersStore.allTeachersS, true)
+  static async listSearchTeacherAcountService(account:string) {
+    console.log(account);  
+    const data = await useGet<User[]>(`${ADMIN}/search/account/${account}`)
+    return data as unknown as Ref<User>
+  }
+  @ELLoading()
+  @StoreCache(usersStore.allTeachersS, true)
+  static async listSearchTeacherNameService(name:string) {
+    const data = await useGet<User[]>(`${ADMIN}/search/account/${name}`)
+    return data as unknown as Ref<User[]>
+  }
+  @ELLoading()
+  @StoreCache(usersStore.allTeachersS, true)
   static async resetService(account: String) {
     const data = await usePatch<String>(`${ADMIN}/reset`, account)
     return data as unknown as Ref<User[]>

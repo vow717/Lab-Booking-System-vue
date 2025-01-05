@@ -6,7 +6,10 @@ import { AdminService } from '@/services/AdminService'
 import { Check, CloseBold} from '@element-plus/icons-vue'
 import { ElButton, ElCol, ElDialog, ElInput, ElOption, ElRow, ElSelect } from 'element-plus'
 import {  ref, watch } from 'vue'
-const prop = defineProps<{ lab: Lab}>()
+const prop = defineProps<{ 
+  lab: Lab
+  updateAllLabs:(labs:Lab[]) => void;
+}>()
 const labR = ref<Lab>(JSON.parse(JSON.stringify(prop.lab)))
 const dialogTableVisible = ref(true)
 const comm = ref(true)
@@ -36,8 +39,9 @@ const updateLabF = async() => {
   labR.value.config = textarea.value
   labR.value.manager = managerR.value
   labR.value.status = statusR.value
-  console.log(labR.value);
-await AdminService.updateLabService(labR.value)
+await AdminService.updateLabService(labR.value).then((res)=>{
+  prop.updateAllLabs(res.value)
+})
 
 createNoticeBoard('实验室信息更新成功', '')
   dialogTableVisible.value = false

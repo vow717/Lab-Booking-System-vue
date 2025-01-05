@@ -5,6 +5,7 @@ import { AdminService } from '@/services/AdminService'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { EditPen,DeleteFilled } from '@element-plus/icons-vue';
 const prop = defineProps<{ labs: Lab}>()
+const allLabsM = defineModel<Lab[]>('alllabs')
 const labsR = prop.labs
 const delPorcessF = (lid: string) => {
   ElMessageBox.confirm(`删除${labsR.name}将不可恢复，确定删除？`, 'Warning', {
@@ -13,7 +14,10 @@ const delPorcessF = (lid: string) => {
     type: 'warning'
   })
     .then(async () => {
-      await AdminService.delLabsService(lid)
+     await AdminService.delLabsService(lid).then((res)=>{
+      allLabsM.value =  res.value
+     })
+      console.log( allLabsM.value );      
     })
     .then(() => {
       ElMessage({
@@ -28,10 +32,15 @@ const delPorcessF = (lid: string) => {
       })
     })
 }
+//
+const updateAllLabs = (Labs:Lab[]) =>{
+  console.log(Labs); 
+  allLabsM.value = Labs
+}
 </script>
 <template>
   <div>
-    <el-button type="primary" @click="createEditProcessDialog(prop.labs)">
+    <el-button type="primary" @click="createEditProcessDialog(prop.labs,updateAllLabs)">
       <el-icon><EditPen /></el-icon>
     </el-button>
     <el-button

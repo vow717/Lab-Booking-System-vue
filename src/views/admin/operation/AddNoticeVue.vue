@@ -29,7 +29,9 @@ const addNoticeF = async () => {
     try {
         noticeR.value.title = titleValue
         noticeR.value.content = contentValue
-        noticesM.value = await AdminService.addNoticeService(1,noticeR.value);
+       await AdminService.addNoticeService(1,noticeR.value).then((res)=>{
+        noticesM.value = res.value
+       });
         router.push(`/admin/notices/page/1`)
         createNoticeBoard('通知添加成功', '');
         dialogVisible.value = false;
